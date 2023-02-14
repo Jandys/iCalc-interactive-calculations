@@ -10,6 +10,9 @@ services:
     container_name: wordpress
     image: wordpress
     restart: always
+    depends_on:
+      - db
+      - builder
     ports:
       - "8080:80"
       - "443:443"
@@ -21,6 +24,7 @@ services:
       WORDPRESS_TABLE_PREFIX: "wp_"
     volumes:
       - wordpress:/var/www/html
+      - ./deploy:/var/www/html/wp-content/plugins/
 
 
   db:
@@ -33,3 +37,13 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
     volumes:
       - db:/var/lib/mysql
+
+  builder:
+    container_name: builder
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        builder_output_name: i-calcus
+    volumes:
+      - ./deploy:/mnt/system/deploy
