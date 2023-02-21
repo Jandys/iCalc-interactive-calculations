@@ -12,7 +12,6 @@ services:
     restart: always
     depends_on:
       - db
-      - builder
     ports:
       - "8080:80"
       - "443:443"
@@ -29,21 +28,14 @@ services:
 
   db:
     image: mysql:5.7
+    container_name: database
     restart: always
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    ports:
+      - "33306:3306"
     volumes:
       - db:/var/lib/mysql
-
-  builder:
-    container_name: builder
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        builder_output_name: i-calcus
-    volumes:
-      - ./deploy:/mnt/system/deploy
