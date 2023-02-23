@@ -1,5 +1,6 @@
 <?php
 
+namespace icalc\util;
 
 function console_log($output, $with_script_tags = true)
 {

@@ -3,29 +3,45 @@
 
 use icalc\db\DBConnector;
 
-add_action('admin_menu', 'my_admin_menu');
+use function icalc\util\console_log;
 
-function my_admin_menu()
+add_action('admin_menu', 'ic_admin_menu');
+
+function ic_admin_menu()
 {
     add_menu_page('Calcus',
         'Inter Calcus',
         'manage_options',
-        'my-admin-menu',
-        'my_admin_menu_main',
+        'inter-calc-configuration',
+        'inter_calc_main_configuration',
         'dashicons-schedule',
         4);
-    add_submenu_page('my-admin-menu',
-            'Inter Calcus - Products',
+    add_submenu_page('inter-calc-configuration',
+            'Products - Inter Calcus',
         'IC - Products',
         'manage_options',
         'ic-products-configuration',
         'ic_menu_products_configuration');
+    add_submenu_page('inter-calc-configuration',
+            'Services - Inter Calcus',
+        'IC - Services',
+        'manage_options',
+        'ic-services-configuration',
+        'ic_menu_services_configuration');
+    add_submenu_page('inter-calc-configuration',
+        'Tags - Inter Calcus',
+        'IC - Tags',
+        'manage_options',
+        'ic-tags-configuration',
+        'ic_menu_tags_configuration');
 
 }
 
 
-function my_admin_menu_main()
+function inter_calc_main_configuration()
 {
+    console_log(\icalc\db\DatabaseInit::init());
+
     console_log("inside menu");
 
     echo '<div class="wrap">
@@ -36,21 +52,34 @@ function my_admin_menu_main()
 }
 
 function ic_menu_products_configuration(){
-    console_log("inside menu");
-
-    $db = new DBConnector();
-    $additionalSettings =
-        '(id INT NOT NULL AUTO_INCREMENT,
-        name VARCHAR(50),
-        email VARCHAR(50),
-        PRIMARY KEY (id)
-        );';
-
-    echo $db->createTable("icalc",$additionalSettings);
+    console_log(\icalc\db\DatabaseInit::init());
 
     echo '<div class="wrap">
-<h2>InterCalc submenu</h2>
+<h2>InterCalc Products</h2>
  
 
 </div>';
+}
+
+function ic_menu_services_configuration(){
+    console_log(\icalc\db\DatabaseInit::init());
+
+    echo '<div class="wrap">
+<h2>InterCalc Services</h2>
+ 
+
+</div>';
+}
+
+function ic_menu_tags_configuration(){
+    console_log(\icalc\db\DatabaseInit::init());
+
+
+
+    echo '<div class="wrap">
+<h2>InterCalc Tags</h2>';
+
+    \icalc\fe\AdminFrontend::tagsConfiguration();
+
+    echo '</div>';
 }

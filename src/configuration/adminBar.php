@@ -8,8 +8,8 @@ function my_admin_bar_menu( $wp_admin_bar ) {
         array(
             'id'    => 'ccb-admin-menu',
 //            'title' => '<img class="ccb-icon-logo" src="' . CALC_URL . '/frontend/dist/img/ccb-logo.svg' . '"/>' . __( 'Cost Calculator', 'cost-calculator-builder' ), //phpcs:ignore
-            'title' =>  __( 'Cost Calculator', 'cost-calculator-builder' ), //phpcs:ignore
-            'href'  => get_admin_url( null, 'admin.php?page=cost_calculator_builder' ),
+            'title' =>  __( 'InterCalc', 'inter-calculator' ), //phpcs:ignore
+            'href'  => get_admin_url( null, 'admin.php?page=inter-calc-configuration' ),
         )
     );
 //
