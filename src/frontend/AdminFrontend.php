@@ -2,13 +2,57 @@
 
 namespace icalc\fe;
 
+use function icalc\util\console_log;
+
 class AdminFrontend
 {
 
 
     public static function tagsConfiguration()
     {
-        $html = '
+        $productsEP = ICALC_EP_PREFIX . '/products';
+        $url = get_rest_url(null, $productsEP);
+
+        console_log($url);
+        $response = wp_remote_get($url);
+
+
+        console_log($response);
+        if (is_array($response)) {
+            console_log("DATA RECIEVED");
+            $body = wp_remote_retrieve_body($response);
+            console_log($body);
+            $data = json_decode($body);
+            console_log($data);
+
+            $tbody = "";
+            $html = "";
+
+            $modalData = [];
+            $modalData["name"] = "name";
+            $modalData["desc"] = "desc";
+
+            foreach ($data->products as $item) {
+                $modalId = "tag" . $item . "modal";
+
+                $html = $html . self::configuredModalTagEdit($modalData, $modalId, $item);
+
+
+                $tbody = $tbody . '
+                <tr>
+                        <td>' . $item . '</td>
+                        <td>Tag' . $item . '</td>
+                        <td>This is Tag</td>
+                        <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
+                        <td class="text-center"><button class="btn btn-danger" data-toggle="modal" data-target="#myModal"><span class="dashicons dashicons-trash"></span></button></td>
+                    </tr>';
+            }
+        } else {
+            console_log("ERROR FETCHING");
+        }
+
+
+        $html = $html . '
     <div class="container pt-5">
         <!-- Additon button -->
         <span><button class="button mb-2">+</button> Add new Tag</span>
@@ -19,14 +63,12 @@ class AdminFrontend
                         <th class="p-2 m-2">ID</th>
                         <th class="p-2 m-2">Name</th>
                         <th class="p-2 m-2">Description</th>
+                        <th class="col-1"></th>
+                        <th class="col-1"></th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
-                    <tr>
-                        <td>1</td>
-                        <td>Tag</td>
-                        <td>This is Tag</td>
-                    </tr>
+                ' . $tbody . '
                 </tbody>
             </table>
         <!-- Pagination -->
@@ -36,6 +78,47 @@ class AdminFrontend
     </div>';
 
         echo $html;
+
+    }
+
+
+    private static function configuredModalTagEdit($formFields, $modalId, $id)
+    {
+       return  '<div class="modal mt-5 fade w-100 p-3" id="' . $modalId . '" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body p-5">
+                              <h4 class="modal-title">Upravit Tag</h4>
+                              <form>
+                              <div class="form-row">
+                                <div class="col">
+                                  <label for="' . $modalId . '_id_form">Id</label>
+                                  <input id="' . $modalId . '_id_form" type="text" class="form-control" value="' . $id . '" readonly>
+                                </div>
+                                <div class="col">
+                                  <label for="' . $modalId . '_name_form">Name</label>
+                                  <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="Tag name" value="' . $formFields['name'] . '">
+                                </div>
+                                 <div class="col">
+                                  <label for="' . $modalId . '_desc_form">Description</label>
+                                  <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="Tag description" value="' . $formFields['desc'] . '">
+                                </div>
+                              </div>
+                                <div class="d-flex justify-content-end">
+                                </div>
+                            </form>
+                            </div>
+                            <div class="modal-footer">
+                            
+                              <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">Zavřít</button>
+                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="icalc_process_tag_edition(\''.$id.'\',\'' . $modalId . '_name_form\',\'' . $modalId . '_desc_form\')">Upravit</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>';
     }
 
 

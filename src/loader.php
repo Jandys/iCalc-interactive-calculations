@@ -9,3 +9,4 @@ if(is_admin()){
 require_once ICALC_PATH . '/util/utilities.php';
 require_once ICALC_PATH . '/configuration/configuration.php';
 require_once ICALC_PATH . '/database/autoload.php';
+require_once ICALC_PATH . '/controller/controllers.php';
