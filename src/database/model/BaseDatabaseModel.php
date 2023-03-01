@@ -19,12 +19,13 @@ class BaseDatabaseModel
     public static function insert($data)
     {
         global $wpdb;
+        return $wpdb->insert(self::_tableName(), $data);
+    }
 
-        add_filter('query', array(self::class, 'wp_db_null_value'));
 
-        $result = $wpdb->insert(self::_tableName(), $data);
-        remove_filter('query', array(self::class, 'wp_db_null_value'));
-        return $result;
+    public static function update($data, $id){
+        global $wpdb;
+        return $wpdb->update(self::_tableName(),$data,array( self::$id => $id ));
     }
 
 
@@ -63,7 +64,7 @@ class BaseDatabaseModel
     public static function get_all() {
         global $wpdb;
         return $wpdb->get_results(
-            sprintf( 'SELECT * FROM %s ORDER BY %s DESC', self::_tableName(), static::$primary_key ), //phpcs:ignore
+            sprintf( 'SELECT * FROM %s ORDER BY %s ASC', self::_tableName(), static::$id ), //phpcs:ignore
             ARRAY_A
         );
     }
@@ -75,7 +76,7 @@ class BaseDatabaseModel
      */
     public static function delete( $value ) {
         global $wpdb;
-        $sql = sprintf( 'DELETE FROM %s WHERE %s = %%s', self::_table(), static::$primary_key );
+        $sql = sprintf( 'DELETE FROM %s WHERE %s = %%s', self::_tableName(), static::$id );
 
         return $wpdb->query( $wpdb->prepare( $sql, $value ) ); //phpcs:ignore
     }

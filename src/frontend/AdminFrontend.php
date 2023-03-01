@@ -10,8 +10,8 @@ class AdminFrontend
 
     public static function tagsConfiguration()
     {
-        $productsEP = ICALC_EP_PREFIX . '/products';
-        $url = get_rest_url(null, $productsEP);
+        $tagsEP = ICALC_EP_PREFIX . '/tags';
+        $url = get_rest_url(null, $tagsEP);
 
         console_log($url);
         $response = wp_remote_get($url);
@@ -28,23 +28,24 @@ class AdminFrontend
             $tbody = "";
             $html = "";
 
-            $modalData = [];
-            $modalData["name"] = "name";
-            $modalData["desc"] = "desc";
 
-            foreach ($data->products as $item) {
-                $modalId = "tag" . $item . "modal";
+            foreach ($data as $item) {
+                $modalId = "tag" . $item->id . "modal";
 
-                $html = $html . self::configuredModalTagEdit($modalData, $modalId, $item);
+                $modalData = [];
+                $modalData["name"] = $item->name;
+                $modalData["desc"] = $item->description;
+
+                $html = $html . self::configuredModalTagEdit($modalData, $modalId, $item->id);
 
 
                 $tbody = $tbody . '
                 <tr>
-                        <td>' . $item . '</td>
-                        <td>Tag' . $item . '</td>
-                        <td>This is Tag</td>
+                        <td>' . $item->id . '</td>
+                        <td>' . $item->name . '</td>
+                        <td>' . $item->description . '</td>
                         <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
-                        <td class="text-center"><button class="btn btn-danger" data-toggle="modal" data-target="#myModal"><span class="dashicons dashicons-trash"></span></button></td>
+                        <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_tag_deletion(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
                     </tr>';
             }
         } else {

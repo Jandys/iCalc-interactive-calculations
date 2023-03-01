@@ -22,4 +22,16 @@ class Tag extends BaseDatabaseModel
         return maybe_create_table( $table_name, $sql );
     }
 
+    public static function insertNew($name, $description)
+    {
+        $data = array('name' => $name, 'description' => $description);
+        return parent::insert($data);
+    }
+
+    public static function updateById($id, $name, $description){
+        $data = array('name' => $name, 'description' => $description);
+        return parent::update($data, $id);
+    }
+
+
 }
