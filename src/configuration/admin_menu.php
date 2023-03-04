@@ -1,8 +1,6 @@
 <?php
 
 
-use icalc\db\DBConnector;
-
 use function icalc\util\console_log;
 
 add_action('admin_menu', 'ic_admin_menu');
@@ -55,29 +53,30 @@ function ic_menu_products_configuration(){
     console_log(\icalc\db\DatabaseInit::init());
 
     echo '<div class="wrap">
-<h2>InterCalc Products</h2>
- 
+        <h2>InterCalc Services</h2>';
 
-</div>';
+//    \icalc\fe\AdminFrontend::serviceConfiguration();
+
+    echo '</div>';
 }
 
 function ic_menu_services_configuration(){
     console_log(\icalc\db\DatabaseInit::init());
 
     echo '<div class="wrap">
-<h2>InterCalc Services</h2>
- 
+        <h2>InterCalc Services</h2>';
 
-</div>';
+    \icalc\fe\AdminFrontend::serviceConfiguration();
+
+    echo '</div>';
 }
 
 function ic_menu_tags_configuration(){
     console_log(\icalc\db\DatabaseInit::init());
 
 
-
     echo '<div class="wrap">
-<h2>InterCalc Tags</h2>';
+        <h2>InterCalc Tags</h2>';
 
     \icalc\fe\AdminFrontend::tagsConfiguration();
 

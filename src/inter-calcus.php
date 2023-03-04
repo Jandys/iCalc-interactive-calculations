@@ -40,4 +40,7 @@ function prefix_enqueue()
     // CSS
     wp_register_style('prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css');
     wp_enqueue_style('prefix_bootstrap');
+
+    wp_enqueue_style('icalc_custom_style',  plugins_url('/styles/icalc-custom-style.css', __FILE__), array(), '0.0.1', false);
+    add_action('wp_enqueue_style', 'icalc_custom_style');
 }

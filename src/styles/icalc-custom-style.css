@@ -1,0 +1,11 @@
+.icalc-service-form-row{
+    padding-top: 5px;
+}
+
+
+.icalc-service-form-row > .col{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+

@@ -32,6 +32,4 @@ class Tag extends BaseDatabaseModel
         $data = array('name' => $name, 'description' => $description);
         return parent::update($data, $id);
     }
-
-
 }

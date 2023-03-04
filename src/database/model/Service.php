@@ -24,7 +24,44 @@ class Service extends BaseDatabaseModel
                   display_type VARCHAR(50) NOT NULL
                 ) {$wpdb->get_charset_collate()};";
 
-        return maybe_create_table( $table_name, $sql );
+        return maybe_create_table($table_name, $sql);
+    }
+
+    public static function insertNew($name,
+                                     $description,
+                                     $price,
+                                     $unit,
+                                     $tag,
+                                     $min_quantity,
+                                     $display_type)
+    {
+        $data = array('name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'unit' => $unit,
+            'tag' => $tag,
+            'min_quantity' => $min_quantity,
+            'display_type' => $display_type);
+        return parent::insert($data);
+    }
+
+    public static function updateById($id,
+                                      $name,
+                                      $description,
+                                      $price,
+                                      $unit,
+                                      $tag,
+                                      $min_quantity,
+                                      $display_type)
+    {
+        $data = array('name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'unit' => $unit,
+            'tag' => $tag,
+            'min_quantity' => $min_quantity,
+            'display_type' => $display_type);
+        return parent::update($data, $id);
     }
 
 }

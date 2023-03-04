@@ -5,9 +5,39 @@
  */
 
 
-add_action( 'rest_api_init', 'iclac_plugin_add_endpoints' );
+add_action( 'rest_api_init', 'iclac_plugin_add_tag_endpoints');
+add_action( 'rest_api_init', 'iclac_plugin_add_service_endpoints');
 
-function iclac_plugin_add_endpoints() {
+
+
+function iclac_plugin_add_service_endpoints() {
+    register_rest_route( ICALC_EP_PREFIX, '/services', array(
+        'methods' => 'POST',
+        'callback' => 'icalc_postService',
+        'permission_callback' => '__return_true'
+    ) );
+
+    register_rest_route( ICALC_EP_PREFIX, '/services', array(
+        'methods' => 'GET',
+        'callback' => 'icalc_getServices',
+        'permission_callback' => '__return_true'
+    ) );
+
+    register_rest_route( ICALC_EP_PREFIX, '/services', array(
+        'methods' => 'PUT',
+        'callback' => 'icalc_putService',
+        'permission_callback' => '__return_true'
+    ) );
+
+
+    register_rest_route( ICALC_EP_PREFIX, '/services', array(
+        'methods' => 'DELETE',
+        'callback' => 'icalc_deleteService',
+        'permission_callback' => '__return_true'
+    ) );
+}
+
+function iclac_plugin_add_tag_endpoints() {
     register_rest_route( ICALC_EP_PREFIX, '/tags', array(
         'methods' => 'POST',
         'callback' => 'icalc_postTag',
@@ -33,6 +63,63 @@ function iclac_plugin_add_endpoints() {
         'permission_callback' => '__return_true'
     ) );
 }
+
+
+
+/**
+ * POST /services
+ */
+function icalc_postService( WP_REST_Request $request  ){
+
+    $data = $request->get_json_params();
+    $name = $data['name'];
+    $desc = $data['description'];
+
+    $succes = \icalc\db\model\Service::insertNew($name,$desc);
+
+    return new WP_REST_Response($succes);
+}
+
+
+/**
+ * PUT /services
+ */
+function icalc_putService( WP_REST_Request $request  ){
+
+    $data = $request->get_json_params();
+    $name = $data['name'];
+    $desc = $data['description'];
+    $id = $data['id'];
+
+    $succes = \icalc\db\model\Service::updateById($id,$name,$desc);
+
+    return new WP_REST_Response($succes);
+}
+
+
+/**
+ * GET /services
+ */
+function icalc_getServices(WP_REST_Request $request){
+    $allServices = \icalc\db\model\Service::get_all();
+
+    return new WP_REST_Response($allServices);
+}
+
+/**
+ * DELETE /services
+ */
+function icalc_deleteService(WP_REST_Request $request){
+    $data = $request->get_json_params();
+    $id = $data['id'];
+
+    $allServices = \icalc\db\model\Service::delete($id);
+
+    return new WP_REST_Response($allServices);
+}
+
+
+
 
 
 /**
