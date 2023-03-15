@@ -53,7 +53,7 @@ function ic_menu_products_configuration(){
     console_log(\icalc\db\DatabaseInit::init());
 
     echo '<div class="wrap">
-        <h2>InterCalc Services</h2>';
+        <h2>InterCalc Products</h2>';
 
 //    \icalc\fe\AdminFrontend::serviceConfiguration();
 
@@ -66,7 +66,7 @@ function ic_menu_services_configuration(){
     echo '<div class="wrap">
         <h2>InterCalc Services</h2>';
 
-    \icalc\fe\AdminFrontend::serviceConfiguration();
+    \icalc\fe\ServiceAdminFrontend::configuration();
 
     echo '</div>';
 }
@@ -78,7 +78,7 @@ function ic_menu_tags_configuration(){
     echo '<div class="wrap">
         <h2>InterCalc Tags</h2>';
 
-    \icalc\fe\AdminFrontend::tagsConfiguration();
+    \icalc\fe\TagAdminFrontend::configuration();
 
     echo '</div>';
 }

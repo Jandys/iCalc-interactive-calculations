@@ -19,9 +19,6 @@ define('ICALC_EP_PREFIX', 'icalc/v1');
 
 require ICALC_PATH . '/loader.php';
 
-add_action('admin_menu', 'icalcPluginConfiguration');
-add_action('admin_menu', 'icalcConfigurableVariablesMenu');
-add_action('admin_init', 'my_configurable_variables_save_options');
 
 
 prefix_enqueue();

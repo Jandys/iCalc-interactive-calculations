@@ -97,19 +97,27 @@ function icalc_process_tag_deletion(id,name){
 }
 
 
-function icalc_process_service_edition(id, name, description){
-    let nameElement = document.getElementById(name);
-    let descriptionElement = document.getElementById(description);
+function icalc_process_service_edition(id, modalId){
 
-    let nameVal = nameElement.value;
-    let descVal = descriptionElement.value;
+    let nameElement = document.getElementById(modalId+'_name_form');
+    let descriptionElement = document.getElementById(modalId+'_desc_form');
+    let priceElement = document.getElementById(modalId+'_price_form');
+    let unitElement = document.getElementById(modalId+'_unit_form');
+    let minQualityElement = document.getElementById(modalId+'_min_quantity_form');
+    let tagElement = document.getElementById(modalId+'_tag_form');
+    let displayTypeElement = document.getElementById(modalId+'_display_type_form');
 
     const xhr = new XMLHttpRequest();
     const url = '/wp-json/icalc/v1/services';
     const data = JSON.stringify({
         id: id,
-        name: nameVal,
-        description: descVal
+        name: nameElement.value,
+        description: descriptionElement.value,
+        price: priceElement.value,
+        unit: unitElement.value,
+        minQuality: minQualityElement.value,
+        tag:tagElement.value,
+        displayType:displayTypeElement.value
     });
 
     xhr.open('PUT', url);
@@ -129,18 +137,26 @@ function icalc_process_service_edition(id, name, description){
     xhr.send(data);
 }
 
-function icalc_process_service_creation( name, description){
-    let nameElement = document.getElementById(name);
-    let descriptionElement = document.getElementById(description);
+function icalc_process_service_creation(modalId){
 
-    let nameVal = nameElement.value;
-    let descVal = descriptionElement.value;
+    let nameElement = document.getElementById(modalId+'_name_form');
+    let descriptionElement = document.getElementById(modalId+'_desc_form');
+    let priceElement = document.getElementById(modalId+'_price_form');
+    let unitElement = document.getElementById(modalId+'_unit_form');
+    let minQualityElement = document.getElementById(modalId+'_min_quantity_form');
+    let tagElement = document.getElementById(modalId+'_tag_form');
+    let displayTypeElement = document.getElementById(modalId+'_display_type_form');
 
     const xhr = new XMLHttpRequest();
     const url = '/wp-json/icalc/v1/services';
     const data = JSON.stringify({
-        name: nameVal,
-        description: descVal
+        name: nameElement.value,
+        description: descriptionElement.value,
+        price: priceElement.value,
+        unit: unitElement.value,
+        minQuality: minQualityElement.value,
+        tag:tagElement.value,
+        displayType:displayTypeElement.value
     });
 
     xhr.open('POST', url);

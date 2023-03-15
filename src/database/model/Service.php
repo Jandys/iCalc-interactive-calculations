@@ -42,6 +42,7 @@ class Service extends BaseDatabaseModel
             'tag' => $tag,
             'min_quantity' => $min_quantity,
             'display_type' => $display_type);
+        Unit::insertNew($unit);
         return parent::insert($data);
     }
 
@@ -61,6 +62,7 @@ class Service extends BaseDatabaseModel
             'tag' => $tag,
             'min_quantity' => $min_quantity,
             'display_type' => $display_type);
+        Unit::insertNew($unit);
         return parent::update($data, $id);
     }
 

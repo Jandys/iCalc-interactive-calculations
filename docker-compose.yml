@@ -9,7 +9,7 @@ services:
   wordpress:
     container_name: wordpress
     image: wordpress
-    restart: always
+#    restart: always
     depends_on:
       - db
     ports:
@@ -29,7 +29,7 @@ services:
   db:
     image: mysql:5.7
     container_name: database
-    restart: always
+#    restart: always
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
