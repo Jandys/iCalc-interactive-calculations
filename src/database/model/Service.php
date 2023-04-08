@@ -21,7 +21,9 @@ class Service extends BaseDatabaseModel
                   unit VARCHAR(50) NOT NULL,
                   tag VARCHAR(255) NOT NULL,
                   min_quantity INT NOT NULL,
-                  display_type VARCHAR(50) NOT NULL
+                  display_type VARCHAR(50) NOT NULL,
+                  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                  modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 ) {$wpdb->get_charset_collate()};";
 
         return maybe_create_table($table_name, $sql);

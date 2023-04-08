@@ -1,4 +1,6 @@
 <?php
+//require dependencies
+require __DIR__ . '/vendor/autoload.php';
 
 if(is_admin()){
     require_once ICALC_PATH . '/configuration/adminBar.php';
@@ -11,3 +13,7 @@ require_once ICALC_PATH . '/util/script-require.php';
 require_once ICALC_PATH . '/database/autoload.php';
 require_once ICALC_PATH . '/controller/controllers.php';
 require_once ICALC_PATH . '/frontend/displayTypes/autoload.php';
+require_once ICALC_PATH . '/controller/icalcJWT.php';
+
+// Hook into the 'plugins_loaded' action to make sure WordPress core functions are available.
+add_action('plugins_loaded', 'generate_site_specific_secret_key');

@@ -1,0 +1,22 @@
+{
+  "name": "vendor_name/src",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Jakub Jandak",
+      "email": "jandak.kuba@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "firebase/php-jwt": "^5.0",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "CustomJwtAuth\\": "src/"
+    }
+  }
+}

@@ -9,6 +9,8 @@ class DatabaseInit
         $service = \icalc\db\model\Service::create_table();
         $tag = \icalc\db\model\Tag::create_table();
         $unit = \icalc\db\model\Unit::create_table();
-        return $product && $service && $tag && $unit;
+        $icalcDesc = \icalc\db\model\IcalculationsDescription::create_table();
+        $icalcs = \icalc\db\model\Icalculations::create_table();
+        return $product && $service && $tag && $unit && $icalcDesc && $icalcs;
     }
 }

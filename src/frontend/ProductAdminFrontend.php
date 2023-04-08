@@ -7,15 +7,14 @@ use icalc\fe\displayTypes\ChooseList;
 use icalc\fe\displayTypes\DisplayTypeManager;
 use function icalc\util\console_log;
 
-class ServiceAdminFrontend extends AbstractAdminFrontend
+class ProductAdminFrontend extends AbstractAdminFrontend
 {
 
     public static function configuration()
     {
-        $tagsEP = ICALC_EP_PREFIX . '/services';
+        $tagsEP = ICALC_EP_PREFIX . '/products';
         $url = get_rest_url(null, $tagsEP);
 
-        console_log($url);
 
         self::setIcalcTokenCookie();
 
@@ -32,8 +31,11 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
 
         $response = wp_remote_get($url, $args);
 
+
         console_log($response);
 
+
+        console_log($response);
 
         $tbody = "";
         $html = "";
@@ -46,7 +48,7 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
 
 
             foreach ($data as $item) {
-                $modalId = "service" . $item->id . "modal";
+                $modalId = "product" . $item->id . "modal";
                 $modalData = [];
                 $modalData["name"] = $item->name;
                 $modalData["desc"] = $item->description;
@@ -71,20 +73,20 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
                         <td>' . $item->tag . '</td>
                         <td>' . $item->display_type . '</td>
                         <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
-                        <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_service_deletion(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
+                        <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_product_deletion(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
                     </tr>';
             }
         } else {
             console_log("ERROR FETCHING");
         }
 
-        $serviceCreationModal = "serviceCreationModal";
+        $productCreationModal = "productCreationModal";
 
-        $html = $html . self::configureCreationModal($serviceCreationModal);
+        $html = $html . self::configureCreationModal($productCreationModal);
         $html = $html . '
     <div class="container pt-5">
         <!-- Additon button -->
-        <span><button class="button mb-2" data-toggle="modal" data-target="#' . $serviceCreationModal . '">+</button> ' . __("Add New Service") . '</span>
+        <span><button class="button mb-2" data-toggle="modal" data-target="#' . $productCreationModal . '">+</button> ' . __("Add New Product") . '</span>
             <!-- Table -->
             <table class="table table-bordered table-striped table-hover col-12">
                 <thead class="thead-dark">
@@ -127,9 +129,9 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
                               <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body p-5">
-                              <h4 class="modal-title">' . __("Edit Service") . '</h4>
+                              <h4 class="modal-title">' . __("Edit Product") . '</h4>
                               <form id="' . $modalId . '_form">
-                              <div class="form-row icalc-service-form-row">
+                              <div class="form-row icalc-product-form-row">
                                 <div class="col">
                                   <label for="' . $modalId . '_id_form">' . __("ID") . '</label>
                                   <input id="' . $modalId . '_id_form" type="text" class="form-control" value="' . $id . '" readonly>
@@ -175,7 +177,7 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
                             <div class="modal-footer">
                             
                               <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">' . __("Close") . '</button>
-                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="icalc_process_service_edition(\'' . $id . '\',\'' . $modalId . '\')">' . __("Edit") . '</button>
+                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="icalc_process_product_edition(\'' . $id . '\',\'' . $modalId . '\')">' . __("Edit") . '</button>
                             </div>
                           </div>
                         </div>
@@ -195,32 +197,32 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
                               <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body p-5">
-                              <h4 class="modal-title">' . __("Create New Service") . '</h4>
+                              <h4 class="modal-title">' . __("Create New Product") . '</h4>
                               <form id="' . $modalId . '_form">
-                              <div class="form-row icalc-service-form-row">
+                              <div class="form-row icalc-product-form-row">
                                 <div class="col">
                                   <label for="' . $modalId . '_name_form">' . __("Name") . '</label>
-                                  <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="' . __("Service Name") . '">
+                                  <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="' . __("Product Name") . '">
                                 </div>
                                  <div class="col">
                                   <label for="' . $modalId . '_desc_form">' . __("Description") . '</label>
-                                  <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __("Service Description") . '" >
+                                  <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __("Product Description") . '" >
                                 </div>
                                 <div class="col">
                                   <label for="' . $modalId . '_price_form">' . __("Price") . '</label>
-                                  <input id="' . $modalId . '_price_form" type="number" class="form-control" placeholder="' . __("Service Price") . '" >
+                                  <input id="' . $modalId . '_price_form" type="number" class="form-control" placeholder="' . __("Product Price") . '" >
                                 </div>
                                 <div class="col">
                                   <label for="' . $modalId . '_unit_form">' . __("Unit") . '</label>
-                                  <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __("Service Unit") . '" >
+                                  <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __("Product Unit") . '" >
                                 </div>
                                 <div class="col">
                                   <label for="' . $modalId . '_min_quantity_form">' . __("Minimal Quantity") . '</label>
-                                  <input id="' . $modalId . '_min_quantity_form" type="number" class="form-control" placeholder="' . __("Service Minimal Quantity") . '" >
+                                  <input id="' . $modalId . '_min_quantity_form" type="number" class="form-control" placeholder="' . __("Product Minimal Quantity") . '" >
                                 </div>
                                  <div class="col">
                                   <label for="' . $modalId . '_tag_form">' . __("Tag") . '</label>
-                                  <input id="' . $modalId . '_tag_form" type="text" class="form-control" placeholder="' . __("Service Tag") . '" >
+                                  <input id="' . $modalId . '_tag_form" type="text" class="form-control" placeholder="' . __("Product Tag") . '" >
                                 </div> 
                                  <div class="col">
                                   <label for="' . $modalId . '_display_type_form">' . __("Display Type") . '</label>
@@ -235,7 +237,7 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">' . __("Close") . '</button>
-                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="icalc_process_service_creation(\'' . $modalId . '\')">' . __("Save") . '</button>
+                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="icalc_process_product_creation(\'' . $modalId . '\')">' . __("Save") . '</button>
                             </div>
                           </div>
                         </div>

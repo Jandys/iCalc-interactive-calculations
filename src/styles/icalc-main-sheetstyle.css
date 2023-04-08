@@ -1,0 +1,158 @@
+#icalc-left-bar {
+    width: 20%;
+    height: 100vh;
+    background-color: lightgray;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 20px;
+    border-radius: 20px 0 0 20px;
+}
+
+.icalc-draggable {
+    width: 100px;
+    height: 100px;
+    background-color: royalblue;
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    cursor: grab;
+}
+
+#icalc-dashboard {
+    width: 80%;
+    height: 100vh;
+    background-color: whitesmoke;
+    position: absolute;
+    right: 0;
+    padding: 20px;
+    border-radius: 0 20px 20px 0;
+    margin-right: 20px;
+}
+
+.icalc-dashboard-item {
+    position: relative;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.icalc-dashboard-item:hover .icalc-move-controls {
+    display: flex;
+}
+
+.icalc-move-controls {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 5px;
+    width: 20px;
+    margin-left: 10px;
+}
+
+.icalc-move-controls button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+
+/* /////////////// dashboard styles end*/
+
+.icalc-main-wrapper{
+    position: relative;
+}
+
+.content-div {
+    float: left;
+    width: 90%;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    transition: all 1s ease-in-out;
+}
+
+.visible {
+    background-color: gray;
+    opacity: 0;
+    visibility: visible;
+    z-index: 2;
+    animation: comeout 1s 0.5s ease-in-out forwards;
+}
+
+.display-none{
+    display: none;
+}
+
+@keyframes comeout {
+    0%{
+        scale: 0;
+        opacity: 0;
+
+    }
+    100%{
+        scale: 100%;
+        opacity: 1;
+    }
+}
+
+.icalc-hidden-slow {
+    z-index: 1;
+    animation: hideout 1s ease-in-out forwards;
+}
+
+@keyframes hideout {
+    0%{
+        scale: 100%;
+        opacity: 1;
+    }
+    100%{
+        scale: 0;
+        opacity: 1;
+    }
+}
+
+button.icalc-toggle-creation {
+    position: static;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    width: fit-content;
+    height: auto;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.icalc-toggle-creation:hover {
+    background-color: #0056b3;
+}
+
+.icalc-reappear{
+    animation: reappearButton 1s forwards ease-in-out ;
+}
+
+@keyframes reapperButton {
+    0%{
+        opacity: 100;
+    }
+    50%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 100;
+    }
+}

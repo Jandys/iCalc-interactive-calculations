@@ -20,8 +20,9 @@ define('ICALC_EP_PREFIX', 'icalc/v1');
 require ICALC_PATH . '/loader.php';
 
 
-
 prefix_enqueue();
+add_action( 'plugins_loaded', 'icalc_load_textdomain' );
+
 
 function prefix_enqueue()
 {
@@ -40,4 +41,9 @@ function prefix_enqueue()
 
     wp_enqueue_style('icalc_custom_style',  plugins_url('/styles/icalc-custom-style.css', __FILE__), array(), '0.0.1', false);
     add_action('wp_enqueue_style', 'icalc_custom_style');
+}
+
+
+function icalc_load_textdomain() {
+    load_plugin_textdomain( 'icalc', false, plugins_url('/localization',__DIR__) );
 }
