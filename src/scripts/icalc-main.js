@@ -20,9 +20,21 @@ dashboard.addEventListener('dragover', e => {
 
 dashboard.addEventListener('drop', e => {
     e.preventDefault();
+    console.log("Data drop:");
     const id = e.dataTransfer.getData('text/plain');
+    console.log("dropped: " + id);
     const draggedComponent = document.getElementById(id);
-    const cloneComponent = draggedComponent.cloneNode(true);
+    console.log("Element = " + draggedComponent);
+    const viableComponentId = draggedComponent.getAttribute('data-component');
+    const viableComponent = document.getElementById(viableComponentId);
+
+    const cloneComponent = viableComponent.cloneNode(true);
+    cloneComponent.classList.remove("hidden");
+    let nextId = Number(viableComponent.getAttribute("data-next-id"));
+    cloneComponent.id = cloneComponent.id + nextId;
+
+    nextId++;
+    viableComponent.setAttribute("data-next-id", nextId);
 
     const dashboardItem = document.createElement('div');
     dashboardItem.classList.add('icalc-dashboard-item');
@@ -67,6 +79,28 @@ function moveComponent(dashboardItem, direction) {
         }
     }
 }
+
+// loaders
+document.addEventListener('DOMContentLoaded', () => {
+    const dashboradProducts = document.getElementById('icalc-dashboard-products');
+
+    const input = document.createElement('input');
+    const datalist = document.createElement('datalist');
+    datalist.id = "productDatalist";
+
+    console.log('GETTING PRODUCTS');
+
+    let products = icalc_getAllProducts();
+    console.log(products)
+
+
+    input.type = "text";
+    input.id = "productsInput";
+    input.name = "products";
+    input.list = datalist;
+
+
+})
 
 
 // DAHSBOARD LOGIC END /////////

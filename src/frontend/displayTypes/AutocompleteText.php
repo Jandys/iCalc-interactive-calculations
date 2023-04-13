@@ -14,7 +14,7 @@ class AutocompleteText extends DisplayType
         $this->id = $id;
     }
 
-    public function render()
+    public function render() :string
     {
         requireAutocomplete();
 

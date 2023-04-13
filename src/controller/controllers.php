@@ -5,6 +5,8 @@
  */
 
 
+use function icalc\util\getPossibleCookieValue;
+
 add_action('rest_api_init', 'icalc_plugin_add_tag_endpoints');
 add_action('rest_api_init', 'icalc_plugin_add_service_endpoints');
 add_action('rest_api_init', 'icalc_plugin_add_product_endpoints');
@@ -84,7 +86,7 @@ function icalc_plugin_add_icalculation_descriptions_endpoints()
 /**
  * POST /products
  */
-function icalc_postIcalculationDescription(WP_REST_Request $request)
+function icalc_getIcalculationDescriptions(WP_REST_Request $request)
 {
     $validated = validate_icalc_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
@@ -94,20 +96,9 @@ function icalc_postIcalculationDescription(WP_REST_Request $request)
     if(!$validated){
         return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
     }
-    
-    $data = $request->get_json_params();
-    $name = $data['name'];
-    $desc = $data['description'];
-    $price = $data['price'];
-    $unit = $data['unit'];
-    $minQuality = $data['minQuality'];
-    $tag = $data['tag'];
-    $displayType = $data['displayType'];
 
-    $succes = \icalc\db\model\Product::insertNew($name, $desc, $price, $unit, $tag, $minQuality, $displayType);
-
-    return new WP_REST_Response($succes);
-
+    $allDescriptions = \icalc\db\model\IcalculationsDescription::get_all();
+    return new WP_REST_Response($allDescriptions);
 }
 
 
@@ -514,6 +505,10 @@ function validate_icalc_jwt_token(WP_REST_Request $request) {
     $user = $request->get_header('user');
     $session = $request->get_header('session');
     $token = $request->get_header('icalc-token');
+
+    if(empty($token)){
+        $token = getPossibleCookieValue($request,'icalc-token');
+    }
 
     return validate_jwt_token($token,$user,$session);
 }

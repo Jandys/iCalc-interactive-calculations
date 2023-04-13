@@ -12,70 +12,43 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
 
     public static function configuration()
     {
-        $tagsEP = ICALC_EP_PREFIX . '/services';
-        $url = get_rest_url(null, $tagsEP);
+        self::populateIcalcJSData();
 
-        console_log($url);
+        $data = self::callGetOnEPWithAuthCookie('/services');
 
-        self::setIcalcTokenCookie();
-
-        $headers = array(
-            'Content-Type' => 'application/json',
-            'user' => wp_get_current_user()->ID,
-            'session' => wp_get_session_token(),
-            'icalc-token' => $_COOKIE['icalc-token']
-        );
-
-        $args = array(
-            'headers' => $headers
-        );;
-
-        $response = wp_remote_get($url, $args);
-
-        console_log($response);
-
-
+        if(is_null($data)) {
+            error_log("ERROR Fetching data from API");
+        }
         $tbody = "";
         $html = "";
-        if (is_array($response)) {
-            console_log("DATA RECIEVED");
-            $body = wp_remote_retrieve_body($response);
-            console_log($body);
-            $data = json_decode($body);
-            console_log($data);
+        foreach ($data as $item) {
+            $modalId = "service" . $item->id . "modal";
+            $modalData = [];
+            $modalData["name"] = $item->name;
+            $modalData["desc"] = $item->description;
+            $modalData["price"] = $item->price;
+            $modalData["unit"] = $item->unit;
+            $modalData["min_quantity"] = $item->min_quantity;
+            $modalData["tag"] = $item->tag;
+            $modalData["display_type"] = $item->display_type;
 
 
-            foreach ($data as $item) {
-                $modalId = "service" . $item->id . "modal";
-                $modalData = [];
-                $modalData["name"] = $item->name;
-                $modalData["desc"] = $item->description;
-                $modalData["price"] = $item->price;
-                $modalData["unit"] = $item->unit;
-                $modalData["min_quantity"] = $item->min_quantity;
-                $modalData["tag"] = $item->tag;
-                $modalData["display_type"] = $item->display_type;
+            $html = $html . self::configuredModalEdit($modalId, $item->id, $modalData);
 
 
-                $html = $html . self::configuredModalEdit($modalId, $item->id, $modalData);
-
-
-                $tbody = $tbody . '
-                <tr>
-                        <td>' . $item->id . '</td>
-                        <td>' . $item->name . '</td>
-                        <td>' . $item->description . '</td>
-                        <td>' . $item->price . '</td>
-                        <td>' . $item->unit . '</td>
-                        <td>' . $item->min_quantity . '</td>
-                        <td>' . $item->tag . '</td>
-                        <td>' . $item->display_type . '</td>
-                        <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
-                        <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_service_deletion(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
-                    </tr>';
-            }
-        } else {
-            console_log("ERROR FETCHING");
+            $tbody = $tbody . '
+            <tr>
+                    <td>' . $item->id . '</td>
+                    <td>' . $item->name . '</td>
+                    <td>' . $item->description . '</td>
+                    <td>' . $item->price . '</td>
+                    <td>' . $item->unit . '</td>
+                    <td>' . $item->min_quantity . '</td>
+                    <td>' . $item->tag . '</td>
+                    <td>' . $item->display_type . '</td>
+                    <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
+                    <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_service_deletion(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
+                </tr>';
         }
 
         $serviceCreationModal = "serviceCreationModal";

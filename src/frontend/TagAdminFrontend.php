@@ -9,59 +9,36 @@ class TagAdminFrontend extends AbstractAdminFrontend
 
     public static function configuration()
     {
-        $tagsEP = ICALC_EP_PREFIX . '/tags';
-        $url = get_rest_url(null, $tagsEP);
+        self::populateIcalcJSData();
 
+        $data = self::callGetOnEPWithAuthCookie('/tags');
 
-        self::setIcalcTokenCookie();
-
-        $headers = array(
-            'Content-Type' => 'application/json',
-            'user' => wp_get_current_user()->ID,
-            'session' => wp_get_session_token(),
-            'icalc-token' => $_COOKIE['icalc-token']
-        );
-
-        $args = array(
-            'headers' => $headers
-        );;
-
-        $response = wp_remote_get($url, $args);
-
-
+        if(is_null($data)) {
+            error_log("ERROR Fetching data from API");
+        }
 
         $tbody = "";
         $html = "";
 
-        console_log($response);
-        if (is_array($response)) {
-            $body = wp_remote_retrieve_body($response);
-            console_log($body);
-            $data = json_decode($body);
-            console_log($data);
+
+        foreach ($data as $item) {
+            $modalId = "tag" . $item->id . "modal";
+
+            $modalData = [];
+            $modalData["name"] = $item->name;
+            $modalData["desc"] = $item->description;
+
+            $html = $html . self::configuredModalEdit( $modalId, $item->id, $modalData,);
 
 
-            foreach ($data as $item) {
-                $modalId = "tag" . $item->id . "modal";
-
-                $modalData = [];
-                $modalData["name"] = $item->name;
-                $modalData["desc"] = $item->description;
-
-                $html = $html . self::configuredModalEdit( $modalId, $item->id, $modalData,);
-
-
-                $tbody = $tbody . '
-                <tr>
-                        <td>' . $item->id . '</td>
-                        <td>' . $item->name . '</td>
-                        <td>' . $item->description . '</td>
-                        <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
-                        <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_tag_deletion(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
-                    </tr>';
-            }
-        } else {
-            console_log(__("Error Fetching"));
+            $tbody = $tbody . '
+            <tr>
+                    <td>' . $item->id . '</td>
+                    <td>' . $item->name . '</td>
+                    <td>' . $item->description . '</td>
+                    <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
+                    <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_tag_deletion(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
+                </tr>';
         }
 
         $html = $html . self::configureCreationModal("tagCreationModal");

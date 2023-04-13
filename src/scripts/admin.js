@@ -15,12 +15,14 @@ function icalc_process_tag_edition(id, name, description){
 
     xhr.open('PUT', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
     xhr.withCredentials = true;
 
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState === XMLHttpRequest.DONE) {
-            if(xhr.status === 200) {
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
                 console.log('Data successfully updated:', xhr.responseText);
                 location.reload();
             } else {
@@ -47,12 +49,14 @@ function icalc_process_tag_creation( name, description){
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
     xhr.withCredentials = true;
 
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState === XMLHttpRequest.DONE) {
-            if(xhr.status === 200) {
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
                 console.log('Data successfully updated:', xhr.responseText);
                 location.reload();
             } else {
@@ -76,12 +80,14 @@ function icalc_process_tag_deletion(id,name){
 
         xhr.open('DELETE', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
+        xhr.setRequestHeader('user', icalcApiSettings.user);
+        xhr.setRequestHeader('session', icalcApiSettings.session);
+    
         xhr.withCredentials = true;
 
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState === XMLHttpRequest.DONE) {
-                if(xhr.status === 200) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
                     console.log('Data successfully updated:', xhr.responseText);
                     location.reload();
                 } else {
@@ -120,18 +126,20 @@ function icalc_process_service_edition(id, modalId){
         price: priceElement.value,
         unit: unitElement.value,
         minQuality: minQualityElement.value,
-        tag:tagElement.value,
-        displayType:displayTypeElement.value
+        tag: tagElement.value,
+        displayType: displayTypeElement.value
     });
 
     xhr.open('PUT', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
     xhr.withCredentials = true;
 
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState === XMLHttpRequest.DONE) {
-            if(xhr.status === 200) {
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
                 console.log('Data successfully updated:', xhr.responseText);
                 location.reload();
             } else {
@@ -160,18 +168,20 @@ function icalc_process_service_creation(modalId){
         price: priceElement.value,
         unit: unitElement.value,
         minQuality: minQualityElement.value,
-        tag:tagElement.value,
-        displayType:displayTypeElement.value
+        tag: tagElement.value,
+        displayType: displayTypeElement.value
     });
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
     xhr.withCredentials = true;
 
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState === XMLHttpRequest.DONE) {
-            if(xhr.status === 200) {
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
                 console.log('Data successfully updated:', xhr.responseText);
                 location.reload();
             } else {
@@ -195,12 +205,14 @@ function icalc_process_service_deletion(id,name){
 
         xhr.open('DELETE', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
+        xhr.setRequestHeader('user', icalcApiSettings.user);
+        xhr.setRequestHeader('session', icalcApiSettings.session);
+    
         xhr.withCredentials = true;
 
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState === XMLHttpRequest.DONE) {
-                if(xhr.status === 200) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
                     console.log('Data successfully updated:', xhr.responseText);
                     location.reload();
                 } else {
@@ -238,18 +250,20 @@ function icalc_process_product_edition(id, modalId){
         price: priceElement.value,
         unit: unitElement.value,
         minQuality: minQualityElement.value,
-        tag:tagElement.value,
-        displayType:displayTypeElement.value
+        tag: tagElement.value,
+        displayType: displayTypeElement.value
     });
 
     xhr.open('PUT', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
     xhr.withCredentials = true;
 
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState === XMLHttpRequest.DONE) {
-            if(xhr.status === 200) {
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
                 console.log('Data successfully updated:', xhr.responseText);
                 location.reload();
             } else {
@@ -278,18 +292,20 @@ function icalc_process_product_creation(modalId){
         price: priceElement.value,
         unit: unitElement.value,
         minQuality: minQualityElement.value,
-        tag:tagElement.value,
-        displayType:displayTypeElement.value
+        tag: tagElement.value,
+        displayType: displayTypeElement.value
     });
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
     xhr.withCredentials = true;
 
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState === XMLHttpRequest.DONE) {
-            if(xhr.status === 200) {
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
                 console.log('Data successfully updated:', xhr.responseText);
                 location.reload();
             } else {
@@ -313,12 +329,14 @@ function icalc_process_product_deletion(id,name){
 
         xhr.open('DELETE', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
+        xhr.setRequestHeader('user', icalcApiSettings.user);
+        xhr.setRequestHeader('session', icalcApiSettings.session);
+    
         xhr.withCredentials = true;
 
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState === XMLHttpRequest.DONE) {
-                if(xhr.status === 200) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
                     console.log('Data successfully updated:', xhr.responseText);
                     location.reload();
                 } else {
@@ -337,3 +355,67 @@ function icalc_process_product_deletion(id,name){
 
 }
 
+var icalcApiSettings = {};
+
+function populateIcalcSettings(user, session) {
+    icalcApiSettings.user = user;
+    icalcApiSettings.session = session;
+}
+
+
+
+
+
+
+function icalc_getAllProducts(){
+    const xhr = new XMLHttpRequest();
+    const url = '/wp-json/icalc/v1/produts';
+
+
+    xhr.open('GET', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
+    xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                console.log('Data successfully updated:', xhr.responseText);
+                return xhr.response;
+            } else {
+                console.log('Error updating data:', xhr.status);
+            }
+        }
+    };
+
+    xhr.send(data);
+}
+
+
+function icalc_getAllServices(){
+    const xhr = new XMLHttpRequest();
+    const url = '/wp-json/icalc/v1/services';
+
+
+    xhr.open('GET', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
+    xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                console.log('Data successfully updated:', xhr.responseText);
+                return xhr.response;
+            } else {
+                console.log('Error updating data:', xhr.status);
+            }
+        }
+    };
+
+    xhr.send(data);
+}

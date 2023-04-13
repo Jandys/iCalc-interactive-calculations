@@ -23,7 +23,7 @@ class ChooseList extends DisplayType
         $this->default = $default;
     }
 
-    function render()
+    function render() :string
     {
 
         $multiple = $this->is_multiple ? ' multiple ' : ' ';

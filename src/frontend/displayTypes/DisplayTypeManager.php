@@ -10,7 +10,8 @@ class DisplayTypeManager
       "number"=>Number::class,
       "test"=>Text::class,
       "slider"=>Slider::class,
-      "list"=>ChooseList::class
+      "list"=>ChooseList::class,
+      "label"=>Label::class
     );
 
     public static function getAllDisplayTypes(): array

@@ -11,5 +11,5 @@ abstract class DisplayType
     }
 
 
-    abstract public function render();
+    abstract public function render() :string;
 }

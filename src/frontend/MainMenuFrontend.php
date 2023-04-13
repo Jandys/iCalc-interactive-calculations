@@ -3,31 +3,44 @@
 namespace icalc\fe;
 
 
+use icalc\fe\displayTypes\ChooseList;
+
 class MainMenuFrontend extends AbstractAdminFrontend
 {
 
+//       $numberInput = new Number("icalc-numbar","Label input:","Nameee",0,2000,1,10);
+//        $myChoseList = new ChooseList("icalc-list","MyName","icalc-test-class",["opt1"=>"test","opt2"=>"value"],"opt2");
+
     public static function configuration()
     {
+        self::populateIcalcJSData();
+        $calculationsDescriptionsAdminFrontend = new CalculationsDescriptionsAdminFrontend();
+
+        echo self::draggableConfiguration();
 
         echo '
             <div class="d-flex flex-column icalc-main-wrapper">
-                 <button id="toggleBtn" class="icalc-toggle-creation col-2 icalc-reappear" data-toggled-text="'.__("Edit Calculations").'">'.__("Create New Calculation").'</button>
+                 <button id="toggleBtn" class="icalc-toggle-creation col-2 icalc-reappear" data-toggled-text="' . __("Edit Calculations") . '">' . __("Create New Calculation") . '</button>
                     <div id="firstDiv" class="content-div visible">
-                    <h1>Edit Calculations</h1>
+                    <h1>' . __("Edit Calculations") . '</h1>
+                    ' .
+            $calculationsDescriptionsAdminFrontend::configuration()
+            . '
                 </div>
                 <div id="secondDiv" class="content-div icalc-hidden-slow display-none">
-                    <h1>Create new Calculation</h1>
+                    <h1>' . __("Create New Calculation") . '</h1>
                     <div class="d-flex">
                       <div id="icalc-left-bar">
-                          <div class="icalc-draggable" draggable="true" id="component1">Component 1</div>
-                          <div class="icalc-draggable" draggable="true" id="component2">Component 2</div>
-                          <div class="icalc-draggable" draggable="true" id="component3">Component 3</div>
+                      ' .
+            self::getAllDraggableComponents()
+            . '
+                      
                       </div>
                       <div id="icalc-dashboard"></div>
                     </div>
                 </div>
                  <div id="thirdDiv" class="content-div icalc-hidden-slow display-none">
-                    <h1>Edist specific calculation</h1>
+                    <h1>' . __("Edit Specific Calculation") . '</h1>
                     <ul>
                         
                     </ul>
@@ -39,94 +52,83 @@ class MainMenuFrontend extends AbstractAdminFrontend
     }
 
 
-    public static function configurationOfEditCalculations(){
-        $tagsEP = ICALC_EP_PREFIX . '/icalculations';
-        $url = get_rest_url(null, $tagsEP);
-
-        console_log($url);
-        $response = wp_remote_get($url);
-
-
-        console_log($response);
-
-        $tbody = "";
-        $html = "";
-        if (is_array($response)) {
-            console_log("DATA RECIEVED");
-            $body = wp_remote_retrieve_body($response);
-            console_log($body);
-            $data = json_decode($body);
-            console_log($data);
-
-
-            foreach ($data as $item) {
-                $modalId = "product" . $item->id . "modal";
-                $modalData = [];
-                $modalData["name"] = $item->name;
-                $modalData["desc"] = $item->description;
-                $modalData["price"] = $item->price;
-                $modalData["unit"] = $item->unit;
-                $modalData["min_quantity"] = $item->min_quantity;
-                $modalData["tag"] = $item->tag;
-                $modalData["display_type"] = $item->display_type;
-
-
-                $html = $html . self::configuredModalEdit($modalId, $item->id, $modalData);
-
-
-                $tbody = $tbody . '
-                <tr>
-                        <td>' . $item->id . '</td>
-                        <td>' . $item->name . '</td>
-                        <td>' . $item->description . '</td>
-                        <td>' . $item->price . '</td>
-                        <td>' . $item->unit . '</td>
-                        <td>' . $item->min_quantity . '</td>
-                        <td>' . $item->tag . '</td>
-                        <td>' . $item->display_type . '</td>
-                        <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
-                        <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_product_deletion(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
-                    </tr>';
-            }
-        } else {
-            console_log("ERROR FETCHING");
-        }
-
-        $productCreationModal = "productCreationModal";
-
-        $html = $html . self::configureCreationModal($productCreationModal);
-        $html = $html . '
-    <div class="container pt-5">
-        <!-- Additon button -->
-        <span><button class="button mb-2" data-toggle="modal" data-target="#' . $productCreationModal . '">+</button> '.__("Add New Product").'</span>
-            <!-- Table -->
-            <table class="table table-bordered table-striped table-hover col-12">
-                <thead class="thead-dark">
-                    <tr class="col-12">
-                        <th class="p-2 m-2">'.__("ID").'</th>
-                        <th class="p-2 m-2">'.__("Name").'</th>
-                        <th class="p-2 m-2">'.__("Description").'</th>
-                        <th class="p-2 m-2">'.__("Price").'</th>
-                        <th class="p-2 m-2">'.__("Unit").'</th>
-                        <th class="p-2 m-2">'.__("Minimal Quantity").'</th>
-                        <th class="p-2 m-2">'.__("Tag").'</th>
-                        <th class="p-2 m-2">'.__("Display Type").'</th>
-                        <th class="col-1"></th>
-                        <th class="col-1"></th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                ' . $tbody . '
-                </tbody>
-            </table>
-        <!-- Pagination -->
-        <div class="wp-block-navigation">
-            <!-- Add pagination links here -->
-        </div>
-    </div>';
-
-        echo $html;
+    static function getAllDraggableComponents(): string
+    {
+        $dragables = self::getDraggableProduct();
+        $dragables = $dragables . self::getDraggableService();
+        $dragables = $dragables . self::getDraggableDisplayType();
+        return $dragables . self::getDraggableComponent();
     }
 
 
+    static function getDraggableProduct(): string
+    {
+        return '<div class="icalc-draggable" draggable="true" id="draggableProduct" data-component="product-component" data-next-id="1">' . __("Product") . '</div>';
+    }
+
+    static function getDraggableService(): string
+    {
+        return '<div class="icalc-draggable" draggable="true" id="draggableService" data-component="service-component" data-next-id="1">' . __("Service") . '</div>';
+    }
+
+    static function getDraggableDisplayType(): string
+    {
+        return '<div class="icalc-draggable" draggable="true" id="draggableDisplayType" data-component="display-component" data-next-id="1">' . __("Generic Display Type") . '</div>';
+    }
+
+    static function getDraggableComponent(): string
+    {
+        return '<div class="icalc-draggable" draggable="true" id="draggableComponent" data-component="component-component" data-next-id="1">' . __("Generic Component") . '</div>';
+    }
+
+
+    static function draggableConfiguration()
+    {
+//        $products = self::callGetOnEPWithAuthCookie('/products');
+        $services = self::callGetOnEPWithAuthCookie('/services');
+
+//        $productNamesWithID = array_map('\icalc\fe\MainMenuFrontend::generateIdAndName', $products);
+//        $productNames = array_column($productNamesWithID, 'name');
+//        $productNames = array_combine(array_column($productNamesWithID, 'id'), $productNames);
+//
+        $serviceNamesWithID = array_map('\icalc\fe\MainMenuFrontend::generateIdAndName', $services);
+        $serviceNames = array_column($serviceNamesWithID, 'name');
+        $serviceNames = array_combine(array_column($serviceNamesWithID, 'id'), $serviceNames);
+//
+//
+//        $productChooseList = new ChooseList('productChooseList','productChooseList','icalc-component-chooselist',$productNames);
+        $serviceChooseList = new ChooseList('serviceChooseList','serviceChooseList','icalc-component-chooselist',$serviceNames);
+
+
+
+        $returnDiv = '<div id="product-component" class="icalc-draggable-option hidden" draggable="true">
+                        <h3>'.__("Product Component").'</h3>
+                        <div id="icalc-dashboard-products" class="icalc-choose-list"></div>                      
+                      </div>';
+//
+//                            $productChooseList->render()
+
+        $returnDiv = $returnDiv . '<div id="service-component" class="icalc-draggable-option hidden" draggable="true"> 
+                                <h3>'.__("Service Component").'</h3>
+
+            '.
+            $serviceChooseList->render()
+            .'</div>';
+        $returnDiv = $returnDiv . '<div id="display-component" class="icalc-draggable-option hidden" draggable="true">Totally Different option</div>';
+        $returnDiv = $returnDiv . '<div id="component-component" class="icalc-draggable-option hidden" draggable="true">Totally Different option</div>';
+
+
+        return $returnDiv;
+    }
+
+
+    static function generateIdAndName($product): array
+    {
+        return array('id' => $product->id,  'name' => $product->name);
+    }
+
+
+
+
 }
+

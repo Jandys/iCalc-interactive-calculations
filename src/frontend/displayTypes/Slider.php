@@ -5,8 +5,9 @@ namespace icalc\fe\displayTypes;
 class Slider extends DisplayType
 {
 
-    function render()
+    function render() :string
     {
         // TODO: Implement render() method.
+        return "";
     }
 }

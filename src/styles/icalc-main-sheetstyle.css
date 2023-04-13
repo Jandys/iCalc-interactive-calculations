@@ -47,10 +47,10 @@
 .icalc-move-controls {
     display: none;
     background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
-    padding: 5px;
-    width: 20px;
-    margin-left: 10px;
+    border-radius: 1px;
+    padding: 8px;
+    width: 30px;
+    margin-left: -10px;
 }
 
 .icalc-move-controls button {
@@ -63,6 +63,11 @@
     font-size: 14px;
 }
 
+.icalc-draggable-option{
+    border: 1px solid #0b0b0b;
+    border-radius: 5px;
+    box-shadow: #0d7fad 5px 3px 5px;
+}
 
 
 /* /////////////// dashboard styles end*/
@@ -81,7 +86,6 @@
 }
 
 .visible {
-    background-color: gray;
     opacity: 0;
     visibility: visible;
     z-index: 2;

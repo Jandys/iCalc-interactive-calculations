@@ -16,6 +16,9 @@ function generate_site_specific_secret_key()
 // Issue a new JWT token
 function issue_jwt_token($user_id, $session): string
 {
+
+    error_log("ASSSKING FOR JWT COOKIE");
+
     $issued_at = time();
     $expiration_time = $issued_at + (60 * 60); // Token valid for 1 hour
 
