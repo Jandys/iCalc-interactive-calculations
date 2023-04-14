@@ -29,15 +29,17 @@ class MainMenuFrontend extends AbstractAdminFrontend
                 </div>
                 <div id="secondDiv" class="content-div icalc-hidden-slow display-none">
                     <h1>' . __("Create New Calculation") . '</h1>
-                    <div class="d-flex">
-                      <div id="icalc-left-bar">
+                    <div class="d-flex flex-row">
+                      <div id="icalc-left-bar" class="col-3">
                       ' .
             self::getAllDraggableComponents()
             . '
                       
                       </div>
-                      <div id="icalc-dashboard"></div>
-                    </div>
+                      <div id="icalc-dashboard" class="col-6 d-flex flex-column"></div>
+                      <div id="icalc-preview" class="col-3 icalc-preview-box"></div>
+                      </div>
+                      
                 </div>
                  <div id="thirdDiv" class="content-div icalc-hidden-slow display-none">
                     <h1>' . __("Edit Specific Calculation") . '</h1>
@@ -103,7 +105,7 @@ class MainMenuFrontend extends AbstractAdminFrontend
 
         $returnDiv = '<div id="product-component" class="icalc-draggable-option hidden" draggable="true">
                         <h3>'.__("Product Component").'</h3>
-                        <div id="icalc-dashboard-products" class="icalc-choose-list"></div>                      
+                        <div id="icalc-dashboard-products" class="icalc-choose-list"></div>     
                       </div>';
 //
 //                            $productChooseList->render()

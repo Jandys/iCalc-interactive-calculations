@@ -369,7 +369,7 @@ function populateIcalcSettings(user, session) {
 
 function icalc_getAllProducts(){
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/icalc/v1/produts';
+    const url = '/wp-json/icalc/v1/products';
 
 
     xhr.open('GET', url);
@@ -379,18 +379,7 @@ function icalc_getAllProducts(){
 
     xhr.withCredentials = true;
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                console.log('Data successfully updated:', xhr.responseText);
-                return xhr.response;
-            } else {
-                console.log('Error updating data:', xhr.status);
-            }
-        }
-    };
-
-    xhr.send(data);
+    return xhr;
 }
 
 
@@ -417,5 +406,5 @@ function icalc_getAllServices(){
         }
     };
 
-    xhr.send(data);
+    xhr.send();
 }

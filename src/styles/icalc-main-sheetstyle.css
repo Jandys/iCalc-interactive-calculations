@@ -1,11 +1,7 @@
 #icalc-left-bar {
-    width: 20%;
     height: 100vh;
     background-color: lightgray;
-    display: flex;
-    flex-direction: column;
     justify-content: space-evenly;
-    padding: 20px;
     border-radius: 20px 0 0 20px;
 }
 
@@ -23,15 +19,17 @@
 }
 
 #icalc-dashboard {
-    width: 80%;
     height: 100vh;
     background-color: whitesmoke;
-    position: absolute;
-    right: 0;
-    padding: 20px;
-    border-radius: 0 20px 20px 0;
-    margin-right: 20px;
 }
+
+#icalc-preview{
+    background-color: whitesmoke;
+
+    border-left: #0b0b0b 1px solid;
+}
+
+
 
 .icalc-dashboard-item {
     position: relative;
@@ -67,6 +65,15 @@
     border: 1px solid #0b0b0b;
     border-radius: 5px;
     box-shadow: #0d7fad 5px 3px 5px;
+    overflow-block: auto;
+}
+
+.icalc-product-div{
+    overflow-block: auto;
+}
+
+.icalc-preview-box:after{
+    content: "Preview:";
 }
 
 
