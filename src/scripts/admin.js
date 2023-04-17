@@ -395,16 +395,5 @@ function icalc_getAllServices(){
 
     xhr.withCredentials = true;
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                console.log('Data successfully updated:', xhr.responseText);
-                return xhr.response;
-            } else {
-                console.log('Error updating data:', xhr.status);
-            }
-        }
-    };
-
-    xhr.send();
+    return xhr;
 }

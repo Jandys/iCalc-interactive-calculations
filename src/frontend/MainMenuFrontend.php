@@ -28,7 +28,8 @@ class MainMenuFrontend extends AbstractAdminFrontend
             . '
                 </div>
                 <div id="secondDiv" class="content-div icalc-hidden-slow display-none">
-                    <h1>' . __("Create New Calculation") . '</h1>
+                    <h1>' . __("Create New Calculation") . ' <input type="text" id="icalc-calulation-new-name" class="ml-1 border-0 font-weight-bold w-auto" placeholder="Calculation name" /> </h1>
+                   
                     <div class="d-flex flex-row">
                       <div id="icalc-left-bar" class="col-3">
                       ' .
@@ -86,38 +87,25 @@ class MainMenuFrontend extends AbstractAdminFrontend
 
     static function draggableConfiguration()
     {
-//        $products = self::callGetOnEPWithAuthCookie('/products');
-        $services = self::callGetOnEPWithAuthCookie('/services');
 
-//        $productNamesWithID = array_map('\icalc\fe\MainMenuFrontend::generateIdAndName', $products);
-//        $productNames = array_column($productNamesWithID, 'name');
-//        $productNames = array_combine(array_column($productNamesWithID, 'id'), $productNames);
-//
-        $serviceNamesWithID = array_map('\icalc\fe\MainMenuFrontend::generateIdAndName', $services);
-        $serviceNames = array_column($serviceNamesWithID, 'name');
-        $serviceNames = array_combine(array_column($serviceNamesWithID, 'id'), $serviceNames);
-//
-//
-//        $productChooseList = new ChooseList('productChooseList','productChooseList','icalc-component-chooselist',$productNames);
-        $serviceChooseList = new ChooseList('serviceChooseList','serviceChooseList','icalc-component-chooselist',$serviceNames);
-
-
-
-        $returnDiv = '<div id="product-component" class="icalc-draggable-option hidden" draggable="true">
-                        <h3>'.__("Product Component").'</h3>
-                        <div id="icalc-dashboard-products" class="icalc-choose-list"></div>     
-                      </div>';
-//
-//                            $productChooseList->render()
+        $returnDiv =             '<div id="product-component" class="icalc-draggable-option hidden" draggable="true">
+                                    <h3>'.__("Product Component").'</h3>
+                                    <div id="icalc-dashboard-products" class="icalc-choose-list"></div>     
+                                  </div>';
 
         $returnDiv = $returnDiv . '<div id="service-component" class="icalc-draggable-option hidden" draggable="true"> 
                                 <h3>'.__("Service Component").'</h3>
+                                <div id="icalc-dashboard-services" class="icalc-choose-list"></div>     
+                                </div>';
 
-            '.
-            $serviceChooseList->render()
-            .'</div>';
+
         $returnDiv = $returnDiv . '<div id="display-component" class="icalc-draggable-option hidden" draggable="true">Totally Different option</div>';
-        $returnDiv = $returnDiv . '<div id="component-component" class="icalc-draggable-option hidden" draggable="true">Totally Different option</div>';
+
+
+        $returnDiv = $returnDiv . '<div id="component-component" class="icalc-draggable-option hidden" draggable="true">
+                                <h3>'.__("Generic Component").'</h3>
+                                <div id="icalc-dashboard-components" class="icalc-choose-list"></div>     
+                                </div>';
 
 
         return $returnDiv;

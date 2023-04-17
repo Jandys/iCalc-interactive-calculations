@@ -3,6 +3,7 @@
 namespace icalc\fe;
 
 use function icalc\util\callJSFunction;
+use function icalc\util\console_log;
 
 abstract class AbstractAdminFrontend
 {
@@ -22,9 +23,11 @@ abstract class AbstractAdminFrontend
 
     public static function setIcalcTokenCookie()
     {
-        if(!isset($_COOKIE['icalc-token'])){
-            header("Location: ".$_SERVER['PHP_SELF']);
-            exit;
+        $maxWait = 10;
+        $iter = 0;
+        while(!isset($_COOKIE['icalc-token']) && $iter < $maxWait ){
+            sleep(0.1);
+            $iter++;
         }
     }
 
@@ -49,6 +52,7 @@ abstract class AbstractAdminFrontend
             $response = wp_remote_get($url, $args);
             if (is_array($response)) {
                 $body = wp_remote_retrieve_body($response);
+                error_log("BODY: ". $body);
                 $data = json_decode($body);
                 return $data;
             }

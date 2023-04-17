@@ -33,6 +33,7 @@ function issue_jwt_token($user_id, $session): string
     ];
 
     $token = JWT::encode($payload, JWT_SECRET_KEY);
+    delete_site_transient('icalc-secret-' . $user_id . $session);
     set_site_transient('icalc-secret-' . $user_id . $session, $randomCharacters, 60 * 60);
     return $token;
 }
@@ -47,6 +48,9 @@ function validate_jwt_token($token, $userid, $session)
         if ($userid == $uid && $sessionId == $session) {
             $secret = get_site_transient('icalc-secret-' . $userid . $sessionId);
             if ($secret != $decoded->secret) {
+                error_log("Recieved token id: " . $userid . ", expected uid:  " . $uid . ", recieved session: " . $session . ", expected session: " . $sessionId . ", recieved pass: " . $decoded->secret . ", expected secret: " . $secret);
+
+
                 return false;
             }
 

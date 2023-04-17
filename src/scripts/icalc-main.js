@@ -114,6 +114,13 @@ window.addEventListener('load', () => {
                 let products = JSON.parse(productsXHR.responseText);
                 console.log('Data successfully loaded:', products);
 
+                if(products.length>0){
+                    let noneSelected = document.createElement('option');
+                    noneSelected.value="";
+                    noneSelected.innerText="-- None --";
+                    productSelectList.appendChild(noneSelected);
+                }
+
                 products.forEach(product => {
                     let htmlOptionElement = document.createElement('option');
                     htmlOptionElement.value = product.id;
@@ -137,13 +144,99 @@ window.addEventListener('load', () => {
     };
     productsXHR.send();
 
-
-// Attach an event listener for the change event on the select element
-
-    productSelectList.setAttribute("onchange", "icalc_product_select_change(this)");
-
     dashboardProducts.appendChild(productSelectList);
     dashboardProducts.appendChild(productDiv)
+})
+
+
+window.addEventListener('load', () => {
+    const dashboardServices = document.getElementById('icalc-dashboard-services');
+
+    const serviceSelectList = document.createElement('select');
+    serviceSelectList.type = "text";
+    serviceSelectList.id = "serviceSelect";
+    serviceSelectList.name = "services";
+
+    const serviceDiv = document.createElement('div');
+    serviceDiv.id = 'serviceDiv';
+    serviceDiv.classList.add("icalc-service-div");
+
+    let servicesXHR = icalc_getAllServices();
+    servicesXHR.onreadystatechange = function () {
+        if (servicesXHR.readyState === XMLHttpRequest.DONE) {
+            if (servicesXHR.status === 200) {
+                let services = JSON.parse(servicesXHR.responseText);
+                console.log('Data successfully loaded:', services);
+
+                if(services.length>0){
+                    let noneSelected = document.createElement('option');
+                    noneSelected.value="";
+                    noneSelected.innerText="-- None --";
+                    serviceSelectList.appendChild(noneSelected);
+                }
+
+                services.forEach(service => {
+                    let htmlOptionElement = document.createElement('option');
+                    htmlOptionElement.value = service.id;
+                    htmlOptionElement.innerText = service.name;
+                    serviceSelectList.appendChild(htmlOptionElement);
+
+
+                    const span = document.createElement('span');
+                    console.log(service);
+                    span.innerHTML = getProductInHtml(service);
+                    span.id = 'service' + service.id + '-'
+                    span.classList.add("icalc-selected-span-item");
+                    span.classList.add("hidden");
+                    serviceDiv.appendChild(span);
+                });
+
+            } else {
+                console.log('Error updating data:', servicesXHR.status);
+            }
+        }
+    };
+    servicesXHR.send();
+
+
+    console.log("Services List: ");
+    console.log(serviceSelectList);
+    console.log("List childrens: ");
+    console.log(serviceSelectList.children.length);
+
+
+    dashboardServices.appendChild(serviceSelectList);
+    dashboardServices.appendChild(serviceDiv)
+})
+
+const genericTypes = new Map(
+    [[1, "label"],
+    [2, "Number input"]]);
+
+
+window.addEventListener('load', () => {
+    const dashboardComponents = document.getElementById('icalc-dashboard-components');
+
+    const componentSelectList = document.createElement('select');
+    componentSelectList.type = "text";
+    componentSelectList.id = "componentSelect";
+    componentSelectList.name = "components";
+
+    const componentDiv = document.createElement('div');
+    componentDiv.id = 'componentDiv';
+    componentDiv.classList.add("icalc-component-div");
+
+    for (const genericType of genericTypes) {
+        const option = document.createElement('option');
+        option.value = genericType[0].toString();
+        option.innerText = genericType[1];
+
+        componentSelectList.appendChild(option);
+    }
+
+
+    dashboardComponents.appendChild(componentSelectList);
+    dashboardComponents.appendChild(componentDiv)
 })
 
 
@@ -155,10 +248,97 @@ function setNewClonedComponent(component) {
         case id.startsWith("product-component"):
             setNewProductComponent(component);
             break;
+        case id.startsWith("service-component"):
+            setNewServiceComponent(component);
+            break;
+        case id.startsWith("component-component"):
+            startNewGenericComponent(component);
+            break
 
+    }
+}
+
+function setNewServiceComponent(serviceComponent) {
+    const id = getSuffixIdFromElement(serviceComponent);
+    let dashboard;
+    let select;
+    let serviceDiv;
+    for (const child of serviceComponent.children) {
+        modifyChildIdsWithSuffix(child, id);
+        if (child.id.startsWith("icalc-dashboard-services")) {
+            dashboard = child;
+        }
+    }
+
+    for (const child of dashboard.children) {
+        modifyChildIdsWithSuffix(child, id);
+        if (child.id.startsWith("serviceSelect")) {
+            select = child;
+        }
+        if (child.id.startsWith("serviceDiv")) {
+            serviceDiv = child;
+        }
+    }
+
+    for (const child of serviceDiv.children) {
+        modifyChildIdsWithSuffix(child, id);
     }
 
 
+    select.onchange = (event) => {
+        for (const product of serviceDiv.children) {
+            product.classList.add("hidden");
+        }
+
+        console.log('service' + event.target.value + '-' + id);
+        selectedElement = document.getElementById('service' + event.target.value + '-' + id);
+        if(selectedElement){
+            selectedElement.classList.remove("hidden");
+        }
+    };
+
+    if (select.children.length === 0) {
+        dashboard.removeChild(select);
+        dashboard.appendChild(noComponentFoundError("No Service found"));
+    }
+}
+
+function startNewGenericComponent(genericComponent) {
+    const id = getSuffixIdFromElement(genericComponent);
+    let dashboard;
+    let select;
+    let componentDiv;
+
+    for (const child of genericComponent.children) {
+        modifyChildIdsWithSuffix(child, id);
+        if (child.id.startsWith("icalc-dashboard-components")) {
+            dashboard = child;
+        }
+    }
+
+    for (const child of dashboard.children) {
+        modifyChildIdsWithSuffix(child, id);
+        if (child.id.startsWith("componentSelect")) {
+            select = child;
+        }
+        if (child.id.startsWith("componentDiv")) {
+            componentDiv = child;
+        }
+    }
+
+    for (const child of componentDiv.children) {
+        modifyChildIdsWithSuffix(child, id);
+    }
+
+
+    select.onchange = (event) => {
+        console.log('component' + event.target.value + '-' + id);
+    }
+
+    if (select.children.length === 0) {
+        dashboard.removeChild(select);
+        dashboard.appendChild(noComponentFoundError("No Generic Component found"));
+    }
 }
 
 function setNewProductComponent(productComponent) {
@@ -195,10 +375,15 @@ function setNewProductComponent(productComponent) {
 
         console.log('product' + event.target.value + '-' + id);
         selectedElement = document.getElementById('product' + event.target.value + '-' + id);
-        selectedElement.classList.remove("hidden");
+        if(selectedElement){
+            selectedElement.classList.remove("hidden");
+        }
     };
 
-
+    if (select.children.length === 0) {
+        dashboard.removeChild(select);
+        dashboard.appendChild(noComponentFoundError("No Product found"));
+    }
 }
 
 function getSuffixIdFromElement(elementId) {
@@ -246,21 +431,101 @@ function getProductInHtml(product) {
 }
 
 
-
-
-
-
-function dashboard_content_change(){
-    let content = "";
+function dashboard_content_change() {
     let children = dashboard.children;
-    for(const child of children){
-        console.log(child.children[0]);
-        content += child.children[0].id + ", ";
+
+    let calculationTitleObject = document.getElementById('icalc-calulation-new-name');
+    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : "New Calculation title";
+
+    let updateObject = {}
+    updateObject.title = calculationTitle;
+    updateObject.components = [];
+
+    for (const child of children) {
+        console.log("Child: ");
+        console.log(child);
+        const component = getComponentToJSONObject(child.children[0]);
+        if (component != null) {
+            updateObject.components.push(component);
+        }
     }
 
-    console.log(content);
+
+    updatePreview(JSON.stringify(updateObject));
 }
 
+function getComponentToJSONObject(component) {
+    const id = component.id
+
+    console.log("id:" + id);
+
+    switch (true) {
+        case id.startsWith("product-component"):
+            return getProductToJSONObject(component);
+        case id.startsWith("service-component"):
+            break;
+        case id.startsWith("component-component"):
+            break
+    }
+}
+
+function getProductToJSONObject(productComponent) {
+    const children = productComponent.children;
+    let dashboard;
+    let productDiv;
+    let validProduct;
+    console.log(productComponent);
+    for (const child of children) {
+        if (child.id.startsWith("icalc-dashboard")) {
+            dashboard = child;
+        }
+    }
+
+    for (const dashItem of dashboard.children) {
+        if (dashItem.id.startsWith("productDiv")) {
+            productDiv = dashItem;
+        }
+    }
+
+    if (!productDiv) {
+        return;
+    }
+
+    for (const item of productDiv.children) {
+        if (!item.classList.contains("hidden")) {
+            validProduct = item;
+        }
+    }
+
+    if(validProduct !== undefined){
+
+        console.log("Valid product:");
+        console.log(validProduct);
+        return {"name": "sušenka"};
+
+    }
+
+}
+
+
+function updatePreview(jsonBodyToUpdate) {
+    console.log(jsonBodyToUpdate);
+
+
+    const preview = document.getElementById('icalc-preview');
+    preview.innerHTML = '';
+
+    const updateObject = JSON.parse(jsonBodyToUpdate);
+    const wrapperDiv = document.createElement("div")
+    wrapperDiv.id = 'icalc-preview-wrapper';
+
+    const title = document.createElement('h3');
+    title.innerText = updateObject["title"];
+    wrapperDiv.appendChild(title);
+
+
+    preview.appendChild(wrapperDiv);
+}
 
 
 // DAHSBOARD LOGIC END /////////
@@ -296,3 +561,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+function noComponentFoundError(error) {
+    const span = document.createElement('span');
+    span.classList.add("text-danger");
+    span.classList.add("text-font-weight-bold");
+    span.innerText = error;
+    return span;
+}
