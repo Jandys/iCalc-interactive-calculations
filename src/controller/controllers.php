@@ -7,24 +7,53 @@
 
 use function icalc\util\getPossibleCookieValue;
 
-add_action('rest_api_init', 'icalc_plugin_add_tag_endpoints');
-add_action('rest_api_init', 'icalc_plugin_add_service_endpoints');
-add_action('rest_api_init', 'icalc_plugin_add_product_endpoints');
-add_action('rest_api_init', 'icalc_plugin_add_icalculation_descriptions_endpoints');
-add_action('rest_api_init', 'icalc_autocomplete_endpoints');
-add_action('rest_api_init', 'icalc_plugin_add_jwt_endpoints');
+add_action( 'rest_api_init', 'icalc_plugin_add_tag_endpoints' );
+add_action( 'rest_api_init', 'icalc_plugin_add_service_endpoints' );
+add_action( 'rest_api_init', 'icalc_plugin_add_product_endpoints' );
+add_action( 'rest_api_init', 'icalc_plugin_add_icalculation_descriptions_endpoints' );
+add_action( 'rest_api_init', 'icalc_autocomplete_endpoints' );
+add_action( 'rest_api_init', 'icalc_plugin_add_jwt_endpoints' );
+add_action( 'rest_api_init', 'icalc_plugin_add_public_endpoints' );
 
 
-const NOT_AUTH_MSG = "Not authorized, token needed";
+const NOT_AUTH_MSG   = "Not authorized, token needed";
+const NO_SESSION_MSG = "No such session found for given user.";
 
 
-function icalc_plugin_add_jwt_endpoints(){
-    register_rest_route(ICALC_EP_PREFIX, '/token', array(
-        'methods' => 'POST',
-        'callback' => 'issue_jwt_token_callback',
-        'permission_callback' => '__return_true'
+function icalc_plugin_add_public_endpoints() {
+	register_rest_route( ICALC_EP_PREFIX, '/products/(?P<id>\d+)', array(
+		'methods'             => 'GET',
+		'callback'            => 'icalc_getProductById',
+		'args'                => array( // Argument validation and sanitization.
+			'id' => array(
+				'validate_callback' => 'my_id_validate_callback',
+			),
+		),
+		'permission_callback' => '__return_true'
 
-    ));
+	) );
+}
+
+function my_id_validate_callback( $value, $request, $param ) {
+	return is_numeric( $value );
+}
+
+function icalc_getProductById( WP_REST_Request $request ) {
+	error_log( "Trying to get product" );
+	$id      = $request->get_param( 'id' );
+	$product = \icalc\db\model\Product::get( "id", $id );
+
+	return new WP_REST_Response( $product );
+}
+
+
+function icalc_plugin_add_jwt_endpoints() {
+	register_rest_route( ICALC_EP_PREFIX, '/token', array(
+		'methods'             => 'POST',
+		'callback'            => 'issue_jwt_token_callback',
+		'permission_callback' => 'icalc_user_can_manage'
+
+	) );
 
     register_rest_route(ICALC_EP_PREFIX, '/token-verify', array(
         'methods' => 'POST',
@@ -34,14 +63,18 @@ function icalc_plugin_add_jwt_endpoints(){
     ));
 }
 
-function issue_jwt_token_callback(WP_REST_Request $request)
-{
-    $body = $request->get_json_params();
-    $user = $body['user'];
-    $session = $body['session'];
+function issue_jwt_token_callback(WP_REST_Request $request) {
+	$body    = $request->get_json_params();
+	$user    = $body['user'];
+	$session = $body['session'];
+	$transSession =  get_transient($session);
 
-    $token = issue_jwt_token($user,$session);
-    return new WP_REST_Response(['token' => $token]);
+	if($transSession != $user){
+		return new WP_REST_Response(NO_SESSION_MSG);
+	}
+	$token = issue_jwt_token( $user, $session );
+
+	return new WP_REST_Response( [ 'token' => $token ] );
 }
 
 function verify_jwt_token_callback(WP_REST_Request $request){
@@ -502,13 +535,20 @@ function icalc_deleteTag(WP_REST_Request $request)
 }
 
 function validate_icalc_jwt_token(WP_REST_Request $request) {
-    $user = $request->get_header('user');
-    $session = $request->get_header('session');
-    $token = $request->get_header('icalc-token');
+	$user    = $request->get_header( 'user' );
+	$session = $request->get_header( 'session' );
+	$token   = $request->get_header( 'icalc-token' );
 
-    if(empty($token)){
-        $token = getPossibleCookieValue($request,'icalc-token');
-    }
+	if ( empty( $token ) ) {
+		$token = getPossibleCookieValue( $request, 'icalc-token' );
+	}
 
-    return validate_jwt_token($token,$user,$session);
+	return validate_jwt_token( $token, $user, $session );
+}
+
+function icalc_user_can_manage( WP_REST_Request $request ) {
+	$body = $request->get_json_params();
+	$user = $body['user'];
+
+	return user_can( $user, 'manage_options' );
 }
