@@ -1,0 +1,301 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2023-04-20 21:57+0200\n"
+"PO-Revision-Date: 2023-04-20 21:57+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
+"X-Generator: Poedit 3.2.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: icalc;__\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: configuration/adminBar.php:11
+msgid "InterCalc"
+msgstr "InterCalc"
+
+#: configuration/admin_menu.php:86
+msgid "Calcus"
+msgstr "Calcus"
+
+#: configuration/admin_menu.php:87
+msgid "Inter Calcus"
+msgstr "Inter Calcus"
+
+#: configuration/admin_menu.php:94
+msgid "Products - Inter Calcus"
+msgstr "Produkty - Inter Calcus"
+
+#: configuration/admin_menu.php:95
+msgid "IC - Products"
+msgstr "IC - Produkty"
+
+#: configuration/admin_menu.php:100
+msgid "Services - Inter Calcus"
+msgstr "Služby - Inter Calcus"
+
+#: configuration/admin_menu.php:101
+msgid "IC - Services"
+msgstr "IC - Služby"
+
+#: configuration/admin_menu.php:106
+msgid "Tags - Inter Calcus"
+msgstr "Štítky - Inter Calcus"
+
+#: configuration/admin_menu.php:107
+msgid "IC - Tags"
+msgstr "IC - Štítky"
+
+#: configuration/admin_menu.php:112
+msgid "Statistics - Inter Calcus"
+msgstr "Statistiky - Inter Calcus"
+
+#: configuration/admin_menu.php:113
+msgid "IC - Statistics"
+msgstr "IC - Statistiky"
+
+#: configuration/admin_menu.php:133
+msgid "Inter Calcus Menu"
+msgstr "Inter Calcus"
+
+#: configuration/admin_menu.php:153
+msgid "Product Menu"
+msgstr "Produkty"
+
+#: configuration/admin_menu.php:168
+msgid "Services Menu"
+msgstr "Služby"
+
+#: configuration/admin_menu.php:184
+msgid "Tags Menu"
+msgstr "Štítky"
+
+#: configuration/admin_menu.php:200
+msgid "Statistics Menu"
+msgstr "Statistiky"
+
+#: frontend/CalculationsDescriptionsAdminFrontend.php:49
+#: frontend/ProductAdminFrontend.php:64 frontend/ProductAdminFrontend.php:106
+#: frontend/ServiceAdminFrontend.php:65 frontend/ServiceAdminFrontend.php:107
+#: frontend/TagAdminFrontend.php:53
+msgid "ID"
+msgstr "ID"
+
+#: frontend/CalculationsDescriptionsAdminFrontend.php:50
+#: frontend/ProductAdminFrontend.php:65 frontend/ProductAdminFrontend.php:110
+#: frontend/ProductAdminFrontend.php:111 frontend/ProductAdminFrontend.php:174
+#: frontend/ServiceAdminFrontend.php:66 frontend/ServiceAdminFrontend.php:111
+#: frontend/ServiceAdminFrontend.php:112 frontend/ServiceAdminFrontend.php:175
+#: frontend/TagAdminFrontend.php:54 frontend/TagAdminFrontend.php:91
+#: frontend/TagAdminFrontend.php:126
+msgid "Name"
+msgstr "Jméno"
+
+#: frontend/CalculationsDescriptionsAdminFrontend.php:51
+#: frontend/ProductAdminFrontend.php:66 frontend/ProductAdminFrontend.php:114
+#: frontend/ProductAdminFrontend.php:115 frontend/ProductAdminFrontend.php:178
+#: frontend/ServiceAdminFrontend.php:67 frontend/ServiceAdminFrontend.php:115
+#: frontend/ServiceAdminFrontend.php:116 frontend/ServiceAdminFrontend.php:179
+#: frontend/TagAdminFrontend.php:55 frontend/TagAdminFrontend.php:95
+#: frontend/TagAdminFrontend.php:130
+msgid "Description"
+msgstr "Popis"
+
+#: frontend/CalculationsDescriptionsAdminFrontend.php:52
+msgid "Body"
+msgstr "Tělo"
+
+#: frontend/CalculationsDescriptionsAdminFrontend.php:53
+msgid "Created At"
+msgstr "Vytvořeno"
+
+#: frontend/CalculationsDescriptionsAdminFrontend.php:54
+msgid "Modified At"
+msgstr "Naposledy upraveno"
+
+#: frontend/MainMenuFrontend.php:23 frontend/MainMenuFrontend.php:25
+msgid "Edit Calculations"
+msgstr "Upravit kalkulace"
+
+#: frontend/MainMenuFrontend.php:23 frontend/MainMenuFrontend.php:31
+msgid "Create New Calculation"
+msgstr "Vytvořit novou kalkulaci"
+
+#: frontend/MainMenuFrontend.php:46
+msgid "Edit Specific Calculation"
+msgstr "Upravit Kalkulaci"
+
+#: frontend/MainMenuFrontend.php:69
+msgid "Product"
+msgstr "Přidat nový produkt"
+
+#: frontend/MainMenuFrontend.php:74
+msgid "Service"
+msgstr "Přidat novou službu"
+
+#: frontend/MainMenuFrontend.php:79
+msgid "Generic Display Type"
+msgstr "Typ zobrazení"
+
+#: frontend/MainMenuFrontend.php:84 frontend/MainMenuFrontend.php:106
+msgid "Generic Component"
+msgstr "Obecná komponenta"
+
+#: frontend/MainMenuFrontend.php:92
+msgid "Product Component"
+msgstr "Popis produktu"
+
+#: frontend/MainMenuFrontend.php:97
+msgid "Service Component"
+msgstr "Popis služby"
+
+#: frontend/ProductAdminFrontend.php:59
+msgid "Add New Product"
+msgstr "Přidat nový produkt"
+
+#: frontend/ProductAdminFrontend.php:67 frontend/ProductAdminFrontend.php:118
+#: frontend/ProductAdminFrontend.php:119 frontend/ProductAdminFrontend.php:182
+#: frontend/ServiceAdminFrontend.php:68 frontend/ServiceAdminFrontend.php:119
+#: frontend/ServiceAdminFrontend.php:120 frontend/ServiceAdminFrontend.php:183
+msgid "Price"
+msgstr "Cena"
+
+#: frontend/ProductAdminFrontend.php:68 frontend/ProductAdminFrontend.php:122
+#: frontend/ProductAdminFrontend.php:126 frontend/ProductAdminFrontend.php:186
+#: frontend/ServiceAdminFrontend.php:69 frontend/ServiceAdminFrontend.php:123
+#: frontend/ServiceAdminFrontend.php:127 frontend/ServiceAdminFrontend.php:187
+msgid "Unit"
+msgstr "Jednotka"
+
+#: frontend/ProductAdminFrontend.php:69 frontend/ProductAdminFrontend.php:129
+#: frontend/ProductAdminFrontend.php:130 frontend/ProductAdminFrontend.php:190
+#: frontend/ServiceAdminFrontend.php:70 frontend/ServiceAdminFrontend.php:130
+#: frontend/ServiceAdminFrontend.php:131 frontend/ServiceAdminFrontend.php:191
+msgid "Minimal Quantity"
+msgstr "Minimální množství"
+
+#: frontend/ProductAdminFrontend.php:70 frontend/ProductAdminFrontend.php:133
+#: frontend/ProductAdminFrontend.php:134 frontend/ProductAdminFrontend.php:194
+#: frontend/ServiceAdminFrontend.php:71 frontend/ServiceAdminFrontend.php:134
+#: frontend/ServiceAdminFrontend.php:135 frontend/ServiceAdminFrontend.php:195
+msgid "Tag"
+msgstr "Štítek"
+
+#: frontend/ProductAdminFrontend.php:71 frontend/ProductAdminFrontend.php:137
+#: frontend/ProductAdminFrontend.php:198 frontend/ServiceAdminFrontend.php:72
+#: frontend/ServiceAdminFrontend.php:138 frontend/ServiceAdminFrontend.php:199
+msgid "Display Type"
+msgstr "Typ zobrazení"
+
+#: frontend/ProductAdminFrontend.php:102
+msgid "Edit Product"
+msgstr "Upravit Produkt"
+
+#: frontend/ProductAdminFrontend.php:149 frontend/ProductAdminFrontend.php:209
+#: frontend/ServiceAdminFrontend.php:150 frontend/ServiceAdminFrontend.php:210
+#: frontend/TagAdminFrontend.php:105 frontend/TagAdminFrontend.php:140
+msgid "Close"
+msgstr "Zavřít"
+
+#: frontend/ProductAdminFrontend.php:150 frontend/ServiceAdminFrontend.php:151
+#: frontend/TagAdminFrontend.php:106
+msgid "Edit"
+msgstr "Upravit"
+
+#: frontend/ProductAdminFrontend.php:170
+msgid "Create New Product"
+msgstr "Vytvořit nový produkt"
+
+#: frontend/ProductAdminFrontend.php:175
+msgid "Product Name"
+msgstr "Jméno produktu"
+
+#: frontend/ProductAdminFrontend.php:179
+msgid "Product Description"
+msgstr "Popis produktu"
+
+#: frontend/ProductAdminFrontend.php:183
+msgid "Product Price"
+msgstr "Cena produktu"
+
+#: frontend/ProductAdminFrontend.php:187
+msgid "Product Unit"
+msgstr "Jednotka"
+
+#: frontend/ProductAdminFrontend.php:191
+msgid "Product Minimal Quantity"
+msgstr "Minimální množství"
+
+#: frontend/ProductAdminFrontend.php:195
+msgid "Product Tag"
+msgstr "Štítek produktu"
+
+#: frontend/ProductAdminFrontend.php:210 frontend/ServiceAdminFrontend.php:211
+#: frontend/TagAdminFrontend.php:141
+msgid "Save"
+msgstr "Uložit"
+
+#: frontend/ServiceAdminFrontend.php:60
+msgid "Add New Service"
+msgstr "Přidat novou službu"
+
+#: frontend/ServiceAdminFrontend.php:103
+msgid "Edit Service"
+msgstr "Upravit službu"
+
+#: frontend/ServiceAdminFrontend.php:171
+msgid "Create New Service"
+msgstr "Vytvořit novou službu"
+
+#: frontend/ServiceAdminFrontend.php:176
+msgid "Service Name"
+msgstr "Jméno služby"
+
+#: frontend/ServiceAdminFrontend.php:180
+msgid "Service Description"
+msgstr "Popis služby"
+
+#: frontend/ServiceAdminFrontend.php:184
+msgid "Service Price"
+msgstr "Cena služby"
+
+#: frontend/ServiceAdminFrontend.php:188
+msgid "Service Unit"
+msgstr "Jednotka"
+
+#: frontend/ServiceAdminFrontend.php:192
+msgid "Service Minimal Quantity"
+msgstr "Minimální množství"
+
+#: frontend/ServiceAdminFrontend.php:196
+msgid "Service Tag"
+msgstr "Štítek služby"
+
+#: frontend/TagAdminFrontend.php:48
+msgid "Add New Tag"
+msgstr "Přidat nový tag"
+
+#: frontend/TagAdminFrontend.php:83
+msgid "Edit Tag"
+msgstr "Upravit Tag"
+
+#: frontend/TagAdminFrontend.php:92 frontend/TagAdminFrontend.php:127
+msgid "Tag Name"
+msgstr "Jméno Tagu"
+
+#: frontend/TagAdminFrontend.php:96
+msgid "Tag description"
+msgstr "Popisek Tagu"
+
+#: frontend/TagAdminFrontend.php:122
+msgid "Create New Tag"
+msgstr "Vytvořit nový tag"
+
+#: frontend/TagAdminFrontend.php:131
+msgid "Tag Description"
+msgstr "Popisek Tagu"
