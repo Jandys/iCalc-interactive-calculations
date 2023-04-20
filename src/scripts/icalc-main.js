@@ -37,6 +37,7 @@ dashboard.addEventListener('drop', e => {
     cloneComponent.classList.remove("hidden");
     let nextId = Number(viableComponent.getAttribute("data-next-id"));
     cloneComponent.id = cloneComponent.id + nextId;
+    cloneComponent.classList.add("icalc-configurable-draggable-option");
 
     setNewClonedComponent(cloneComponent);
 
@@ -300,6 +301,8 @@ function setNewServiceComponent(serviceComponent) {
     if (select.children.length === 0) {
         dashboard.removeChild(select);
         dashboard.appendChild(noComponentFoundError("No Service found"));
+    } else {
+        appendConfigButton(dashboard);
     }
 }
 
@@ -338,6 +341,8 @@ function startNewGenericComponent(genericComponent) {
     if (select.children.length === 0) {
         dashboard.removeChild(select);
         dashboard.appendChild(noComponentFoundError("No Generic Component found"));
+    } else {
+        appendConfigButton(dashboard);
     }
 }
 
@@ -383,6 +388,8 @@ function setNewProductComponent(productComponent) {
     if (select.children.length === 0) {
         dashboard.removeChild(select);
         dashboard.appendChild(noComponentFoundError("No Product found"));
+    } else {
+        appendConfigButton(dashboard);
     }
 }
 
@@ -440,6 +447,7 @@ function dashboard_content_change() {
     let updateObject = {}
     updateObject.title = calculationTitle;
     updateObject.components = [];
+    updateObject.customStyles = "";
 
     for (const child of children) {
         console.log("Child: ");
@@ -447,6 +455,7 @@ function dashboard_content_change() {
         const component = getComponentToJSONObject(child.children[0]);
         if (component != null) {
             updateObject.components.push(component);
+            appendStyles(updateObject.customStyles, component);
         }
     }
 
@@ -497,14 +506,132 @@ function getProductToJSONObject(productComponent) {
         }
     }
 
-    if(validProduct !== undefined){
+    if (validProduct !== undefined) {
 
         console.log("Valid product:");
         console.log(validProduct);
-        return {"name": "sušenka"};
 
+
+        const modalConfId = "modal-conf-" + validProduct.parentNode.parentNode.parentNode.id
+        let conf = {};
+
+        let modalConf = document.getElementById(modalConfId);
+        let elementNodeListOf = modalConf.querySelectorAll('.icalc-custom-input');
+        for (const customInput of elementNodeListOf) {
+            conf[customInput.name] = customInput.dataset.previous;
+        }
+
+        const headers = Array.from(validProduct.querySelector("thead").querySelectorAll("th")).map(th => th.innerText);
+        const row = validProduct.querySelector("tbody tr");
+        const values = Array.from(row.querySelectorAll("td")).map(td => td.innerText);
+        const keyValuePairs = {};
+        headers.forEach((header, index) => {
+            keyValuePairs[header] = values[index];
+        });
+
+
+        return {
+            "domId": validProduct.id,
+            "type": "product",
+            "id": parseInt(validProduct.id.split("-")[0].match(/\d+/)[0], 10),
+            "conf": {
+                "confId": modalConfId,
+                "configuration": conf
+            },
+            "displayType": keyValuePairs['Display Type']
+        }
     }
 
+}
+
+function getConfigureModal(id) {
+
+    return `
+    <div class="icalc-modal-wrapper hidden">
+        <div id="modal-${id}" class="icalc-config-modal">
+        <div class="modal-content p-3">
+           <button class="icalc-config-btn btn-danger mt-2 close-btn"><i class="dashicons dashicons-no"></i></button>
+          <h2>Personal Customization</h2>
+          
+          <span>
+              <label for="show-label" class="icalc-tooltip-container">Show label: <p class="icalc-tooltip">This is tooltip</p></label>
+              <input type="checkbox" name="show-label" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
+        </span>
+         
+          
+          <label for="classes">Classes:</label>
+           <input type="text" id="classes" name="classes" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
+           <p class="font-italic font-weight-light text-info">To add multiple classes separate them by using semicolon: ';' </p>
+            
+          <label for="text-area">Custom CSS:</label>
+          <textarea class="icalc-custom-input icalc-custom-styler mt-0 mb-4 ml-4 mr-4"  id="text-area" name="custom-css" rows="8" cols="50" placeholder=".myStyle{color:red}" data-previous=""></textarea>
+        
+          <button class="icalc-config-btn btn-success mt-2 save-btn"><i class="dashicons dashicons-saved"></i></button>
+        
+        </div>
+      </div>
+    </div>
+  
+`;
+
+}
+
+function appendConfigButton(div) {
+    // Create a new button element
+    const button = document.createElement('button');
+    button.innerHTML = '<i class="dashicons dashicons-admin-generic"></i>'; // Using Font Awesome for the cog icon
+    button.className = 'icalc-config-btn button';
+
+    const id = "conf-" + div.parentNode.id;
+
+    // Append the button to the div
+    div.parentNode.insertBefore(button, div);
+
+
+    // Append the modal to the body
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = getConfigureModal(id);
+    document.body.appendChild(modalContainer);
+
+    // Get the modal and close button elements
+    const modal = document.getElementById('modal-' + id);
+    const closeBtn = modal.querySelector('.close-btn');
+    const saveBtn = modal.querySelector('.save-btn');
+
+    // Function to open the modal
+    function openModal() {
+        modal.parentNode.classList.remove("hidden");
+    }
+
+    function saveModal() {
+        modal.parentNode.classList.add("hidden");
+        let customInputs = modal.querySelectorAll('.icalc-custom-input');
+        for (const input of customInputs) {
+            input.dataset.previous = input.value;
+        }
+        dashboard_content_change();
+    }
+
+    // Function to close the modal
+    function closeModal() {
+        modal.parentNode.classList.add("hidden");
+        let customInputs = modal.querySelectorAll('.icalc-custom-input');
+        for (const input of customInputs) {
+            input.value = input.dataset.previous;
+        }
+    }
+
+    // Event listeners
+    button.addEventListener('click', () => {
+        openModal();
+    });
+    closeBtn.addEventListener('click', closeModal);
+    saveBtn.addEventListener('click', saveModal);
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
 }
 
 
@@ -527,6 +654,14 @@ function updatePreview(jsonBodyToUpdate) {
     preview.appendChild(wrapperDiv);
 }
 
+
+function appendStyles(styles, component) {
+    console.table(styles, component)
+    let componentCustomCss = component.conf.configuration["custom-css"];
+
+    console.log("custom css: " + componentCustomCss);
+
+}
 
 // DAHSBOARD LOGIC END /////////
 
