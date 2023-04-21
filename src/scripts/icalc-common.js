@@ -1,9 +1,309 @@
+class ObservableArray {
+    constructor(array) {
+        this.array = array;
+        this.listeners = new Set();
+    }
+
+    get(id) {
+        return this.array[id];
+    }
+
+    getFrom(id, from) {
+        return this.array[id][from];
+    }
+
+    set(id, val) {
+        return this.array[id] = val;
+    }
+
+    setFrom(id, from, val) {
+        this.array[id][from] = val;
+        this.notify('setFrom', val, id);
+    }
+
+    push(...args) {
+        const result = this.array.push(...args);
+        this.notify('push', args);
+        return result;
+    }
 
 
-function icalc_getProductById(id){
+    pushToFrom(id, from, ...args) {
+        const result = this.array[id][from].push(...args);
+        this.notify('pushToFrom', args, id);
+        return result;
+    }
+
+    pop() {
+        const result = this.array.pop();
+        this.notify('pop');
+        return result;
+    }
+
+    // Other array methods here...
+
+    addListener(listener) {
+        this.listeners.add(listener);
+    }
+
+    removeListener(listener) {
+        this.listeners.delete(listener);
+    }
+
+    notify(action, args, calculationId) {
+        for (const listener of this.listeners) {
+            listener(action, args, calculationId);
+        }
+    }
+}
+
+
+let icalc_calculations = new ObservableArray([]);
+let icalc_calculationElements = [];
+
+icalc_calculations.addListener((action, args, calculationId) => {
+    if (icalc_calculationElements[calculationId]) {
+        for (const element of icalc_calculationElements[calculationId]) {
+            element.value = icalc_calculate(calculationId);
+        }
+    }
+});
+
+
+function icalc_getProductById(id) {
     const xhr = new XMLHttpRequest();
     const url = `/wp-json/icalc/v1/products/${id}`;
     xhr.open('GET', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     return xhr;
 }
+
+function icalc_getNextCalculationId(id) {
+    const xhr = new XMLHttpRequest();
+    const url = `/wp-json/icalc/v1/calculation/next`;
+    xhr.open('GET', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    return xhr;
+}
+
+
+function icalc_displayComponent(component, calculationId) {
+    switch (component.type) {
+        case "product":
+            return icalc_displayProduct(component, calculationId);
+        case "service":
+            return icalc_displayService(component, calculationId);
+        case "genericComponent":
+            return icalc_displayGenericComponent(component, calculationId);
+    }
+
+}
+
+function icalc_displayProduct(product, calculationId) {
+    const productDiv = document.createElement("div");
+    productDiv.classList.add("form-group");
+    productDiv.classList.add("row");
+
+    let productXHR = icalc_getProductById(product.id);
+
+    productXHR.onreadystatechange = function () {
+        if (productXHR.readyState === XMLHttpRequest.DONE) {
+            if (productXHR.status === 200) {
+                let productData = JSON.parse(productXHR.responseText);
+
+                productDiv.appendChild(icalc_getDisplayType(product, productData, calculationId));
+
+            } else {
+                console.log('Error fetching prodcut data');
+            }
+        }
+    };
+    productXHR.send();
+
+    return productDiv;
+}
+
+function icalc_displayService(service) {
+    const serviceDiv = document.createElement("div");
+    // productDiv.classList.add("form-group");
+    // productDiv.classList.add("row");
+    //
+    // let productXHR = icalc_getProductById(product.id);
+    //
+    // productXHR.onreadystatechange = function () {
+    //     if (productXHR.readyState === XMLHttpRequest.DONE) {
+    //         if (productXHR.status === 200) {
+    //             let productData = JSON.parse(productXHR.responseText);
+    //
+    //             productDiv.appendChild(icalc_getDisplayType(product, productData));
+    //
+    //         } else {
+    //             console.log('Error fetching prodcut data');
+    //         }
+    //     }
+    // };
+    // productXHR.send();
+
+    return serviceDiv;
+}
+
+function icalc_displayGenericComponent(genericComponent, calculationId) {
+    return icalc_getDisplayType(genericComponent, {}, calculationId);
+
+}
+
+
+function icalc_createCustomStyle(customStyles) {
+    if (customStyles.trim().length !== 0) {
+        const styles = document.createElement("style");
+        styles.innerText = customStyles;
+        return styles;
+    }
+    return false;
+}
+
+
+function icalc_getDisplayType(component, componentData, calculationId) {
+    switch (component.displayType.toLowerCase()) {
+        case "number":
+        case "number input":
+            return icalc_getNumberDisplayType(component, componentData, calculationId);
+
+        case "sum":
+            return icalc_getSumDisplayType(component, calculationId);
+    }
+}
+
+function icalc_getSumDisplayType(component, calculationId) {
+    const wrapper = document.createElement("div");
+    const colLabel = document.createElement("div");
+    colLabel.classList.add("col");
+    const label = document.createElement("label");
+    label.innerText = "Result:"
+    label.setAttribute('for', `${component.type}-${component.id}-numberInput`);
+    if (component.conf.configuration["label-class"]) {
+        let labelClasses = component.conf.configuration["label-class"].split(";");
+        for (const labelClass of labelClasses) {
+            label.classList.add(labelClass);
+        }
+    }
+    colLabel.appendChild(label);
+    wrapper.appendChild(colLabel);
+
+
+    const colResult = document.createElement("div");
+    colResult.classList.add("col");
+    const inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.disabled = true
+    inputElement.classList.add("form-control");
+    if (component.conf.configuration["input-class"]) {
+        let inputClasses = component.conf.configuration["input-class"].split(";");
+        for (const inputClass of inputClasses) {
+            inputElement.classList.add(inputClass);
+        }
+    }
+
+    if (!icalc_calculationElements[calculationId]) {
+        icalc_calculationElements[calculationId] = [];
+    }
+    icalc_calculationElements[calculationId].push(inputElement);
+
+    colResult.appendChild(inputElement);
+    wrapper.appendChild(colResult);
+    return wrapper;
+}
+
+
+function icalc_calculate(idOfCalculation, method = "sum") {
+    let result = 0;
+    const calculationObject = icalc_calculations.get(idOfCalculation);
+    for (const calcPart in calculationObject) {
+            switch (method) {
+                case "sum":
+                    result += icalc_simpleCalculation(calculationObject[calcPart]);
+                    break;
+        }
+    }
+    return result;
+}
+
+/**
+ *
+ * @param calculationPart {"baseValue":15.4, "times": 5, "negative": false}
+ */
+function icalc_simpleCalculation(calculationPart) {
+    let preCalc = calculationPart["baseValue"] * calculationPart["times"];
+    return calculationPart["negative"] ? preCalc * -1 : preCalc;
+}
+
+
+function icalc_getNumberDisplayType(component, componentData, calculationId) {
+    console.log("COMPONENT")
+    console.log(component)
+
+    console.log("COMPONENT Data")
+    console.log(componentData)
+
+
+    const showLabel = component.conf.configuration["show-label"];
+    const wrapper = document.createElement("div");
+    if (showLabel == "true") {
+        const colLabel = document.createElement("div");
+        colLabel.classList.add("col");
+        const label = document.createElement("label");
+        label.innerText = componentData.name
+        label.setAttribute('for', `${component.domId}-numberInput`);
+        if (component.conf.configuration["label-class"]) {
+            let labelClasses = component.conf.configuration["label-class"].split(";");
+            for (const labelClass of labelClasses) {
+                label.classList.add(labelClass);
+            }
+        }
+        colLabel.appendChild(label);
+        wrapper.appendChild(colLabel);
+    }
+
+    const colInput = document.createElement("div");
+    colInput.classList.add("col");
+    const inputElement = document.createElement('input');
+    inputElement.type = 'number';
+    inputElement.classList.add("form-control");
+    if (component.conf.configuration["input-class"]) {
+        let inputClasses = component.conf.configuration["input-class"].split(";");
+        for (const inputClass of inputClasses) {
+            inputElement.classList.add(inputClass);
+        }
+    }
+
+    inputElement.setAttribute('id', `${component.domId}-numberInput`);
+    inputElement.setAttribute('name', `${component.domId}-numberInput`);
+    inputElement.setAttribute('min', '0');
+    if (componentData["min_quantity"]) {
+        inputElement.setAttribute('step', componentData["min_quantity"]);
+        inputElement.setAttribute('value', componentData["min_quantity"]);
+    } else if (component.conf.configuration["step"]) {
+        inputElement.setAttribute('step', component.conf.configuration["step"]);
+        inputElement.setAttribute('value', component.conf.configuration["step"]);
+    }
+
+    colInput.onchange = () => {
+        const inputCalculation = {
+            "baseValue": Number(componentData["price"]),
+            "times": Number(inputElement.value),
+            "negative": false
+        }
+        icalc_calculations.setFrom(calculationId, `${component.domId}-numberInput`, inputCalculation);
+    }
+
+    colInput.appendChild(inputElement);
+    wrapper.appendChild(colInput);
+    return wrapper;
+}
+
+
+
+
+
+
+

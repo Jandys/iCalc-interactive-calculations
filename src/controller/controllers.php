@@ -102,29 +102,52 @@ function icalc_plugin_add_icalculation_descriptions_endpoints()
     ));
 
     register_rest_route(ICALC_EP_PREFIX, '/icalculation-descriptions', array(
-        'methods' => 'PUT',
-        'callback' => 'icalc_putIcalculationDescriptions',
-        'permission_callback' => '__return_true'
-    ));
+	    'methods'             => 'PUT',
+	    'callback'            => 'icalc_putIcalculationDescriptions',
+	    'permission_callback' => '__return_true'
+    ) );
 
 
-    register_rest_route(ICALC_EP_PREFIX, '/icalculation-descriptions', array(
-        'methods' => 'DELETE',
-        'callback' => 'icalc_deleteIcalculationDescriptions',
-        'permission_callback' => '__return_true'
-    ));
+	register_rest_route( ICALC_EP_PREFIX, '/icalculation-descriptions', array(
+		'methods'             => 'DELETE',
+		'callback'            => 'icalc_deleteIcalculationDescriptions',
+		'permission_callback' => '__return_true'
+	) );
+
+	register_rest_route( ICALC_EP_PREFIX, '/icalculation-descriptions/next', array(
+		'methods'             => 'GET',
+		'callback'            => 'icalc_getNextIcalculationDescriptionId',
+		'permission_callback' => '__return_true'
+	) );
 }
 
 
 /**
+ * GET /icalculation-descriptions/next
+ */
+function icalc_getNextIcalculationDescriptionId( WP_REST_Request $request ) {
+	$validated = validate_icalc_jwt_token( $request );
+	if ( $validated instanceof WP_REST_Response ) {
+		return $validated;
+	}
+
+	if ( ! $validated ) {
+		return new WP_REST_Response( [ 'msg' => NOT_AUTH_MSG ], 401 );
+	}
+
+	$allDescriptions = \icalc\db\model\IcalculationsDescription::last_id();
+
+	return new WP_REST_Response( $allDescriptions + 1 );
+}
+
+/**
  * POST /products
  */
-function icalc_getIcalculationDescriptions(WP_REST_Request $request)
-{
-    $validated = validate_icalc_jwt_token($request);
-    if ($validated instanceof WP_REST_Response) {
-        return $validated;
-    }
+function icalc_getIcalculationDescriptions( WP_REST_Request $request ) {
+	$validated = validate_icalc_jwt_token( $request );
+	if ( $validated instanceof WP_REST_Response ) {
+		return $validated;
+	}
 
     if(!$validated){
         return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);

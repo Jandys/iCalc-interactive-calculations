@@ -383,7 +383,24 @@ function icalc_getAllProducts(){
 }
 
 
-function icalc_getAllServices(){
+function icalc_getNextCalculationDescriptionId() {
+    const xhr = new XMLHttpRequest();
+    const url = '/wp-json/icalc/v1/icalculation-descriptions/next';
+
+
+    xhr.open('GET', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
+    xhr.withCredentials = true;
+
+    return xhr;
+
+}
+
+
+function icalc_getAllServices() {
     const xhr = new XMLHttpRequest();
     const url = '/wp-json/icalc/v1/services';
 

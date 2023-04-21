@@ -21,6 +21,7 @@
 #icalc-dashboard {
     height: 100vh;
     background-color: whitesmoke;
+    overflow: auto;
 }
 
 #icalc-preview{
@@ -28,12 +29,31 @@
 
     border-left: #0b0b0b 1px solid;
 }
+.icalc-configuration-bar{
+    display: flex;
+    gap: 5px;
+    flex-direction: row-reverse;
+    margin-right: 10px;
+    margin-bottom: 6px;
+}
 
+.icalc-configurable-draggable-option > h3{
+    margin: 5px 20px 0 5px ;
+}
 
+.icalc-choose-list{
+    margin-left: 5px;
+}
+
+.icalc-btn-gray{
+    color: #5e5b5b !important;
+    border-color: #5e5b5b !important;
+}
 
 .icalc-dashboard-item {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
+    margin-top: 4px;
     display: flex;
     align-items: center;
 }
@@ -51,10 +71,7 @@
 }
 
 .icalc-config-btn{
-    position: relative;
     width: fit-content;
-    left: 100%;
-    transform: translateX(-150%);
     display: flex !important;
     align-content: center;
     align-items: center;

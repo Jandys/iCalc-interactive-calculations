@@ -48,22 +48,28 @@ dashboard.addEventListener('drop', e => {
     dashboardItem.classList.add('icalc-dashboard-item');
     dashboardItem.appendChild(cloneComponent);
 
-    const moveControls = document.createElement('div');
-    moveControls.classList.add('icalc-move-controls');
+    let configurationBar = cloneComponent.querySelector(".icalc-configuration-bar");
+
+
     const moveUpButton = document.createElement('button');
-    moveUpButton.innerHTML = '↑';
+    moveUpButton.innerHTML = '<i class="dashicons dashicons-arrow-up-alt"></i>';
+    moveUpButton.classList.add("icalc-config-btn");
+    moveUpButton.classList.add("icalc-btn-gray");
+    moveUpButton.classList.add("button");
     moveUpButton.addEventListener('click', () => moveComponent(dashboardItem, 'up'));
     const moveDownButton = document.createElement('button');
-    moveDownButton.innerHTML = '↓';
+    moveDownButton.innerHTML = '<i class="dashicons dashicons-arrow-down-alt"></i>';
+    moveDownButton.classList.add("icalc-config-btn");
+    moveDownButton.classList.add("icalc-btn-gray");
+    moveDownButton.classList.add("button");
     moveDownButton.addEventListener('click', () => moveComponent(dashboardItem, 'down'));
 
-    moveControls.appendChild(moveUpButton);
-    moveControls.appendChild(moveDownButton);
-    dashboardItem.appendChild(moveControls);
+    configurationBar.appendChild(moveDownButton);
+    configurationBar.appendChild(moveUpButton);
 
     dashboard.appendChild(dashboardItem);
 
-    if(viableComponent){
+    if (viableComponent) {
         dashboard_content_change();
     }
 });
@@ -211,8 +217,10 @@ window.addEventListener('load', () => {
 })
 
 const genericTypes = new Map(
-    [[1, "label"],
-    [2, "Number input"]]);
+    [[0, "-- None --"],
+        [1, "Label"],
+        [2, "Number input"],
+        [3, "Sum"]]);
 
 
 window.addEventListener('load', () => {
@@ -253,7 +261,7 @@ function setNewClonedComponent(component) {
             setNewServiceComponent(component);
             break;
         case id.startsWith("component-component"):
-            startNewGenericComponent(component);
+            setNewGenericComponent(component);
             break
 
     }
@@ -306,7 +314,7 @@ function setNewServiceComponent(serviceComponent) {
     }
 }
 
-function startNewGenericComponent(genericComponent) {
+function setNewGenericComponent(genericComponent) {
     const id = getSuffixIdFromElement(genericComponent);
     let dashboard;
     let select;
@@ -335,10 +343,12 @@ function startNewGenericComponent(genericComponent) {
 
 
     select.onchange = (event) => {
-        console.log('component' + event.target.value + '-' + id);
+        select.dataset.selected = event.target.value
     }
 
-    if (select.children.length === 0) {
+    select.dataset.selected = 0;
+
+    if (select.children.length === 1) {
         dashboard.removeChild(select);
         dashboard.appendChild(noComponentFoundError("No Generic Component found"));
     } else {
@@ -437,9 +447,11 @@ function getProductInHtml(product) {
         "</table>";
 }
 
+let nextCalculationId;
 
 function dashboard_content_change() {
     let children = dashboard.children;
+
 
     let calculationTitleObject = document.getElementById('icalc-calulation-new-name');
     let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : "New Calculation title";
@@ -449,18 +461,38 @@ function dashboard_content_change() {
     updateObject.components = [];
     updateObject.customStyles = "";
 
+
     for (const child of children) {
         console.log("Child: ");
         console.log(child);
         const component = getComponentToJSONObject(child.children[0]);
         if (component != null) {
             updateObject.components.push(component);
-            appendStyles(updateObject.customStyles, component);
+            updateObject.customStyles = appendStyles(updateObject.customStyles, component);
         }
     }
 
+    if (nextCalculationId) {
+        updateObject.id = nextCalculationId;
+        updatePreview(JSON.stringify(updateObject));
 
-    updatePreview(JSON.stringify(updateObject));
+    } else {
+        let nextIdXHR = icalc_getNextCalculationDescriptionId();
+
+        nextIdXHR.onreadystatechange = function () {
+            if (nextIdXHR.readyState === XMLHttpRequest.DONE) {
+                if (nextIdXHR.status === 200) {
+                    let nextId = JSON.parse(nextIdXHR.responseText);
+                    updateObject.id = nextId;
+                    nextCalculationId = nextId;
+                    updatePreview(JSON.stringify(updateObject));
+                } else {
+                    console.log('Error fetching data:', nextIdXHR.status);
+                }
+            }
+        };
+        nextIdXHR.send();
+    }
 }
 
 function getComponentToJSONObject(component) {
@@ -474,7 +506,7 @@ function getComponentToJSONObject(component) {
         case id.startsWith("service-component"):
             break;
         case id.startsWith("component-component"):
-            break
+            return getGenericComponentToJSONObject(component);
     }
 }
 
@@ -544,6 +576,46 @@ function getProductToJSONObject(productComponent) {
 
 }
 
+function getGenericComponentToJSONObject(genericComponent) {
+    const children = genericComponent.children;
+    let dashboard;
+    let option;
+    let select;
+    for (const child of children) {
+        if (child.id.startsWith("icalc-dashboard")) {
+            dashboard = child;
+        }
+    }
+
+    for (const dashItem of dashboard.children) {
+        if (dashItem.id.startsWith("componentSelect")) {
+            select = dashItem;
+        }
+    }
+
+
+    const modalConfId = "modal-conf-" + genericComponent.id
+    let conf = {};
+
+    let modalConf = document.getElementById(modalConfId);
+    let elementNodeListOf = modalConf.querySelectorAll('.icalc-custom-input');
+    for (const customInput of elementNodeListOf) {
+        conf[customInput.name] = customInput.dataset.previous;
+    }
+
+
+    return {
+        "domId": genericComponent.id,
+        "type": "genericComponent",
+        "id": parseInt(select.id.match(/\d+/)[0], 10),
+        "conf": {
+            "confId": modalConfId,
+            "configuration": conf
+        },
+        "displayType": genericTypes.get(Number(select.dataset.selected)),
+    };
+}
+
 function getConfigureModal(id) {
 
     return `
@@ -553,14 +625,21 @@ function getConfigureModal(id) {
            <button class="icalc-config-btn btn-danger mt-2 close-btn"><i class="dashicons dashicons-no"></i></button>
           <h2>Personal Customization</h2>
           
-          <span>
-              <label for="show-label" class="icalc-tooltip-container">Show label: <p class="icalc-tooltip">This is tooltip</p></label>
-              <input type="checkbox" name="show-label" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
+        <span>
+              <label for="show-label">Show label:</label>
+              <input type="checkbox" id="show-label" name="show-label" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
         </span>
          
-          
-          <label for="classes">Classes:</label>
-           <input type="text" id="classes" name="classes" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
+         <span class="hidden" id="label-configuration">
+               <label for="label-classes">Label classes:</label>
+               <input type="text" id="label-classes" name="label-class" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
+        </span>
+         
+      <span>
+           <label for="classes">Input classes:</label>
+           <input type="text" id="classes" name="input-class" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
+        </span>
+        
            <p class="font-italic font-weight-light text-info">To add multiple classes separate them by using semicolon: ';' </p>
             
           <label for="text-area">Custom CSS:</label>
@@ -585,8 +664,8 @@ function appendConfigButton(div) {
     const id = "conf-" + div.parentNode.id;
 
     // Append the button to the div
-    div.parentNode.insertBefore(button, div);
-
+    let configureDiv = div.parentNode.querySelector(".icalc-configuration-bar");
+    configureDiv.appendChild(button);
 
     // Append the modal to the body
     const modalContainer = document.createElement('div');
@@ -597,6 +676,8 @@ function appendConfigButton(div) {
     const modal = document.getElementById('modal-' + id);
     const closeBtn = modal.querySelector('.close-btn');
     const saveBtn = modal.querySelector('.save-btn');
+    const showLabel = modal.querySelector('#show-label');
+
 
     // Function to open the modal
     function openModal() {
@@ -607,7 +688,11 @@ function appendConfigButton(div) {
         modal.parentNode.classList.add("hidden");
         let customInputs = modal.querySelectorAll('.icalc-custom-input');
         for (const input of customInputs) {
-            input.dataset.previous = input.value;
+            if (input.type === "checkbox") {
+                input.dataset.previous = input.checked;
+            } else {
+                input.dataset.previous = input.value;
+            }
         }
         dashboard_content_change();
     }
@@ -621,12 +706,28 @@ function appendConfigButton(div) {
         }
     }
 
+    function changeLabel() {
+        let wrappingSpan = modal.querySelector("#label-configuration");
+        console.log(showLabel.value);
+        if (showLabel.checked === true) {
+            wrappingSpan.classList.remove("hidden");
+        } else {
+            wrappingSpan.classList.add("hidden");
+
+            let labelConfigurations = wrappingSpan.querySelectorAll('.icalc-custom-input');
+            labelConfigurations.forEach((input) => {
+                input.value = ""
+            });
+        }
+    }
+
     // Event listeners
     button.addEventListener('click', () => {
         openModal();
     });
     closeBtn.addEventListener('click', closeModal);
     saveBtn.addEventListener('click', saveModal);
+    showLabel.addEventListener('change', changeLabel);
     window.addEventListener('click', (event) => {
         if (event.target === modal) {
             closeModal();
@@ -637,7 +738,6 @@ function appendConfigButton(div) {
 
 function updatePreview(jsonBodyToUpdate) {
     console.log(jsonBodyToUpdate);
-
 
     const preview = document.getElementById('icalc-preview');
     preview.innerHTML = '';
@@ -650,17 +750,28 @@ function updatePreview(jsonBodyToUpdate) {
     title.innerText = updateObject["title"];
     wrapperDiv.appendChild(title);
 
+    const form = document.createElement("form");
 
+    icalc_calculations.set(updateObject["id"], []);;
+
+    for (const component of updateObject["components"]) {
+        form.appendChild(icalc_displayComponent(component, updateObject["id"]));
+    }
+
+
+    let customStyles = icalc_createCustomStyle(updateObject["customStyles"])
+    if (customStyles !== false) {
+        preview.appendChild(customStyles);
+    }
+
+    wrapperDiv.appendChild(form);
     preview.appendChild(wrapperDiv);
 }
 
 
 function appendStyles(styles, component) {
-    console.table(styles, component)
     let componentCustomCss = component.conf.configuration["custom-css"];
-
-    console.log("custom css: " + componentCustomCss);
-
+    return styles.concat(componentCustomCss);
 }
 
 // DAHSBOARD LOGIC END /////////

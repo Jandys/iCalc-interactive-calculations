@@ -90,11 +90,13 @@ class MainMenuFrontend extends AbstractAdminFrontend
 
         $returnDiv =             '<div id="product-component" class="icalc-draggable-option hidden" draggable="true">
                                     <h3>'.__("Product Component").'</h3>
+                                    <span class="icalc-configuration-bar"></span>
                                     <div id="icalc-dashboard-products" class="icalc-choose-list"></div>     
                                   </div>';
 
         $returnDiv = $returnDiv . '<div id="service-component" class="icalc-draggable-option hidden" draggable="true"> 
                                 <h3>'.__("Service Component").'</h3>
+                                <span class="icalc-configuration-bar"></span>
                                 <div id="icalc-dashboard-services" class="icalc-choose-list"></div>     
                                 </div>';
 
@@ -104,6 +106,7 @@ class MainMenuFrontend extends AbstractAdminFrontend
 
         $returnDiv = $returnDiv . '<div id="component-component" class="icalc-draggable-option hidden" draggable="true">
                                 <h3>'.__("Generic Component").'</h3>
+                                <span class="icalc-configuration-bar"></span>
                                 <div id="icalc-dashboard-components" class="icalc-choose-list"></div>     
                                 </div>';
 
