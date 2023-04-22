@@ -8,7 +8,6 @@ class DisplayTypeManager
 
     private static $dislpayTypes = Array(
       "number"=>Number::class,
-      "test"=>Text::class,
       "slider"=>Slider::class,
       "list"=>ChooseList::class,
       "label"=>Label::class

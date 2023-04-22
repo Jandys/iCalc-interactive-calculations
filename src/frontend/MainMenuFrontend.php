@@ -20,7 +20,10 @@ class MainMenuFrontend extends AbstractAdminFrontend
 
         echo '
             <div class="d-flex flex-column icalc-main-wrapper">
+            <span style="width: 75%;" class="mb-2">
                  <button id="toggleBtn" class="icalc-toggle-creation col-2 icalc-reappear" data-toggled-text="' . __("Edit Calculations") . '">' . __("Create New Calculation") . '</button>
+                 <button id="saveCalculation" class="icalc-toggle-creation col-2 icalc-float-right icalc-button-save-color icalc-translate-middle btn-success hidden">' . __("Save Calculation") . '</button>
+			</span>
                     <div id="firstDiv" class="content-div visible">
                     <h1>' . __("Edit Calculations") . '</h1>
                     ' .

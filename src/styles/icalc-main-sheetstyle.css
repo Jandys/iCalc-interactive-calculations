@@ -58,6 +58,28 @@
     align-items: center;
 }
 
+.icalc-float-right{
+    position: relative !important;
+    left: 100% !important;
+    transform: translateX(-80%);
+}
+
+.icalc-translate-middle{
+    transform: translate(-50%,-50%) !important;
+}
+
+.icalc-button-save-color{
+    background-color: #1ab163 !important;
+    border-color: #1e7e34 !important;
+}
+
+
+.icalc-button-save-color:hover{
+    color: whitesmoke;
+    background-color: #1c7430 !important;
+    border-color: #0b2e13 !important;
+}
+
 .icalc-dashboard-item:hover .icalc-move-controls {
     display: flex;
     padding: 8px;
@@ -94,12 +116,24 @@
     flex-direction: column;
 }
 
+.icalc-display-slider-value{
+    text-align: center;
+    font-weight: bold;
+}
+
 .icalc-config-modal {
     display: flex;
     position: fixed;
     top: 50%;
     left: calc(50% + 80px);
     transform: translate(-50%, -50%);
+    width: 50%;
+    height: 80%;
+}
+
+.modal-content{
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 

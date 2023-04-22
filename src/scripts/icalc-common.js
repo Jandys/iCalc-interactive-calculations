@@ -78,6 +78,15 @@ function icalc_getProductById(id) {
     return xhr;
 }
 
+
+function icalc_getServiceById(id) {
+    const xhr = new XMLHttpRequest();
+    const url = `/wp-json/icalc/v1/services/${id}`;
+    xhr.open('GET', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    return xhr;
+}
+
 function icalc_getNextCalculationId(id) {
     const xhr = new XMLHttpRequest();
     const url = `/wp-json/icalc/v1/calculation/next`;
@@ -95,6 +104,9 @@ function icalc_displayComponent(component, calculationId) {
             return icalc_displayService(component, calculationId);
         case "genericComponent":
             return icalc_displayGenericComponent(component, calculationId);
+
+        default:
+            return document.createElement("div");
     }
 
 }
@@ -123,26 +135,26 @@ function icalc_displayProduct(product, calculationId) {
     return productDiv;
 }
 
-function icalc_displayService(service) {
+function icalc_displayService(service, calculationId) {
     const serviceDiv = document.createElement("div");
-    // productDiv.classList.add("form-group");
-    // productDiv.classList.add("row");
-    //
-    // let productXHR = icalc_getProductById(product.id);
-    //
-    // productXHR.onreadystatechange = function () {
-    //     if (productXHR.readyState === XMLHttpRequest.DONE) {
-    //         if (productXHR.status === 200) {
-    //             let productData = JSON.parse(productXHR.responseText);
-    //
-    //             productDiv.appendChild(icalc_getDisplayType(product, productData));
-    //
-    //         } else {
-    //             console.log('Error fetching prodcut data');
-    //         }
-    //     }
-    // };
-    // productXHR.send();
+    serviceDiv.classList.add("form-group");
+    serviceDiv.classList.add("row");
+
+    let serviceXHR = icalc_getServiceById(service.id);
+
+    serviceXHR.onreadystatechange = function () {
+        if (serviceXHR.readyState === XMLHttpRequest.DONE) {
+            if (serviceXHR.status === 200) {
+                let productData = JSON.parse(serviceXHR.responseText);
+
+                serviceDiv.appendChild(icalc_getDisplayType(service, productData, calculationId));
+
+            } else {
+                console.log('Error fetching prodcut data');
+            }
+        }
+    };
+    serviceXHR.send();
 
     return serviceDiv;
 }
@@ -169,8 +181,24 @@ function icalc_getDisplayType(component, componentData, calculationId) {
         case "number input":
             return icalc_getNumberDisplayType(component, componentData, calculationId);
 
+        case "slider":
+        case "range":
+            return icalc_getSliderDisplayType(component, componentData, calculationId);
+
+        case "label":
+            return icalc_getLabelDisplayType(component, componentData, calculationId);
+
+        case "horizontal rule":
+        case "hr":
+            return icalc_getHorizontalRule(component, componentData, calculationId);
+
         case "sum":
             return icalc_getSumDisplayType(component, calculationId);
+
+        case "list":
+            return icalc_getListDisplayType(component, componentData, calculationId);
+
+
     }
 }
 
@@ -178,6 +206,7 @@ function icalc_getSumDisplayType(component, calculationId) {
     const wrapper = document.createElement("div");
     const colLabel = document.createElement("div");
     colLabel.classList.add("col");
+    colLabel.classList.add("form-label");
     const label = document.createElement("label");
     label.innerText = "Result:"
     label.setAttribute('for', `${component.type}-${component.id}-numberInput`);
@@ -251,6 +280,7 @@ function icalc_getNumberDisplayType(component, componentData, calculationId) {
     if (showLabel == "true") {
         const colLabel = document.createElement("div");
         colLabel.classList.add("col");
+        colLabel.classList.add("form-label");
         const label = document.createElement("label");
         label.innerText = componentData.name
         label.setAttribute('for', `${component.domId}-numberInput`);
@@ -288,8 +318,15 @@ function icalc_getNumberDisplayType(component, componentData, calculationId) {
     }
 
     colInput.onchange = () => {
+        let baseValue;
+        if(componentData["price"]){
+            baseValue = componentData["price"];
+        }else {
+            baseValue = component.conf.configuration["base-value"];
+        }
+
         const inputCalculation = {
-            "baseValue": Number(componentData["price"]),
+            "baseValue": Number(baseValue),
             "times": Number(inputElement.value),
             "negative": false
         }
@@ -302,8 +339,120 @@ function icalc_getNumberDisplayType(component, componentData, calculationId) {
 }
 
 
+function icalc_getSliderDisplayType(component, componentData, calculationId) {
+    const showLabel = component.conf.configuration["show-label"];
+    const wrapper = document.createElement("div");
+    if (showLabel === "true") {
+        const colLabel = document.createElement("div");
+        colLabel.classList.add("col");
+        colLabel.classList.add("form-label");
+        const label = document.createElement("label");
+        label.innerText = componentData.name
+        label.setAttribute('for', `${component.domId}-slider`);
+        if (component.conf.configuration["label-class"]) {
+            let labelClasses = component.conf.configuration["label-class"].split(";");
+            for (const labelClass of labelClasses) {
+                label.classList.add(labelClass);
+            }
+        }
+        colLabel.appendChild(label);
+        wrapper.appendChild(colLabel);
+    }
+
+    const colInput = document.createElement("div");
+    colInput.classList.add("col");
+    const inputElement = document.createElement('input');
+    inputElement.type = 'range';
+    inputElement.classList.add("form-range");
+    if (component.conf.configuration["input-class"]) {
+        let inputClasses = component.conf.configuration["input-class"].split(";");
+        for (const inputClass of inputClasses) {
+            inputElement.classList.add(inputClass);
+        }
+    }
+
+    inputElement.setAttribute('id', `${component.domId}-slider`);
+    inputElement.setAttribute('name', `${component.domId}-slider`);
+    inputElement.setAttribute('min', '0');
+    if (componentData["min_quantity"]) {
+        inputElement.setAttribute('step', componentData["min_quantity"]);
+        inputElement.setAttribute('value', componentData["min_quantity"]);
+    }
+
+    if (component.conf.configuration["slider-step"]) {
+        inputElement.setAttribute('step', component.conf.configuration["slider-step"]);
+    }
+
+    if (component.conf.configuration["slider-max"]) {
+        inputElement.setAttribute('max', component.conf.configuration["slider-max"]);
+    }
+
+    const displayValue = document.createElement("div");
+    displayValue.classList.add("icalc-display-slider-value");
+
+    colInput.onchange = () => {
+        const inputCalculation = {
+            "baseValue": Number(componentData["price"]),
+            "times": Number(inputElement.value),
+            "negative": false
+        }
+
+        if(component.conf.configuration["slider-show-value"]){
+            displayValue.textContent=inputElement.value;
+        }else {
+            displayValue.innerHTML=""
+        }
+
+        icalc_calculations.setFrom(calculationId, `${component.domId}-slider`, inputCalculation);
+    }
+
+    colInput.appendChild(inputElement);
+    colInput.appendChild(displayValue);
+    wrapper.appendChild(colInput);
+    return wrapper;
+}
+
+
+function icalc_getLabelDisplayType(component){
+    const label = document.createElement("label")
+    label.textContent=component.conf.configuration["custom-label"];
+    return label;
+}
+
+function icalc_getHorizontalRule(){
+    return document.createElement("hr");
+}
+
+
+function icalc_getListDisplayType(component, componentData, calculationId){
+
+    const wrapper = document.createElement("div");
+    if (showLabel === "true") {
+        const colLabel = document.createElement("div");
+        colLabel.classList.add("col");
+        colLabel.classList.add("form-label");
+        const label = document.createElement("label");
+        label.innerText = componentData.name
+        label.setAttribute('for', `${component.domId}-list`);
+        if (component.conf.configuration["label-class"]) {
+            let labelClasses = component.conf.configuration["label-class"].split(";");
+            for (const labelClass of labelClasses) {
+                label.classList.add(labelClass);
+            }
+        }
+        colLabel.appendChild(label);
+        wrapper.appendChild(colLabel);
+    }
+
+
+    const colInput = document.createElement("div");
+    colInput.classList.add("col");
+    const select = document.createElement('select');
 
 
 
 
-
+    colInput.appendChild(select);
+    wrapper.appendChild(colInput);
+    return wrapper;
+}

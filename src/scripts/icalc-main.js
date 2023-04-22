@@ -220,7 +220,9 @@ const genericTypes = new Map(
     [[0, "-- None --"],
         [1, "Label"],
         [2, "Number input"],
-        [3, "Sum"]]);
+        [3, "Sum"],
+        [4, "List"],
+        [5, "Horizontal Rule"]]);
 
 
 window.addEventListener('load', () => {
@@ -232,7 +234,7 @@ window.addEventListener('load', () => {
     componentSelectList.name = "components";
 
     const componentDiv = document.createElement('div');
-    componentDiv.id = 'componentDiv';
+    componentDiv.Rid = 'componentDiv';
     componentDiv.classList.add("icalc-component-div");
 
     for (const genericType of genericTypes) {
@@ -300,10 +302,24 @@ function setNewServiceComponent(serviceComponent) {
         }
 
         console.log('service' + event.target.value + '-' + id);
+
         selectedElement = document.getElementById('service' + event.target.value + '-' + id);
-        if(selectedElement){
+        if (selectedElement) {
             selectedElement.classList.remove("hidden");
         }
+
+
+        const modalConfigure = document.getElementById('modal-conf-' + serviceComponent.id);
+        const headers = Array.from(selectedElement.querySelector("thead").querySelectorAll("th")).map(th => th.innerText);
+        const row = selectedElement.querySelector("tbody tr");
+        const values = Array.from(row.querySelectorAll("td")).map(td => td.innerText);
+        const keyValuePairs = {};
+        headers.forEach((header, index) => {
+            keyValuePairs[header] = values[index];
+        });
+
+        modalConfigure.dataset.type = keyValuePairs["Display Type"];
+
     };
 
     if (select.children.length === 0) {
@@ -344,6 +360,9 @@ function setNewGenericComponent(genericComponent) {
 
     select.onchange = (event) => {
         select.dataset.selected = event.target.value
+
+        const modalConfigure = document.getElementById('modal-conf-' + genericComponent.id);
+        modalConfigure.dataset.type = genericTypes.get(Number(event.target.value)).trim().toLowerCase();
     }
 
     select.dataset.selected = 0;
@@ -390,9 +409,20 @@ function setNewProductComponent(productComponent) {
 
         console.log('product' + event.target.value + '-' + id);
         selectedElement = document.getElementById('product' + event.target.value + '-' + id);
-        if(selectedElement){
+        if (selectedElement) {
             selectedElement.classList.remove("hidden");
         }
+
+        const modalConfigure = document.getElementById('modal-conf-' + productComponent.id);
+        const headers = Array.from(selectedElement.querySelector("thead").querySelectorAll("th")).map(th => th.innerText);
+        const row = selectedElement.querySelector("tbody tr");
+        const values = Array.from(row.querySelectorAll("td")).map(td => td.innerText);
+        const keyValuePairs = {};
+        headers.forEach((header, index) => {
+            keyValuePairs[header] = values[index];
+        });
+
+        modalConfigure.dataset.type = keyValuePairs["Display Type"];
     };
 
     if (select.children.length === 0) {
@@ -504,6 +534,8 @@ function getComponentToJSONObject(component) {
         case id.startsWith("product-component"):
             return getProductToJSONObject(component);
         case id.startsWith("service-component"):
+            return getServiceToJSONObject(component);
+
             break;
         case id.startsWith("component-component"):
             return getGenericComponentToJSONObject(component);
@@ -576,6 +608,72 @@ function getProductToJSONObject(productComponent) {
 
 }
 
+
+function getServiceToJSONObject(serviceComponent) {
+    const children = serviceComponent.children;
+    let dashboard;
+    let serviceDiv;
+    let validService;
+    console.log(serviceComponent);
+    for (const child of children) {
+        if (child.id.startsWith("icalc-dashboard")) {
+            dashboard = child;
+        }
+    }
+
+    for (const dashItem of dashboard.children) {
+        if (dashItem.id.startsWith("serviceDiv")) {
+            serviceDiv = dashItem;
+        }
+    }
+
+    if (!serviceDiv) {
+        return;
+    }
+
+    for (const item of serviceDiv.children) {
+        if (!item.classList.contains("hidden")) {
+            validService = item;
+        }
+    }
+
+    if (validService !== undefined) {
+
+        console.log("Valid service:");
+        console.log(validService);
+
+
+        const modalConfId = "modal-conf-" + validService.parentNode.parentNode.parentNode.id;
+        let conf = {};
+
+        let modalConf = document.getElementById(modalConfId);
+        let elementNodeListOf = modalConf.querySelectorAll('.icalc-custom-input');
+        for (const customInput of elementNodeListOf) {
+            conf[customInput.name] = customInput.dataset.previous;
+        }
+
+        const headers = Array.from(validService.querySelector("thead").querySelectorAll("th")).map(th => th.innerText);
+        const row = validService.querySelector("tbody tr");
+        const values = Array.from(row.querySelectorAll("td")).map(td => td.innerText);
+        const keyValuePairs = {};
+        headers.forEach((header, index) => {
+            keyValuePairs[header] = values[index];
+        });
+
+
+        return {
+            "domId": validService.id,
+            "type": "service",
+            "id": parseInt(validService.id.split("-")[0].match(/\d+/)[0], 10),
+            "conf": {
+                "confId": modalConfId,
+                "configuration": conf
+            },
+            "displayType": keyValuePairs['Display Type']
+        }
+    }
+}
+
 function getGenericComponentToJSONObject(genericComponent) {
     const children = genericComponent.children;
     let dashboard;
@@ -622,31 +720,63 @@ function getConfigureModal(id) {
     <div class="icalc-modal-wrapper hidden">
         <div id="modal-${id}" class="icalc-config-modal">
         <div class="modal-content p-3">
-           <button class="icalc-config-btn btn-danger mt-2 close-btn"><i class="dashicons dashicons-no"></i></button>
-          <h2>Personal Customization</h2>
-          
         <span>
-              <label for="show-label">Show label:</label>
+          <h2>Personal Customization</h2>
+           <button class="icalc-config-btn btn-danger mt-2 close-btn icalc-float-right"><i class="dashicons dashicons-no"></i></button>
+        </span>
+          
+        <span id="show-label-configuration">
+              <label class="col-2" for="show-label">Show label:</label>
               <input type="checkbox" id="show-label" name="show-label" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
+        </span>
+        
+        <span class="hidden" id="custom-label-configuration">
+              <label class="col-2" for="custom-label">Custom label:</label>
+              <input type="text" id="custom-label" name="custom-label" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
         </span>
          
          <span class="hidden" id="label-configuration">
                <label for="label-classes">Label classes:</label>
                <input type="text" id="label-classes" name="label-class" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
         </span>
-         
-      <span>
-           <label for="classes">Input classes:</label>
-           <input type="text" id="classes" name="input-class" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
+        
+         <span class="hidden" id="base-value-configuration">
+               <label for="base-value" class="col-2">Base Value:</label>
+               <input type="number" id="base-value" name="base-value" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
         </span>
         
-           <p class="font-italic font-weight-light text-info">To add multiple classes separate them by using semicolon: ';' </p>
+        <span class="hidden" id="slider-configuration">
+            <label class="col-2" for="slider-max">Slider max:</label>
+            <input type="number" id="slider-max" name="slider-max" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/>
+            <label for="slider-show-value">Show Value:</label>
+            <input type="checkbox" id="slider-show-value" name="slider-show-value" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/>  
+        </span>
+        
+        <span class="hidden" id="list-configuration" data-option="1">
+            <span class="row">
+                <label class="col-2" for="list-option1">Option:</label>
+                <input type="text" id="list-option1" name="list-option1" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
+                <label class="col-2" for="list-value1">Value:</label>
+                <input type="text" id="list-value1" name="list-value1" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
+            </span>    
             
-          <label for="text-area">Custom CSS:</label>
-          <textarea class="icalc-custom-input icalc-custom-styler mt-0 mb-4 ml-4 mr-4"  id="text-area" name="custom-css" rows="8" cols="50" placeholder=".myStyle{color:red}" data-previous=""></textarea>
-        
-          <button class="icalc-config-btn btn-success mt-2 save-btn"><i class="dashicons dashicons-saved"></i></button>
-        
+            <button id="list-add-option" class="icalc-config-btn btn-danger mt-2 close-btn icalc-float-right"><i class="dashicons dashicons-plus-alt"></i></button>
+        </span>
+         
+          <span id="input-classes-configuration">
+               <label class="col-2" for="classes">Input classes:</label>
+               <input type="text" id="classes" name="input-class" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
+          </span>
+            
+           
+          <p class="font-italic font-weight-light text-info">To add multiple classes separate them by using semicolon: ';' </p>
+                
+          <span>
+             <label class="col-2"  for="text-area">Custom CSS:</label>
+             <textarea class="icalc-custom-input icalc-custom-styler mt-0 mb-4 ml-4 mr-4"  id="text-area" name="custom-css" rows="8" cols="50" placeholder=".myStyle{color:red}" data-previous=""></textarea>
+          </span>
+       
+          <button class="icalc-config-btn btn-success mt-2 save-btn icalc-float-right"><i class="dashicons dashicons-saved"></i></button>
         </div>
       </div>
     </div>
@@ -661,6 +791,8 @@ function appendConfigButton(div) {
     button.innerHTML = '<i class="dashicons dashicons-admin-generic"></i>'; // Using Font Awesome for the cog icon
     button.className = 'icalc-config-btn button';
 
+    const componentType = icalc_getComponentType(div.id.split("-")[2]);
+
     const id = "conf-" + div.parentNode.id;
 
     // Append the button to the div
@@ -669,14 +801,56 @@ function appendConfigButton(div) {
 
     // Append the modal to the body
     const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = getConfigureModal(id);
+    modalContainer.innerHTML = getConfigureModal(id, componentType);
     document.body.appendChild(modalContainer);
 
     // Get the modal and close button elements
     const modal = document.getElementById('modal-' + id);
+    modal.dataset.type = "generic"
     const closeBtn = modal.querySelector('.close-btn');
     const saveBtn = modal.querySelector('.save-btn');
     const showLabel = modal.querySelector('#show-label');
+
+    const addListOptionBtn = modal.querySelector('#list-add-option');
+    addListOptionBtn.onclick = () => {
+        let elementNodeListOf = addListOptionBtn.previousElementSibling.querySelectorAll(".icalc-custom-input");
+        for (const prevInput of elementNodeListOf) {
+            if (!prevInput.value) {
+                alert("Please fill previous option and value");
+                return;
+            }
+        }
+
+        const span = document.createElement('span');
+        const labelOption = document.createElement("label");
+        const inputOption = document.createElement('input');
+        const labelValue = document.createElement("label");
+        const inputValue = document.createElement('input');
+        const nextId = Number(addListOptionBtn.parentNode.dataset.option) + 1;
+        addListOptionBtn.parentNode.dataset.option = nextId;
+        labelOption.classList.add("col-2");
+        labelOption.htmlFor = "list-option" + nextId;
+        labelOption.textContent = `Option ${nextId}:`;
+        span.appendChild(labelOption);
+        inputOption.type = "text";
+        inputOption.id = "list-option" + nextId;
+        inputOption.name = "list-option" + nextId;
+        inputOption.className="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
+        inputOption.dataset.previous="";
+        span.appendChild(inputOption);
+        labelValue.classList.add("col-2");
+        labelValue.htmlFor = "list-value" + nextId;
+        labelValue.textContent = `Value ${nextId}:`;
+        span.appendChild(labelValue);
+        inputValue.type = "text";
+        inputValue.id = "list-value" + nextId;
+        inputValue.name = "list-value" + nextId;
+        inputValue.className="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
+        inputValue.dataset.previous="";
+        span.appendChild(inputValue);
+
+        addListOptionBtn.parentNode.insertBefore(span, addListOptionBtn);
+    }
 
 
     // Function to open the modal
@@ -721,8 +895,90 @@ function appendConfigButton(div) {
         }
     }
 
+    function resetState() {
+        let showLabelSpan = modal.querySelector("#show-label-configuration");
+        showLabelSpan.classList.remove("hidden");
+
+        let labelConfigurations = showLabelSpan.querySelectorAll('.icalc-custom-input');
+        labelConfigurations.forEach((input) => {
+            input.value = ""
+        });
+
+        let labelSpan = modal.querySelector("#custom-label-configuration");
+        labelSpan.classList.add("hidden");
+
+        let labelInputs = labelSpan.querySelectorAll('.icalc-custom-input');
+        labelInputs.forEach((input) => {
+            input.value = ""
+        });
+
+        let sliderConfSpan = modal.querySelector("#slider-configuration");
+        sliderConfSpan.classList.add("hidden");
+
+        let sliderConfigurations = sliderConfSpan.querySelectorAll('.icalc-custom-input');
+        sliderConfigurations.forEach((input) => {
+            if (input.type === "checkbox") {
+                input.checked = false
+            } else {
+                input.value = ""
+            }
+        });
+
+        let baseValueConfiguration = modal.querySelector("#base-value-configuration");
+        baseValueConfiguration.classList.remove("hidden");
+
+        let baseValueInputs = showLabelSpan.querySelectorAll('.icalc-custom-input');
+        baseValueInputs.forEach((input) => {
+            input.value = ""
+        });
+
+        let listConfiguration = modal.querySelector("#list-configuration");
+        baseValueConfiguration.classList.add("hidden");
+
+        let listInputs = listConfiguration.querySelectorAll('.icalc-custom-input');
+        listInputs.forEach((input) => {
+            input.value = ""
+        });
+    }
+
+    function processDisplayTypeChanges() {
+        const displayType = modal.dataset.type;
+        if (modal.dataset.previousType) {
+            if (displayType !== modal.dataset.previousType) {
+                resetState();
+            }
+        } else {
+            modal.dataset.previousType = displayType
+        }
+
+
+        switch (displayType.toLowerCase()) {
+            case "label":
+                modal.querySelector("#show-label-configuration").classList.add("hidden");
+                modal.querySelector("#input-classes-configuration").classList.add("hidden");
+                modal.querySelector("#custom-label-configuration").classList.remove("hidden");
+                break;
+            case "number input":
+                modal.querySelector("#base-value-configuration").classList.remove("hidden");
+                break;
+
+
+            case "list":
+            case "choose list":
+                modal.querySelector("#list-configuration").classList.remove("hidden");
+                break;
+
+            case "range":
+            case "slider":
+                modal.querySelector("#slider-configuration").classList.remove("hidden");
+                break;
+        }
+    }
+
+
     // Event listeners
     button.addEventListener('click', () => {
+        processDisplayTypeChanges();
         openModal();
     });
     closeBtn.addEventListener('click', closeModal);
@@ -755,6 +1011,9 @@ function updatePreview(jsonBodyToUpdate) {
     icalc_calculations.set(updateObject["id"], []);;
 
     for (const component of updateObject["components"]) {
+        if (component["displayType"].trim().replaceAll(" ", "").replaceAll("-", "").toLowerCase() === "none") {
+            continue;
+        }
         form.appendChild(icalc_displayComponent(component, updateObject["id"]));
     }
 
@@ -780,6 +1039,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleBtn = document.getElementById('toggleBtn');
     const firstDiv = document.getElementById('firstDiv');
     const secondDiv = document.getElementById('secondDiv');
+    const saveCalculation = document.getElementById('saveCalculation');
 
     toggleBtn.addEventListener('click', () => {
         if (firstDiv.classList.contains('visible')) {
@@ -789,6 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
             secondDiv.classList.add('visible');
             secondDiv.classList.remove("display-none")
             setTimeout(() => firstDiv.classList.add("display-none"), 300);
+            saveCalculation.classList.remove("hidden");
         } else {
             firstDiv.classList.remove('icalc-hidden-slow');
             firstDiv.classList.add('visible');
@@ -796,6 +1057,7 @@ document.addEventListener('DOMContentLoaded', () => {
             secondDiv.classList.add('icalc-hidden-slow');
             firstDiv.classList.remove("display-none")
             setTimeout(() => secondDiv.classList.add("display-none"), 300);
+            saveCalculation.classList.add("hidden");
         }
         let toggleText = toggleBtn.getAttribute('data-toggled-text');
         let innerText = toggleBtn.innerText;
@@ -803,8 +1065,10 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleBtn.innerText = toggleText;
         toggleBtn.classList.remove('icalc-reappear');
         toggleBtn.classList.add('icalc-reappear');
-
     });
+
+
+    saveCalculation
 });
 
 function noComponentFoundError(error) {
@@ -813,4 +1077,17 @@ function noComponentFoundError(error) {
     span.classList.add("text-font-weight-bold");
     span.innerText = error;
     return span;
+}
+
+function icalc_getComponentType(idPart) {
+    switch (true) {
+        case idPart.startsWith("product"):
+            return "product";
+
+        case idPart.startsWith("service"):
+            return "service";
+
+        case idPart.startsWith("component"):
+            return "component"
+    }
 }

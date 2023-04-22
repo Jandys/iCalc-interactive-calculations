@@ -32,6 +32,17 @@ function icalc_plugin_add_public_endpoints() {
 		'permission_callback' => '__return_true'
 
 	) );
+	register_rest_route( ICALC_EP_PREFIX, '/services/(?P<id>\d+)', array(
+		'methods'             => 'GET',
+		'callback'            => 'icalc_getServiceById',
+		'args'                => array( // Argument validation and sanitization.
+			'id' => array(
+				'validate_callback' => 'my_id_validate_callback',
+			),
+		),
+		'permission_callback' => '__return_true'
+
+	) );
 }
 
 function my_id_validate_callback( $value, $request, $param ) {
@@ -39,11 +50,18 @@ function my_id_validate_callback( $value, $request, $param ) {
 }
 
 function icalc_getProductById( WP_REST_Request $request ) {
-	error_log( "Trying to get product" );
 	$id      = $request->get_param( 'id' );
 	$product = \icalc\db\model\Product::get( "id", $id );
 
 	return new WP_REST_Response( $product );
+}
+
+
+function icalc_getServiceById( WP_REST_Request $request ) {
+	$id      = $request->get_param( 'id' );
+	$service = \icalc\db\model\Service::get( "id", $id );
+
+	return new WP_REST_Response( $service );
 }
 
 
