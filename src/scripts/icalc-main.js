@@ -6,8 +6,6 @@ dashboard.onchange = () => {
 }
 
 
-
-
 const body = document.querySelector('body');
 let draggedDashboardItem = null;
 draggableComponents.forEach(component => {
@@ -25,6 +23,26 @@ dashboard.addEventListener('dragstart', e => {
 dashboard.addEventListener('dragover', e => {
     e.preventDefault();
 });
+
+function addMovableButtons(cloneComponent, dashboardItem) {
+    let configurationBar = cloneComponent.querySelector(".icalc-configuration-bar");
+
+    const moveUpButton = document.createElement('button');
+    moveUpButton.innerHTML = '<i class="dashicons dashicons-arrow-up-alt"></i>';
+    moveUpButton.classList.add("icalc-config-btn");
+    moveUpButton.classList.add("icalc-btn-gray");
+    moveUpButton.classList.add("button");
+    moveUpButton.addEventListener('click', () => moveComponent(dashboardItem, 'up'));
+    const moveDownButton = document.createElement('button');
+    moveDownButton.innerHTML = '<i class="dashicons dashicons-arrow-down-alt"></i>';
+    moveDownButton.classList.add("icalc-config-btn");
+    moveDownButton.classList.add("icalc-btn-gray");
+    moveDownButton.classList.add("button");
+    moveDownButton.addEventListener('click', () => moveComponent(dashboardItem, 'down'));
+
+    configurationBar.appendChild(moveDownButton);
+    configurationBar.appendChild(moveUpButton);
+}
 
 dashboard.addEventListener('drop', e => {
     e.preventDefault();
@@ -48,24 +66,7 @@ dashboard.addEventListener('drop', e => {
     dashboardItem.classList.add('icalc-dashboard-item');
     dashboardItem.appendChild(cloneComponent);
 
-    let configurationBar = cloneComponent.querySelector(".icalc-configuration-bar");
-
-
-    const moveUpButton = document.createElement('button');
-    moveUpButton.innerHTML = '<i class="dashicons dashicons-arrow-up-alt"></i>';
-    moveUpButton.classList.add("icalc-config-btn");
-    moveUpButton.classList.add("icalc-btn-gray");
-    moveUpButton.classList.add("button");
-    moveUpButton.addEventListener('click', () => moveComponent(dashboardItem, 'up'));
-    const moveDownButton = document.createElement('button');
-    moveDownButton.innerHTML = '<i class="dashicons dashicons-arrow-down-alt"></i>';
-    moveDownButton.classList.add("icalc-config-btn");
-    moveDownButton.classList.add("icalc-btn-gray");
-    moveDownButton.classList.add("button");
-    moveDownButton.addEventListener('click', () => moveComponent(dashboardItem, 'down'));
-
-    configurationBar.appendChild(moveDownButton);
-    configurationBar.appendChild(moveUpButton);
+    addMovableButtons(cloneComponent, dashboardItem);
 
     dashboard.appendChild(dashboardItem);
 
@@ -121,10 +122,10 @@ window.addEventListener('load', () => {
                 let products = JSON.parse(productsXHR.responseText);
                 console.log('Data successfully loaded:', products);
 
-                if(products.length>0){
+                if (products.length > 0) {
                     let noneSelected = document.createElement('option');
-                    noneSelected.value="";
-                    noneSelected.innerText="-- None --";
+                    noneSelected.value = "";
+                    noneSelected.innerText = "-- None --";
                     productSelectList.appendChild(noneSelected);
                 }
 
@@ -175,10 +176,10 @@ window.addEventListener('load', () => {
                 let services = JSON.parse(servicesXHR.responseText);
                 console.log('Data successfully loaded:', services);
 
-                if(services.length>0){
+                if (services.length > 0) {
                     let noneSelected = document.createElement('option');
-                    noneSelected.value="";
-                    noneSelected.innerText="-- None --";
+                    noneSelected.value = "";
+                    noneSelected.innerText = "-- None --";
                     serviceSelectList.appendChild(noneSelected);
                 }
 
@@ -234,7 +235,7 @@ window.addEventListener('load', () => {
     componentSelectList.name = "components";
 
     const componentDiv = document.createElement('div');
-    componentDiv.Rid = 'componentDiv';
+    componentDiv.id = 'componentDiv';
     componentDiv.classList.add("icalc-component-div");
 
     for (const genericType of genericTypes) {
@@ -257,14 +258,11 @@ function setNewClonedComponent(component) {
 
     switch (true) {
         case id.startsWith("product-component"):
-            setNewProductComponent(component);
-            break;
+            return setNewProductComponent(component);
         case id.startsWith("service-component"):
-            setNewServiceComponent(component);
-            break;
+            return setNewServiceComponent(component);
         case id.startsWith("component-component"):
-            setNewGenericComponent(component);
-            break
+            return setNewGenericComponent(component);
 
     }
 }
@@ -328,6 +326,7 @@ function setNewServiceComponent(serviceComponent) {
     } else {
         appendConfigButton(dashboard);
     }
+    return serviceComponent;
 }
 
 function setNewGenericComponent(genericComponent) {
@@ -373,6 +372,7 @@ function setNewGenericComponent(genericComponent) {
     } else {
         appendConfigButton(dashboard);
     }
+    return genericComponent;
 }
 
 function setNewProductComponent(productComponent) {
@@ -431,6 +431,7 @@ function setNewProductComponent(productComponent) {
     } else {
         appendConfigButton(dashboard);
     }
+    return productComponent;
 }
 
 function getSuffixIdFromElement(elementId) {
@@ -455,7 +456,7 @@ function getProductInHtml(product) {
         "<th>ID</th>" +
         "<th>Name</th>" +
         "<th>Description</th>" +
-        "<th>Price</th>" +
+        "<th>Price per Unit</th>" +
         "<th>Unit</th>" +
         "<th>Tag</th>" +
         "<th>Min Quantity</th>" +
@@ -489,7 +490,7 @@ function createUpdateObjectOfNewCalculation() {
     updateObject.title = calculationTitle;
     updateObject.components = [];
     updateObject.customStyles = "";
-
+    updateObject.configuration = currentCalculationConfiguration;
 
     for (const child of children) {
         console.log("Child: ");
@@ -763,7 +764,7 @@ function getConfigureModal(id) {
                 <input type="text" id="list-value1" name="list-value1" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
             </span>    
             
-            <button id="list-add-option" class="icalc-config-btn btn-danger mt-2 close-btn icalc-float-right"><i class="dashicons dashicons-plus-alt"></i></button>
+            <button id="list-add-option" class="icalc-config-btn btn-info mt-2 close-btn icalc-float-right"><i class="dashicons dashicons-plus-alt"></i></button>
         </span>
          
           <span id="input-classes-configuration">
@@ -825,6 +826,7 @@ function appendConfigButton(div) {
         }
 
         const span = document.createElement('span');
+        span.classList.add("row");
         const labelOption = document.createElement("label");
         const inputOption = document.createElement('input');
         const labelValue = document.createElement("label");
@@ -838,8 +840,8 @@ function appendConfigButton(div) {
         inputOption.type = "text";
         inputOption.id = "list-option" + nextId;
         inputOption.name = "list-option" + nextId;
-        inputOption.className="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
-        inputOption.dataset.previous="";
+        inputOption.className = "icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
+        inputOption.dataset.previous = "";
         span.appendChild(inputOption);
         labelValue.classList.add("col-2");
         labelValue.htmlFor = "list-value" + nextId;
@@ -848,8 +850,8 @@ function appendConfigButton(div) {
         inputValue.type = "text";
         inputValue.id = "list-value" + nextId;
         inputValue.name = "list-value" + nextId;
-        inputValue.className="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
-        inputValue.dataset.previous="";
+        inputValue.className = "icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
+        inputValue.dataset.previous = "";
         span.appendChild(inputValue);
 
         addListOptionBtn.parentNode.insertBefore(span, addListOptionBtn);
@@ -998,6 +1000,10 @@ function appendConfigButton(div) {
 function updatePreview(jsonBodyToUpdate) {
     console.log(jsonBodyToUpdate);
 
+    if (jsonBodyToUpdate === undefined) {
+        return;
+    }
+
     const preview = document.getElementById('icalc-preview');
     preview.innerHTML = '';
 
@@ -1005,13 +1011,24 @@ function updatePreview(jsonBodyToUpdate) {
     const wrapperDiv = document.createElement("div")
     wrapperDiv.id = 'icalc-preview-wrapper';
 
-    const title = document.createElement('h3');
-    title.innerText = updateObject["title"];
-    wrapperDiv.appendChild(title);
+    if (updateObject.configuration["wrapper-classes"]) {
+        let classes = updateObject.configuration["wrapper-classes"].split(";");
+        for (const customClass of classes) {
+            wrapperDiv.classList.add(customClass);
+        }
+    }
+
+
+    if (updateObject.configuration["show-title"]) {
+        const title = document.createElement('h3');
+        title.innerText = updateObject["title"];
+        wrapperDiv.appendChild(title);
+    }
 
     const form = document.createElement("form");
 
-    icalc_calculations.set(updateObject["id"], []);;
+    icalc_calculations.set(updateObject["id"], []);
+
 
     for (const component of updateObject["components"]) {
         if (component["displayType"].trim().replaceAll(" ", "").replaceAll("-", "").toLowerCase() === "none") {
@@ -1042,25 +1059,63 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleBtn = document.getElementById('toggleBtn');
     const firstDiv = document.getElementById('firstDiv');
     const secondDiv = document.getElementById('secondDiv');
+    const thirdDiv = document.getElementById('thirdDiv');
     const saveCalculation = document.getElementById('saveCalculation');
+    const editCalculation = document.getElementById('editCalculation');
+    const editConfiguration = document.getElementById('editConfiguration');
 
     toggleBtn.addEventListener('click', () => {
+        if (thirdDiv.classList.contains('visible')) {
+            firstDiv.classList.remove('icalc-hidden-slow');
+            firstDiv.classList.add('visible');
+            secondDiv.classList.remove('visible');
+            thirdDiv.classList.remove('visible');
+            secondDiv.classList.add('icalc-hidden-slow');
+            thirdDiv.classList.add('icalc-hidden-slow');
+            firstDiv.classList.remove("display-none")
+            setTimeout(() => secondDiv.classList.add("display-none"), 300);
+            setTimeout(() => thirdDiv.classList.add("display-none"), 300);
+            saveCalculation.classList.add("hidden");
+            editCalculation.classList.add("hidden");
+            editConfiguration.classList.add("hidden");
+
+            let toggleText = toggleBtn.getAttribute('data-toggled-text');
+            let innerText = toggleBtn.innerText;
+            toggleBtn.setAttribute('data-toggled-text', innerText);
+            toggleBtn.innerText = toggleText;
+            toggleBtn.classList.remove('icalc-reappear');
+            toggleBtn.classList.add('icalc-reappear');
+            return;
+        }
+
+        icalc_clear_edit_calculation_data();
+
         if (firstDiv.classList.contains('visible')) {
             firstDiv.classList.remove('visible');
             firstDiv.classList.add('icalc-hidden-slow');
+            thirdDiv.classList.remove('visible');
+            thirdDiv.classList.add('icalc-hidden-slow');
             secondDiv.classList.remove('icalc-hidden-slow');
             secondDiv.classList.add('visible');
-            secondDiv.classList.remove("display-none")
+            secondDiv.classList.remove("display-none");
             setTimeout(() => firstDiv.classList.add("display-none"), 300);
+            setTimeout(() => thirdDiv.classList.add("display-none"), 300);
             saveCalculation.classList.remove("hidden");
+            editCalculation.classList.add("hidden");
+            editConfiguration.classList.remove("hidden");
         } else {
             firstDiv.classList.remove('icalc-hidden-slow');
             firstDiv.classList.add('visible');
             secondDiv.classList.remove('visible');
+            thirdDiv.classList.remove('visible');
             secondDiv.classList.add('icalc-hidden-slow');
+            thirdDiv.classList.add('icalc-hidden-slow');
             firstDiv.classList.remove("display-none")
             setTimeout(() => secondDiv.classList.add("display-none"), 300);
+            setTimeout(() => thirdDiv.classList.add("display-none"), 300);
             saveCalculation.classList.add("hidden");
+            editCalculation.classList.add("hidden");
+            editConfiguration.classList.add("hidden");
         }
         let toggleText = toggleBtn.getAttribute('data-toggled-text');
         let innerText = toggleBtn.innerText;
@@ -1072,6 +1127,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     saveCalculation.onclick = () => {
+        try {
+            const updateObjectOfNewCalculationJSON = createUpdateObjectOfNewCalculation();
+            const updateObjectOfNewCalculation = JSON.parse(updateObjectOfNewCalculationJSON);
+
+            if (updateObjectOfNewCalculation['components'].length > 0) {
+                let calcCreationXHR = icalc_process_calculation_description_creation();
+
+                calcCreationXHR.onreadystatechange = function () {
+                    if (calcCreationXHR.readyState === XMLHttpRequest.DONE) {
+                        if (calcCreationXHR.status === 200) {
+                            window.location.reload();
+                        } else {
+                            console.log('Error updating data:', calcCreationXHR.status);
+                        }
+                    }
+                };
+
+                calcCreationXHR.send(updateObjectOfNewCalculationJSON);
+            } else {
+                alert("There are no valid components to be saved to calculation");
+            }
+        } catch (exception) {
+            alert("There are no valid components to be saved to calculation");
+        }
+    }
+
+    editConfiguration.onclick = () => {
+        const modal = document.getElementById('configure-calculation-modal').parentNode;
+        modal.classList.remove('hidden');
+
+        const closeBtn = modal.querySelector('.close-btn');
+        const saveBtn = modal.querySelector('.save-btn');
+
+        function saveModal() {
+            modal.classList.add("hidden");
+            let customInputs = modal.querySelectorAll('.icalc-custom-input');
+            for (const input of customInputs) {
+                if (input.type === "checkbox") {
+                    input.dataset.previous = input.checked;
+                } else {
+                    input.dataset.previous = input.value;
+                }
+            }
+            dashboard_content_change();
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            modal.classList.add("hidden");
+            let customInputs = modal.querySelectorAll('.icalc-custom-input');
+            for (const input of customInputs) {
+                input.value = input.dataset.previous;
+            }
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        saveBtn.addEventListener('click', saveModal);
+
+        modal.onchange = () => {
+            icalc_process_calculation_configuration_change(modal);
+        };
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
 
     }
 });
@@ -1095,4 +1217,196 @@ function icalc_getComponentType(idPart) {
         case idPart.startsWith("component"):
             return "component"
     }
+}
+
+let currentCalculationConfiguration = {
+    "show-title": true,
+    "calculation-description": "simpleCalculation",
+    "wrapper-classes": "",
+}
+
+function icalc_set_calculation_configuration_values(calculateConfiguration) {
+    const modal = document.getElementById('configure-calculation-modal')
+    const showTitleCheckBox = modal.querySelector('#show-title');
+    if (calculateConfiguration["show-title"]) {
+        showTitleCheckBox.checked = true;
+        showTitleCheckBox.dataset.previous = "true";
+    } else {
+        showTitleCheckBox.checked = false;
+        showTitleCheckBox.dataset.previous = "false";
+    }
+
+
+    const calcDescription = modal.querySelector('#calculation-description');
+    calcDescription.value = currentCalculationConfiguration["calculation-description"]
+    calcDescription.dataset.previous = currentCalculationConfiguration["calculation-description"]
+
+
+    const wrapperClasses = modal.querySelector('#wrapper-classes');
+    wrapperClasses.value = currentCalculationConfiguration["wrapper-classes"];
+    wrapperClasses.dataset.previous = currentCalculationConfiguration["wrapper-classes"];
+
+}
+
+function icalc_process_calculation_configuration_change(modal) {
+    const showTitleCheckBox = modal.querySelector('#show-title');
+    if (showTitleCheckBox.checked) {
+        currentCalculationConfiguration["show-title"] = true;
+    } else {
+        currentCalculationConfiguration["show-title"] = false;
+    }
+
+    const calcDescription = modal.querySelector('#calculation-description');
+    if (calcDescription.value) {
+        currentCalculationConfiguration["calculation-description"] = calcDescription.value;
+    }
+
+    const wrapperClasses = modal.querySelector('#wrapper-classes');
+    if (wrapperClasses.value) {
+        currentCalculationConfiguration["wrapper-classes"] = wrapperClasses.value;
+    }
+}
+
+function icalc_handle_button_and_div_swap() {
+    const toggleBtn = document.getElementById('toggleBtn');
+    const firstDiv = document.getElementById('firstDiv');
+    const secondDiv = document.getElementById('secondDiv');
+    const thirdDiv = document.getElementById('thirdDiv');
+    const saveCalculation = document.getElementById('saveCalculation');
+    const editCalculation = document.getElementById('editCalculation');
+    const editConfiguration = document.getElementById('editConfiguration');
+
+    setTimeout(() => firstDiv.classList.add("display-none"), 300);
+    setTimeout(() => secondDiv.classList.add("display-none"), 300);
+    firstDiv.classList.add("icalc-hidden-slow");
+    secondDiv.classList.add("icalc-hidden-slow");
+    thirdDiv.classList.remove("display-none");
+    thirdDiv.classList.remove("icalc-hidden-slow");
+    thirdDiv.classList.add("visible");
+
+
+    editConfiguration.classList.remove("hidden");
+    saveCalculation.classList.add("hidden");
+    editCalculation.classList.remove("hidden");
+
+    let toggleText = toggleBtn.getAttribute('data-toggled-text');
+    let innerText = toggleBtn.innerText;
+    toggleBtn.setAttribute('data-toggled-text', innerText);
+    toggleBtn.innerText = toggleText;
+    toggleBtn.classList.remove('icalc-reappear');
+    toggleBtn.classList.add('icalc-reappear');
+}
+
+function icalc_set_edit_calculation_name(configuredName) {
+    const input = document.getElementById("icalc-calulation-edit-name");
+    input.value = configuredName;
+}
+
+function icalc_add_custom_styles_edit_calculation(customStyles) {
+    let thirdDiv = document.getElementById('thirdDiv');
+    let styles = document.createElement('style');
+    styles.innerHTML = customStyles;
+    thirdDiv.appendChild(styles);
+}
+
+function icalc_fill_components_of_edit_calculation(components) {
+    console.log("COMPONENTS:");
+    console.log(components);
+    const nextIds = {
+        "product-component": 1,
+        "service-component": 1,
+        "component-component": 1
+    };
+    for (const component of components){
+        const domId = component.domId;
+        const domText = domId.map(str => str.replace(/\d+/g, ''));
+        const id = domId.map(str => str.match(/\d+/g)?.[0]);
+
+        if(id > nextIds[domText]){
+            nextIds[domText] = id;
+        }
+
+        let draggableComponent = document.getElementById(domText);
+        draggableComponent.id = domId;
+        let insertedComponent = setNewClonedComponent(draggableComponent);
+
+        const dashboardItem = document.createElement('div');
+        dashboardItem.classList.add('icalc-dashboard-item');
+        dashboardItem.appendChild(insertedComponent);
+
+        addMovableButtons(insertedComponent, dashboardItem);
+        dashboard.appendChild(insertedComponent);
+
+        icalc_insertDataToComponent(insertedComponent,component);
+    }
+
+    const draggableProduct = document.getElementById('draggableProduct');
+    draggableProduct.setAttribute("data-next-id", nextIds["product-component"]);
+    const draggableService = document.getElementById('draggableService');
+    draggableService.setAttribute("data-next-id", nextIds["service-component"]);
+    const draggableComponent = document.getElementById('draggableComponent');
+    draggableComponent.setAttribute("data-next-id", nextIds["component-component"]);
+
+
+}
+
+
+function icalc_insertDataToComponent(insertedComponent,jsonData){
+    icalc_insertDataToComponentModal(insertedComponent,jsonData);
+}
+
+//"conf":{"confId":"modal-conf-component-component0","configuration":{"show-label":"","custom-label":"","label-class":"","base-value":"","slider-max":"","slider-show-value":"","list-option1":"","list-value1":"","input-class":"","custom-css":""}},
+function icalc_insertDataToComponentModal(insertedComponent,jsonData){
+    const modal = document.getElementById(jsonData.conf.confId);
+    for (const attribute in jsonData.conf.configuration){
+        const inputValue = document.getElementById(attribute);
+        attribute.value = jsonData.conf.configuration[attribute];
+        attribute.dataset.previous = jsonData.conf.configuration[attribute];
+        if(jsonData.conf.configuration[attribute] )
+        attribute.dataset.previous = // TODO
+    }
+}
+
+
+function icalc_process_calculation_edit_action(id) {
+    const calculationXHR = icalc_getCalculationDescriptionById(id);
+
+    calculationXHR.onreadystatechange = function () {
+        if (calculationXHR.readyState === XMLHttpRequest.DONE) {
+            if (calculationXHR.status === 200) {
+                const databaseObject = JSON.parse(calculationXHR.responseText);
+                const calculationObject = JSON.parse(databaseObject.body);
+                console.log(calculationObject)
+
+                icalc_set_calculation_configuration_values(calculationObject.configuration);
+                icalc_handle_button_and_div_swap();
+
+                icalc_set_edit_calculation_name(calculationObject.title);
+                icalc_add_custom_styles_edit_calculation(calculationObject.customStyles);
+
+                icalc_fill_components_of_edit_calculation(calculationObject.components);
+
+
+            } else {
+                console.log('Error updating data:', calculationXHR.status);
+            }
+        }
+    };
+    calculationXHR.send();
+}
+
+
+function icalc_clear_edit_calculation_data() {
+    const dashboard = document.getElementById('icalc-dashboard-edit');
+    dashboard.innerHTML = "";
+    const preview = document.getElementById('icalc-preview-edit');
+    preview.innerHTML = "";
+
+    const draggableProduct = document.getElementById('draggableProduct');
+    draggableProduct.setAttribute("data-next-id", 1);
+    const draggableService = document.getElementById('draggableService');
+    draggableService.setAttribute("data-next-id", 1);
+    const draggableComponent = document.getElementById('draggableComponent');
+    draggableComponent.setAttribute("data-next-id", 1);
+
 }

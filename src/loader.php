@@ -13,7 +13,6 @@ require_once ICALC_PATH . '/util/script-require.php';
 require_once ICALC_PATH . '/database/autoload.php';
 require_once ICALC_PATH . '/controller/controllers.php';
 require_once ICALC_PATH . '/frontend/displayTypes/autoload.php';
-require_once ICALC_PATH . '/frontend/components/autoload.php';
 require_once ICALC_PATH . '/controller/icalcJWT.php';
 
 // Hook into the 'plugins_loaded' action to make sure WordPress core functions are available.

@@ -73,11 +73,21 @@
     border-color: #1e7e34 !important;
 }
 
-
 .icalc-button-save-color:hover{
     color: whitesmoke;
     background-color: #1c7430 !important;
     border-color: #0b2e13 !important;
+}
+
+.icalc-button-edit-color{
+    background-color: #005cbf !important;
+    border-color: #0d7fad !important;
+}
+
+.icalc-button-edit-color:hover{
+    color: whitesmoke;
+    background-color: #024c9c !important;
+    border-color: #0069d9 !important;
 }
 
 .icalc-dashboard-item:hover .icalc-move-controls {
@@ -275,4 +285,11 @@ button.icalc-toggle-creation:hover {
     100%{
         opacity: 100;
     }
+}
+
+.icalc-long-text-clipping{
+    max-width: 150px; /* Adjust this value to your desired width */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

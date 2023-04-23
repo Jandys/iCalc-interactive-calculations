@@ -32,11 +32,11 @@ class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend
                     <td>' . $item->id . '</td>
                     <td>' . $item->name . '</td>
                     <td>' . $item->description . '</td>
-                    <td>' . $item->body . '</td>
+                    <td class="icalc-long-text-clipping">' . $item->body . '</td>
                     <td>' . $item->created_at . '</td>
                     <td>' . $item->modified_at . '</td>
-                    <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
-                    <td class="text-center"><button class="btn btn-danger" onclick="icakc(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
+                    <td class="text-center"><button class="btn btn-info" onclick="icalc_process_calculation_edit_action(\'' . $item->id . '\')"><span class="dashicons dashicons-edit"></span></button></td>
+                    <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_calculation_delete_action(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
                 </tr>';
         }
 
@@ -49,7 +49,7 @@ class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend
                         <th class="p-2 m-2">'.__("ID").'</th>
                         <th class="p-2 m-2">'.__("Name").'</th>
                         <th class="p-2 m-2">'.__("Description").'</th>
-                        <th class="p-2 m-2">'.__("Body").'</th>
+                        <th class="p-2 m-2 icalc-long-text-clipping">'.__("Body").'</th>
                         <th class="p-2 m-2">'.__("Created At").'</th>
                         <th class="p-2 m-2">'.__("Modified At").'</th>
                         <th class="col-1"></th>

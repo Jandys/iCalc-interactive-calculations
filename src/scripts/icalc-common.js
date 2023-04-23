@@ -96,6 +96,16 @@ function icalc_getNextCalculationId(id) {
 }
 
 
+function icalc_getCalculationDescriptionById(id) {
+    const xhr = new XMLHttpRequest();
+    const url = `/wp-json/icalc/v1/icalculation-descriptions/${id}`;
+    xhr.open('GET', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    return xhr;
+}
+
+
+
 function icalc_displayComponent(component, calculationId) {
     switch (component.type) {
         case "product":
@@ -299,12 +309,6 @@ function icalc_getNumberDisplayType(component, componentData, calculationId) {
     const inputElement = document.createElement('input');
     inputElement.type = 'number';
     inputElement.classList.add("form-control");
-    if (component.conf.configuration["input-class"]) {
-        let inputClasses = component.conf.configuration["input-class"].split(";");
-        for (const inputClass of inputClasses) {
-            inputElement.classList.add(inputClass);
-        }
-    }
 
     inputElement.setAttribute('id', `${component.domId}-numberInput`);
     inputElement.setAttribute('name', `${component.domId}-numberInput`);
@@ -398,7 +402,7 @@ function icalc_getSliderDisplayType(component, componentData, calculationId) {
         }
 
         if (component.conf.configuration["slider-show-value"]) {
-            displayValue.textContent = inputElement.value;
+            displayValue.textContent = inputElement.value + " " + componentData["unit"];
         } else {
             displayValue.innerHTML = ""
         }
@@ -448,7 +452,43 @@ function icalc_getListDisplayType(component, componentData, calculationId) {
     const colInput = document.createElement("div");
     colInput.classList.add("col");
     const select = document.createElement('select');
-    console.log(component.conf);
+    select.classList.add("form-control")
+
+    if (component.conf.configuration["input-class"]) {
+        let inputClasses = component.conf.configuration["input-class"].split(";");
+        for (const inputClass of inputClasses) {
+            select.classList.add(inputClass);
+        }
+    }
+
+    let currentOption = null;
+    let currentValue = null;
+    for (const attribute in component.conf.configuration) {
+        if (currentOption && currentValue) {
+            const option = document.createElement("option");
+            option.value = currentValue;
+            option.innerText = currentOption;
+
+            select.appendChild(option);
+            currentValue = null;
+            currentOption = null;
+        }
+        if (attribute.startsWith('list-option')) {
+            if(component.conf.configuration[attribute]){
+                currentOption = component.conf.configuration[attribute];
+            }else {
+                currentValue = null;
+                currentOption = null;
+            }
+        } else if (attribute.startsWith('list-value')) {
+            if(component.conf.configuration[attribute]){
+                currentValue = component.conf.configuration[attribute];
+            }else {
+                currentValue = null;
+                currentOption = null;
+            }
+        }
+    }
 
 
     colInput.appendChild(select);

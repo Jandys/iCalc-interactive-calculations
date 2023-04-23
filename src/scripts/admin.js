@@ -414,3 +414,55 @@ function icalc_getAllServices() {
 
     return xhr;
 }
+
+function icalc_process_calculation_description_creation(){
+    const xhr = new XMLHttpRequest();
+    const url = '/wp-json/icalc/v1/icalculation-descriptions';
+
+    xhr.open('POST', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
+    xhr.withCredentials = true;
+
+    return xhr;
+}
+
+function icalc_process_calculation_delete_action(id, name){
+
+    const result = confirm("Opravdu chcete odstranit Kalkulaci: " + name + "?" );
+
+    if (result) {
+        const xhr = new XMLHttpRequest();
+        const url = '/wp-json/icalc/v1/icalculation-descriptions';
+        const data = JSON.stringify({
+            id: id
+        });
+
+        xhr.open('DELETE', url);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('user', icalcApiSettings.user);
+        xhr.setRequestHeader('session', icalcApiSettings.session);
+
+        xhr.withCredentials = true;
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('Data successfully updated:', xhr.responseText);
+                    location.reload();
+                } else {
+                    console.log('Error updating data:', xhr.status);
+                }
+            }
+        };
+
+
+        xhr.send(data);
+    } else {
+        // Code to execute if "No" button is clicked
+        // Do nothing
+    }
+
+}

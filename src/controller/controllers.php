@@ -43,6 +43,18 @@ function icalc_plugin_add_public_endpoints() {
 		'permission_callback' => '__return_true'
 
 	) );
+
+	register_rest_route( ICALC_EP_PREFIX, '/icalculation-descriptions/(?P<id>\d+)', array(
+		'methods'             => 'GET',
+		'callback'            => 'icalc_getCalculationDescriptionById',
+		'args'                => array( // Argument validation and sanitization.
+			'id' => array(
+				'validate_callback' => 'my_id_validate_callback',
+			),
+		),
+		'permission_callback' => '__return_true'
+
+	) );
 }
 
 function my_id_validate_callback( $value, $request, $param ) {
@@ -62,6 +74,13 @@ function icalc_getServiceById( WP_REST_Request $request ) {
 	$service = \icalc\db\model\Service::get( "id", $id );
 
 	return new WP_REST_Response( $service );
+}
+
+function icalc_getCalculationDescriptionById( WP_REST_Request $request ) {
+	$id      = $request->get_param( 'id' );
+	$icalcDescription = \icalc\db\model\IcalculationsDescription::get( "id", $id );
+
+	return new WP_REST_Response( $icalcDescription );
 }
 
 
@@ -140,6 +159,37 @@ function icalc_plugin_add_icalculation_descriptions_endpoints()
 }
 
 
+
+/**
+ * POST /icalculation-descriptions
+ */
+function icalc_postIcalculationDescriptions(WP_REST_Request $request)
+{
+	$validated = validate_icalc_jwt_token($request);
+	if ($validated instanceof WP_REST_Response) {
+		return $validated;
+	}
+
+	if(!$validated){
+		return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
+	}
+
+	$data = $request->get_json_params();
+
+	$name = $data['title'];
+	$desc = $data['configuration']['calculation-description'];
+
+	error_log("SAVE DESC");
+	error_log("NAME $name");
+	error_log("DESC $desc");
+	error_log("Body ". json_encode($data));
+
+
+	$success = \icalc\db\model\IcalculationsDescription::insertNew($name,$desc,json_encode($data));
+
+	return new WP_REST_Response($success);
+}
+
 /**
  * GET /icalculation-descriptions/next
  */
@@ -158,8 +208,31 @@ function icalc_getNextIcalculationDescriptionId( WP_REST_Request $request ) {
 	return new WP_REST_Response( $allDescriptions + 1 );
 }
 
+
 /**
- * POST /products
+ * delete /icalculation-descriptions
+ */
+function icalc_deleteIcalculationDescriptions( WP_REST_Request $request ) {
+	$validated = validate_icalc_jwt_token( $request );
+	if ( $validated instanceof WP_REST_Response ) {
+		return $validated;
+	}
+
+	if(!$validated){
+		return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
+	}
+
+	$data = $request->get_json_params();
+	$id = $data['id'];
+
+	$result = \icalc\db\model\IcalculationsDescription::delete($id);
+	return new WP_REST_Response($result);
+}
+
+
+
+/**
+ * GET /icalculation-descriptions
  */
 function icalc_getIcalculationDescriptions( WP_REST_Request $request ) {
 	$validated = validate_icalc_jwt_token( $request );

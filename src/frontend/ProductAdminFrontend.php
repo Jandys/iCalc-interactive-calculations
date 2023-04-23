@@ -64,7 +64,7 @@ class ProductAdminFrontend extends AbstractAdminFrontend
                         <th class="p-2 m-2">' . __("ID") . '</th>
                         <th class="p-2 m-2">' . __("Name") . '</th>
                         <th class="p-2 m-2">' . __("Description") . '</th>
-                        <th class="p-2 m-2">' . __("Price") . '</th>
+                        <th class="p-2 m-2">' . __("Price per Unit") . '</th>
                         <th class="p-2 m-2">' . __("Unit") . '</th>
                         <th class="p-2 m-2">' . __("Minimal Quantity") . '</th>
                         <th class="p-2 m-2">' . __("Tag") . '</th>
@@ -115,8 +115,8 @@ class ProductAdminFrontend extends AbstractAdminFrontend
                                   <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __("Description") . '" value="' . $formFields['desc'] . '">
                                 </div>
                                 <div class="col">
-                                  <label for="' . $modalId . '_price_form">' . __("Price") . '</label>
-                                  <input id="' . $modalId . '_price_form" type="text" class="form-control" placeholder="' . __("Price") . '" value="' . $formFields['price'] . '">
+                                  <label for="' . $modalId . '_price_form">' . __("Price per Unit") . '</label>
+                                  <input id="' . $modalId . '_price_form" type="text" class="form-control" placeholder="' . __("Price per Unit") . '" value="' . $formFields['price'] . '">
                                 </div>
                                 <div class="col">
                                   <label for="' . $modalId . '_unit_form">' . __("Unit") . '</label>
@@ -179,7 +179,7 @@ class ProductAdminFrontend extends AbstractAdminFrontend
                                   <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __("Product Description") . '" >
                                 </div>
                                 <div class="col">
-                                  <label for="' . $modalId . '_price_form">' . __("Price") . '</label>
+                                  <label for="' . $modalId . '_price_form">' . __("Price per Unit") . '</label>
                                   <input id="' . $modalId . '_price_form" type="number" class="form-control" placeholder="' . __("Product Price") . '" >
                                 </div>
                                 <div class="col">
