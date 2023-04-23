@@ -479,9 +479,8 @@ function getProductInHtml(product) {
 
 let nextCalculationId;
 
-function dashboard_content_change() {
+function createUpdateObjectOfNewCalculation() {
     let children = dashboard.children;
-
 
     let calculationTitleObject = document.getElementById('icalc-calulation-new-name');
     let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : "New Calculation title";
@@ -504,8 +503,7 @@ function dashboard_content_change() {
 
     if (nextCalculationId) {
         updateObject.id = nextCalculationId;
-        updatePreview(JSON.stringify(updateObject));
-
+        return JSON.stringify(updateObject);
     } else {
         let nextIdXHR = icalc_getNextCalculationDescriptionId();
 
@@ -515,7 +513,7 @@ function dashboard_content_change() {
                     let nextId = JSON.parse(nextIdXHR.responseText);
                     updateObject.id = nextId;
                     nextCalculationId = nextId;
-                    updatePreview(JSON.stringify(updateObject));
+                    return JSON.stringify(updateObject);
                 } else {
                     console.log('Error fetching data:', nextIdXHR.status);
                 }
@@ -523,6 +521,11 @@ function dashboard_content_change() {
         };
         nextIdXHR.send();
     }
+}
+
+function dashboard_content_change() {
+    let updateObjectJson = createUpdateObjectOfNewCalculation();
+    updatePreview(updateObjectJson);
 }
 
 function getComponentToJSONObject(component) {
@@ -1068,7 +1071,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    saveCalculation
+    saveCalculation.onclick = () => {
+
+    }
 });
 
 function noComponentFoundError(error) {
