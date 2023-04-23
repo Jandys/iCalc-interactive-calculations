@@ -4,14 +4,6 @@
 use function icalc\util\console_log;
 
 add_action('admin_menu', 'ic_admin_menu');
-//add_action('muplugins_loaded', 'inter_calc_before_admin_init');
-//function inter_calc_before_admin_init()
-//{
-//    if (is_admin()) {
-//        \icalc\fe\AbstractAdminFrontend::setIcalcTokenCookie();
-//    }
-//}
-
 add_action('admin_init', 'inter_calc_set_cookie');
 
 const configurationSites = array('inter-calc-configuration',
