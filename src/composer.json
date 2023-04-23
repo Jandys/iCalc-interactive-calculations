@@ -10,8 +10,8 @@
     }
   ],
   "require": {
-    "php": ">=7.0",
-    "firebase/php-jwt": "^5.0",
+    "php": ">=8.0",
+    "firebase/php-jwt": "^v6.4.0",
     "ext-json": "*"
   },
   "autoload": {

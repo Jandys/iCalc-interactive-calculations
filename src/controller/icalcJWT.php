@@ -32,7 +32,7 @@ function issue_jwt_token($user_id, $session): string
         'secret' => $randomCharacters
     ];
 
-    $token = JWT::encode($payload, JWT_SECRET_KEY);
+    $token = JWT::encode($payload, JWT_SECRET_KEY,'HS256');
     delete_site_transient('icalc-secret-' . $user_id . $session);
     set_site_transient('icalc-secret-' . $user_id . $session, $randomCharacters, 60 * 60);
     return $token;
@@ -42,7 +42,8 @@ function issue_jwt_token($user_id, $session): string
 function validate_jwt_token($token, $userid, $session)
 {
     try {
-        $decoded = JWT::decode($token, JWT_SECRET_KEY, ['HS256']);
+		$key = new \Firebase\JWT\Key(JWT_SECRET_KEY, 'HS256');
+        $decoded = JWT::decode($token,$key);
         $uid = $decoded->uid;
         $sessionId = $decoded->session;
         if ($userid == $uid && $sessionId == $session) {

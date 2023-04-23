@@ -28,7 +28,7 @@ class TagAdminFrontend extends AbstractAdminFrontend
             $modalData["name"] = $item->name;
             $modalData["desc"] = $item->description;
 
-            $html = $html . self::configuredModalEdit( $modalId, $item->id, $modalData,);
+            $html = $html . self::configuredModalEdit( $modalId, $item->id, $modalData);
 
 
             $tbody = $tbody . '

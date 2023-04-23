@@ -71,7 +71,7 @@ class BaseDatabaseModel
 
     /**
      * Delete data from Table by ID
-     * @param $id
+     * @param $id of an object
      * @return mixed
      */
     public static function delete( $value ) {

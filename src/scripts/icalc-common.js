@@ -248,10 +248,10 @@ function icalc_calculate(idOfCalculation, method = "sum") {
     let result = 0;
     const calculationObject = icalc_calculations.get(idOfCalculation);
     for (const calcPart in calculationObject) {
-            switch (method) {
-                case "sum":
-                    result += icalc_simpleCalculation(calculationObject[calcPart]);
-                    break;
+        switch (method) {
+            case "sum":
+                result += icalc_simpleCalculation(calculationObject[calcPart]);
+                break;
         }
     }
     return result;
@@ -319,9 +319,9 @@ function icalc_getNumberDisplayType(component, componentData, calculationId) {
 
     colInput.onchange = () => {
         let baseValue;
-        if(componentData["price"]){
+        if (componentData["price"]) {
             baseValue = componentData["price"];
-        }else {
+        } else {
             baseValue = component.conf.configuration["base-value"];
         }
 
@@ -397,10 +397,10 @@ function icalc_getSliderDisplayType(component, componentData, calculationId) {
             "negative": false
         }
 
-        if(component.conf.configuration["slider-show-value"]){
-            displayValue.textContent=inputElement.value;
-        }else {
-            displayValue.innerHTML=""
+        if (component.conf.configuration["slider-show-value"]) {
+            displayValue.textContent = inputElement.value;
+        } else {
+            displayValue.innerHTML = ""
         }
 
         icalc_calculations.setFrom(calculationId, `${component.domId}-slider`, inputCalculation);
@@ -413,19 +413,19 @@ function icalc_getSliderDisplayType(component, componentData, calculationId) {
 }
 
 
-function icalc_getLabelDisplayType(component){
+function icalc_getLabelDisplayType(component) {
     const label = document.createElement("label")
-    label.textContent=component.conf.configuration["custom-label"];
+    label.textContent = component.conf.configuration["custom-label"];
     return label;
 }
 
-function icalc_getHorizontalRule(){
+function icalc_getHorizontalRule() {
     return document.createElement("hr");
 }
 
 
-function icalc_getListDisplayType(component, componentData, calculationId){
-
+function icalc_getListDisplayType(component, componentData, calculationId) {
+    const showLabel = component.conf.configuration["show-label"];
     const wrapper = document.createElement("div");
     if (showLabel === "true") {
         const colLabel = document.createElement("div");
@@ -448,8 +448,7 @@ function icalc_getListDisplayType(component, componentData, calculationId){
     const colInput = document.createElement("div");
     colInput.classList.add("col");
     const select = document.createElement('select');
-
-
+    console.log(component.conf);
 
 
     colInput.appendChild(select);
