@@ -40,8 +40,6 @@ class ObservableArray {
         return result;
     }
 
-    // Other array methods here...
-
     addListener(listener) {
         this.listeners.add(listener);
     }
@@ -60,7 +58,6 @@ class ObservableArray {
 
 let icalc_calculations = new ObservableArray([]);
 let icalc_calculationElements = [];
-
 icalc_calculations.addListener((action, args, calculationId) => {
     if (icalc_calculationElements[calculationId]) {
         for (const element of icalc_calculationElements[calculationId]) {
@@ -279,7 +276,7 @@ function icalc_getNumberDisplayType(component, componentData, calculationId) {
 
     const showLabel = component.conf.configuration["show-label"];
     const wrapper = document.createElement("div");
-    if (showLabel == "true") {
+    if (showLabel === "true") {
         const colLabel = document.createElement("div");
         colLabel.classList.add("col");
         colLabel.classList.add("form-label");

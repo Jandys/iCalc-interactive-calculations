@@ -129,7 +129,7 @@ function inter_calc_main_configuration()
         echo '</div>';
 
 
-        wp_enqueue_script('icalc_main-script', plugins_url('../scripts/icalc-main.js', __FILE__), array(), '0.0.1', false);
+        wp_enqueue_script('icalc_main-script', plugins_url('../scripts/icalc_main.js', __FILE__), array(), '0.0.1', false);
         add_action('wp_enqueue_scripts', 'icalc_main-script');
 
     }
