@@ -3,7 +3,6 @@
 namespace icalc\fe;
 
 use function icalc\util\callJSFunction;
-use function icalc\util\console_log;
 
 abstract class AbstractAdminFrontend
 {

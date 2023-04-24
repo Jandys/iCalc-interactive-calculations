@@ -121,7 +121,6 @@ window.addEventListener('load', () => {
         if (productsXHR.readyState === XMLHttpRequest.DONE) {
             if (productsXHR.status === 200) {
                 let products = JSON.parse(productsXHR.responseText);
-                console.log('Data successfully loaded:', products);
 
                 if (products.length > 0) {
                     let noneSelected = document.createElement('option');
@@ -138,7 +137,6 @@ window.addEventListener('load', () => {
 
 
                     const span = document.createElement('span');
-                    console.log(product);
                     span.innerHTML = getProductInHtml(product);
                     span.id = 'product' + product.id + '-'
                     span.classList.add("icalc-selected-span-item");
@@ -147,16 +145,15 @@ window.addEventListener('load', () => {
                 });
 
             } else {
-                console.log('Error updating data:', productsXHR.status);
+                console.log('Error fetching products data:', productsXHR.status);
             }
         }
     };
     productsXHR.send();
 
     dashboardProducts.appendChild(productSelectList);
-    dashboardProducts.appendChild(productDiv)
+    dashboardProducts.appendChild(productDiv);
 })
-
 
 window.addEventListener('load', () => {
     const dashboardServices = document.getElementById('icalc-dashboard-services');
@@ -175,7 +172,6 @@ window.addEventListener('load', () => {
         if (servicesXHR.readyState === XMLHttpRequest.DONE) {
             if (servicesXHR.status === 200) {
                 let services = JSON.parse(servicesXHR.responseText);
-                console.log('Data successfully loaded:', services);
 
                 if (services.length > 0) {
                     let noneSelected = document.createElement('option');
@@ -192,7 +188,6 @@ window.addEventListener('load', () => {
 
 
                     const span = document.createElement('span');
-                    console.log(service);
                     span.innerHTML = getProductInHtml(service);
                     span.id = 'service' + service.id + '-'
                     span.classList.add("icalc-selected-span-item");
@@ -201,18 +196,11 @@ window.addEventListener('load', () => {
                 });
 
             } else {
-                console.log('Error updating data:', servicesXHR.status);
+                console.log('Error fetched service data:', servicesXHR.status);
             }
         }
     };
     servicesXHR.send();
-
-
-    console.log("Services List: ");
-    console.log(serviceSelectList);
-    console.log("List childrens: ");
-    console.log(serviceSelectList.children.length);
-
 
     dashboardServices.appendChild(serviceSelectList);
     dashboardServices.appendChild(serviceDiv)
@@ -254,7 +242,6 @@ window.addEventListener('load', () => {
 
 
 function setNewClonedComponent(component) {
-    console.log(component);
     let id = component.id;
 
     switch (true) {
@@ -299,8 +286,6 @@ function setNewServiceComponent(serviceComponent) {
         for (const product of serviceDiv.children) {
             product.classList.add("hidden");
         }
-
-        console.log('service' + event.target.value + '-' + id);
 
         selectedElement = document.getElementById('service' + event.target.value + '-' + id);
         if (selectedElement) {
@@ -408,7 +393,6 @@ function setNewProductComponent(productComponent) {
             product.classList.add("hidden");
         }
 
-        console.log('product' + event.target.value + '-' + id);
         selectedElement = document.getElementById('product' + event.target.value + '-' + id);
         if (selectedElement) {
             selectedElement.classList.remove("hidden");
@@ -465,8 +449,6 @@ async function createUpdateObjectOfNewCalculation() {
     });
 
     for (const child of children) {
-        console.log("Child: ");
-        console.log(child);
         const component = getComponentToJSONObject(child.children[0]);
         if (component != null) {
             updateObject.components.push(component);
@@ -521,16 +503,11 @@ async function dashboard_content_change() {
 
 function getComponentToJSONObject(component) {
     const id = component.id
-
-    console.log("id:" + id);
-
     switch (true) {
         case id.startsWith("product-component"):
             return getProductToJSONObject(component);
         case id.startsWith("service-component"):
             return getServiceToJSONObject(component);
-
-            break;
         case id.startsWith("component-component"):
             return getGenericComponentToJSONObject(component);
     }
@@ -541,7 +518,6 @@ function getProductToJSONObject(productComponent) {
     let dashboard;
     let productDiv;
     let validProduct;
-    console.log(productComponent);
     for (const child of children) {
         if (child.id.startsWith("icalc-dashboard")) {
             dashboard = child;
@@ -565,11 +541,6 @@ function getProductToJSONObject(productComponent) {
     }
 
     if (validProduct !== undefined) {
-
-        console.log("Valid product:");
-        console.log(validProduct);
-
-
         const modalConfId = "modal-conf-" + validProduct.parentNode.parentNode.parentNode.id
         let conf = {};
 
@@ -608,7 +579,6 @@ function getServiceToJSONObject(serviceComponent) {
     let dashboard;
     let serviceDiv;
     let validService;
-    console.log(serviceComponent);
     for (const child of children) {
         if (child.id.startsWith("icalc-dashboard")) {
             dashboard = child;
@@ -632,11 +602,6 @@ function getServiceToJSONObject(serviceComponent) {
     }
 
     if (validService !== undefined) {
-
-        console.log("Valid service:");
-        console.log(validService);
-
-
         const modalConfId = "modal-conf-" + validService.parentNode.parentNode.parentNode.id;
         let conf = {};
 
@@ -701,7 +666,7 @@ function getGenericComponentToJSONObject(genericComponent) {
         "domId": genericComponent.id,
         "parentComponent": genericComponent.id,
         "type": "genericComponent",
-        "id": parseInt(select.id.match(/\d+/)[0], 10),
+        "id": select.dataset.selected,
         "conf": {
             "confId": modalConfId,
             "configuration": conf
@@ -710,7 +675,7 @@ function getGenericComponentToJSONObject(genericComponent) {
     };
 }
 
-function getConfigureModal(id) {
+function getConfigureModal(id, displayType) {
 
     return `
     <div class="icalc-modal-wrapper hidden icalc-component-configuration-modal">
@@ -733,7 +698,7 @@ function getConfigureModal(id) {
          
          <span class="hidden" id="label-configuration">
                <label for="label-classes">Label classes:</label>
-               <input type="text" id="label-classes" name="label-class" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
+               <input type="text" id="label-classes" name="label-classes" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
         </span>
         
          <span class="hidden" id="base-value-configuration">
@@ -760,16 +725,16 @@ function getConfigureModal(id) {
         </span>
          
           <span id="input-classes-configuration">
-               <label class="col-2" for="classes">Input classes:</label>
-               <input type="text" id="classes" name="input-class" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
+               <label class="col-2" for="input-classes">Input classes:</label>
+               <input type="text" id="input-classes" name="input-classes" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
           </span>
             
            
           <p class="font-italic font-weight-light text-info">To add multiple classes separate them by using semicolon: ';' </p>
                 
-          <span>
-             <label class="col-2"  for="text-area">Custom CSS:</label>
-             <textarea class="icalc-custom-input icalc-custom-styler mt-0 mb-4 ml-4 mr-4"  id="text-area" name="custom-css" rows="8" cols="50" placeholder=".myStyle{color:red}" data-previous=""></textarea>
+          <span id="custom-css-configuration">
+             <label class="col-2"  for="custom-css">Custom CSS:</label>
+             <textarea class="icalc-custom-input icalc-custom-styler mt-0 mb-4 ml-4 mr-4"  id="custom-css" name="custom-css" rows="8" cols="50" placeholder=".myStyle{color:red}" data-previous=""></textarea>
           </span>
        
           <button class="icalc-config-btn btn-success mt-2 save-btn icalc-float-right"><i class="dashicons dashicons-saved"></i></button>
@@ -779,6 +744,38 @@ function getConfigureModal(id) {
   
 `;
 
+}
+
+function icalc_getNewRowOfOptionsToConfigure(currentId) {
+    const span = document.createElement('span');
+    span.classList.add("row");
+    const labelOption = document.createElement("label");
+    const inputOption = document.createElement('input');
+    const labelValue = document.createElement("label");
+    const inputValue = document.createElement('input');
+    const nextId = currentId + 1;
+
+    labelOption.classList.add("col-2");
+    labelOption.htmlFor = "list-option" + nextId;
+    labelOption.textContent = `Option ${nextId}:`;
+    span.appendChild(labelOption);
+    inputOption.type = "text";
+    inputOption.id = "list-option" + nextId;
+    inputOption.name = "list-option" + nextId;
+    inputOption.className = "icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
+    inputOption.dataset.previous = "";
+    span.appendChild(inputOption);
+    labelValue.classList.add("col-2");
+    labelValue.htmlFor = "list-value" + nextId;
+    labelValue.textContent = `Value ${nextId}:`;
+    span.appendChild(labelValue);
+    inputValue.type = "text";
+    inputValue.id = "list-value" + nextId;
+    inputValue.name = "list-value" + nextId;
+    inputValue.className = "icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
+    inputValue.dataset.previous = "";
+    span.appendChild(inputValue);
+    return {span, nextId};
 }
 
 function appendConfigButton(div) {
@@ -816,35 +813,9 @@ function appendConfigButton(div) {
                 return;
             }
         }
-
-        const span = document.createElement('span');
-        span.classList.add("row");
-        const labelOption = document.createElement("label");
-        const inputOption = document.createElement('input');
-        const labelValue = document.createElement("label");
-        const inputValue = document.createElement('input');
-        const nextId = Number(addListOptionBtn.parentNode.dataset.option) + 1;
+        let currentId = Number(addListOptionBtn.parentNode.dataset.option);
+        const {span, nextId} = icalc_getNewRowOfOptionsToConfigure(currentId);
         addListOptionBtn.parentNode.dataset.option = nextId;
-        labelOption.classList.add("col-2");
-        labelOption.htmlFor = "list-option" + nextId;
-        labelOption.textContent = `Option ${nextId}:`;
-        span.appendChild(labelOption);
-        inputOption.type = "text";
-        inputOption.id = "list-option" + nextId;
-        inputOption.name = "list-option" + nextId;
-        inputOption.className = "icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
-        inputOption.dataset.previous = "";
-        span.appendChild(inputOption);
-        labelValue.classList.add("col-2");
-        labelValue.htmlFor = "list-value" + nextId;
-        labelValue.textContent = `Value ${nextId}:`;
-        span.appendChild(labelValue);
-        inputValue.type = "text";
-        inputValue.id = "list-value" + nextId;
-        inputValue.name = "list-value" + nextId;
-        inputValue.className = "icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
-        inputValue.dataset.previous = "";
-        span.appendChild(inputValue);
 
         addListOptionBtn.parentNode.insertBefore(span, addListOptionBtn);
     }
@@ -879,7 +850,6 @@ function appendConfigButton(div) {
 
     function changeLabel() {
         let wrappingSpan = modal.querySelector("#label-configuration");
-        console.log(showLabel.value);
         if (showLabel.checked === true) {
             wrappingSpan.classList.remove("hidden");
         } else {
@@ -1000,9 +970,9 @@ function updatePreview(jsonBodyToUpdate) {
     preview.innerHTML = '';
 
     let updateObject;
-    if (typeof jsonBodyToUpdate  === 'string'){
+    if (typeof jsonBodyToUpdate === 'string') {
         updateObject = JSON.parse(jsonBodyToUpdate);
-    }else if(typeof jsonBodyToUpdate === 'object'){
+    } else if (typeof jsonBodyToUpdate === 'object') {
         updateObject = jsonBodyToUpdate;
     }
 
@@ -1083,6 +1053,10 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleBtn.innerText = toggleText;
             toggleBtn.classList.remove('icalc-reappear');
             toggleBtn.classList.add('icalc-reappear');
+
+            //clear possible components/modals left from editing
+            icalc_clear_edit_calculation_data();
+
             return;
         }
 
@@ -1125,39 +1099,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     saveCalculation.onclick = async () => {
-            let updateObjectOfNewCalculationJSON = await createUpdateObjectOfNewCalculation();
+        let updateObjectOfNewCalculationJSON = await createUpdateObjectOfNewCalculation();
 
-            console.log("SAAAVE");
-            console.log(updateObjectOfNewCalculationJSON);
+        console.log("SAAAVE");
+        console.log(updateObjectOfNewCalculationJSON);
 
-            let updateObjectOfNewCalculation;
-            if (typeof updateObjectOfNewCalculationJSON === 'string') {
-                updateObjectOfNewCalculation = JSON.parse(updateObjectOfNewCalculationJSON);
-            } else if (typeof updateObjectOfNewCalculationJSON === 'object') {
-                updateObjectOfNewCalculation = updateObjectOfNewCalculationJSON;
-                updateObjectOfNewCalculationJSON = JSON.stringify(updateObjectOfNewCalculationJSON);
-            }
+        let updateObjectOfNewCalculation;
+        if (typeof updateObjectOfNewCalculationJSON === 'string') {
+            updateObjectOfNewCalculation = JSON.parse(updateObjectOfNewCalculationJSON);
+        } else if (typeof updateObjectOfNewCalculationJSON === 'object') {
+            updateObjectOfNewCalculation = updateObjectOfNewCalculationJSON;
+            updateObjectOfNewCalculationJSON = JSON.stringify(updateObjectOfNewCalculationJSON);
+        }
 
-            console.log("SAVE COMPONENTS")
-            console.log(updateObjectOfNewCalculation['components'])
+        console.log("SAVE COMPONENTS")
+        console.log(updateObjectOfNewCalculation['components'])
 
-            if (updateObjectOfNewCalculation['components'].length > 0) {
-                let calcCreationXHR = icalc_process_calculation_description_creation();
+        if (updateObjectOfNewCalculation['components'].length > 0) {
+            let calcCreationXHR = icalc_process_calculation_description_creation();
 
-                calcCreationXHR.onreadystatechange = function () {
-                    if (calcCreationXHR.readyState === XMLHttpRequest.DONE) {
-                        if (calcCreationXHR.status === 200) {
-                            window.location.reload();
-                        } else {
-                            console.log('Error updating data:', calcCreationXHR.status);
-                        }
+            calcCreationXHR.onreadystatechange = function () {
+                if (calcCreationXHR.readyState === XMLHttpRequest.DONE) {
+                    if (calcCreationXHR.status === 200) {
+                        window.location.reload();
+                    } else {
+                        console.log('Error updating data:', calcCreationXHR.status);
                     }
-                };
+                }
+            };
 
-                calcCreationXHR.send(updateObjectOfNewCalculationJSON);
-            } else {
-                alert("There are no valid components to be saved to calculation");
-            }
+            calcCreationXHR.send(updateObjectOfNewCalculationJSON);
+        } else {
+            alert("There are no valid components to be saved to calculation");
+        }
     }
 
     editConfiguration.onclick = () => {
@@ -1333,49 +1307,96 @@ function icalc_fill_components_of_edit_calculation(components) {
         const domText = domId.replace(/\d+/g, '');
         const id = domId.match(/\d+/g)?.[0];
 
+        console.log(component.type);
+        console.log(id);
+        console.log(nextIds[domText]);
 
-        if (id > nextIds[domText]) {
-            nextIds[domText] = id;
+        if (Number(id) >= Number(nextIds[domText])) {
+            nextIds[domText] = Number(id) + 1;
         }
 
-        console.log("DOMTEXT:");
-        console.log(domText);
-        let draggableComponent = document.getElementById(domText);
-        draggableComponent.id = domId;
-        let insertedComponent = setNewClonedComponent(draggableComponent);
+        const draggableComponent = document.getElementById(domText);
+        let clonedElement = draggableComponent.cloneNode(true);
+        clonedElement.id = domId;
+        let insertedComponent = setNewClonedComponent(clonedElement);
 
         const dashboardItem = document.createElement('div');
         dashboardItem.classList.add('icalc-dashboard-item');
         dashboardItem.appendChild(insertedComponent);
 
         addMovableButtons(insertedComponent, dashboardItem);
-        dashboardEdit.appendChild(insertedComponent);
+        dashboardEdit.appendChild(dashboardItem);
 
-        icalc_insertDataToComponent(insertedComponent, component);
+        icalc_insertDataToComponent(insertedComponent, component, id);
     }
 
-    const draggableProduct = document.getElementById('draggableProduct');
+    const thirdDiv = document.getElementById('thirdDiv')
+    const draggableProduct = thirdDiv.querySelector('#draggableProduct');
     draggableProduct.setAttribute("data-next-id", nextIds["product-component"]);
-    const draggableService = document.getElementById('draggableService');
+    const draggableService = thirdDiv.querySelector('#draggableService');
     draggableService.setAttribute("data-next-id", nextIds["service-component"]);
-    const draggableComponent = document.getElementById('draggableComponent');
+    const draggableComponent = thirdDiv.querySelector('#draggableComponent');
     draggableComponent.setAttribute("data-next-id", nextIds["component-component"]);
 }
 
 
 function icalc_insertDataToComponent(insertedComponent, jsonData) {
+    insertedComponent.classList.remove("hidden");
+    console.log("INSERTED COMPONENT");
+    console.log(insertedComponent);
+    console.log("JSON DATA");
+    console.log(jsonData);
+
+    // const id = jsonData.parentComponent.
+
+
+    const possibleItem = insertedComponent.querySelector("#" + jsonData["domId"]);
+    console.log("possibleItem");
+    console.log(possibleItem);
+    if (possibleItem !== null) {
+        possibleItem.classList.remove("hidden");
+    }
+
+    const possibleSelect = insertedComponent.querySelector("select");
+    possibleSelect.value = jsonData["id"];
+
+
     icalc_insertDataToComponentModal(insertedComponent, jsonData);
 }
 
 //"conf":{"confId":"modal-conf-component-component0","configuration":{"show-label":"","custom-label":"","label-class":"","base-value":"","slider-max":"","slider-show-value":"","list-option1":"","list-value1":"","input-class":"","custom-css":""}},
 function icalc_insertDataToComponentModal(insertedComponent, jsonData) {
+
     const modal = document.getElementById(jsonData.conf.confId);
-    for (const attribute in jsonData.conf.configuration) {
-        const inputValue = document.getElementById(attribute);
-        attribute.value = jsonData.conf.configuration[attribute];
-        attribute.dataset.previous = jsonData.conf.configuration[attribute];
-        if (jsonData.conf.configuration[attribute]) {
-            // attribute.dataset.previous = // TODO
+    modal.dataset.type = jsonData.displayType.toLowerCase()
+
+    const configuration = jsonData.conf.configuration;
+    for (const attribute in configuration) {
+        const selector = "#" + attribute;
+        if (jsonData.displayType.toLowerCase() === 'list') {
+            if (attribute.startsWith('list-')) {
+                let listConfiguration = modal.querySelector("#list-configuration");
+                let possibleElement = listConfiguration.querySelector('#'+attribute);
+                if(!possibleElement){
+                    const id = parseInt(attribute.match(/\d+/)[0], 10);
+                    let {span, nextId} = icalc_getNewRowOfOptionsToConfigure(id);
+                    let button = listConfiguration.querySelector('#list-add-option');
+                    listConfiguration.dataset.option = nextId;
+                    listConfiguration.insertBefore(span, button);
+                }
+            }
+        }
+
+        const inputValue = modal.querySelector(selector);
+
+        if (inputValue === undefined || inputValue === null) {
+            continue;
+        }
+
+        inputValue.value = configuration[attribute];
+        inputValue.dataset.previous = configuration[attribute];
+        if (inputValue.type === "checkbox") {
+            inputValue.checked = configuration[attribute];
         }
     }
 }
@@ -1389,7 +1410,6 @@ function icalc_process_calculation_edit_action(id) {
             if (calculationXHR.status === 200) {
                 const databaseObject = JSON.parse(calculationXHR.responseText);
                 const calculationObject = JSON.parse(databaseObject.body);
-                console.log(calculationObject)
 
                 icalc_clear_create_calculation_data();
 
@@ -1403,7 +1423,7 @@ function icalc_process_calculation_edit_action(id) {
 
 
             } else {
-                console.log('Error updating data:', calculationXHR.status);
+                console.log('Error fetching calculation data:', calculationXHR.status);
             }
         }
     };
@@ -1416,13 +1436,7 @@ function icalc_clear_edit_calculation_data() {
     dashboard.innerHTML = "";
     const preview = document.getElementById('icalc-preview-edit');
     preview.innerHTML = "";
-
-    const draggableProduct = document.getElementById('draggableProduct');
-    draggableProduct.setAttribute("data-next-id", 1);
-    const draggableService = document.getElementById('draggableService');
-    draggableService.setAttribute("data-next-id", 1);
-    const draggableComponent = document.getElementById('draggableComponent');
-    draggableComponent.setAttribute("data-next-id", 1);
+    icalc_clear_configure_modals();
 }
 
 

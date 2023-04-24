@@ -1,7 +1,6 @@
 <?php
 
 
-use function icalc\util\console_log;
 
 add_action('admin_menu', 'ic_admin_menu');
 add_action('admin_init', 'inter_calc_set_cookie');
@@ -52,7 +51,7 @@ function inter_calc_set_cookie()
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message();
 					$error_m       = "Something went wrong: $error_message";
-					console_log( $error_m );
+					error_log( $error_m );
 					$settingCookie = false;
 				} else {
 					$response_body   = wp_remote_retrieve_body( $response );

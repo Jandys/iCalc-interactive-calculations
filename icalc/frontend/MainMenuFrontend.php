@@ -73,8 +73,6 @@ class MainMenuFrontend extends AbstractAdminFrontend {
 	static function getAllDraggableComponents(): string {
 		$dragables = self::getDraggableProduct();
 		$dragables = $dragables . self::getDraggableService();
-		$dragables = $dragables . self::getDraggableDisplayType();
-
 		return $dragables . self::getDraggableComponent();
 	}
 
@@ -87,9 +85,6 @@ class MainMenuFrontend extends AbstractAdminFrontend {
 		return '<div class="icalc-draggable" draggable="true" id="draggableService" data-component="service-component" data-next-id="1">' . __( "Service" ) . '</div>';
 	}
 
-	static function getDraggableDisplayType(): string {
-		return '<div class="icalc-draggable" draggable="true" id="draggableDisplayType" data-component="display-component" data-next-id="1">' . __( "Generic Display Type" ) . '</div>';
-	}
 
 	static function getDraggableComponent(): string {
 		return '<div class="icalc-draggable" draggable="true" id="draggableComponent" data-component="component-component" data-next-id="1">' . __( "Generic Component" ) . '</div>';
@@ -109,10 +104,6 @@ class MainMenuFrontend extends AbstractAdminFrontend {
                                 <span class="icalc-configuration-bar"></span>
                                 <div id="icalc-dashboard-services" class="icalc-choose-list"></div>     
                                 </div>';
-
-
-		$returnDiv = $returnDiv . '<div id="display-component" class="icalc-draggable-option hidden" draggable="true">Totally Different option</div>';
-
 
 		$returnDiv = $returnDiv . '<div id="component-component" class="icalc-draggable-option hidden" draggable="true">
                                 <h3>' . __( "Generic Component" ) . '</h3>

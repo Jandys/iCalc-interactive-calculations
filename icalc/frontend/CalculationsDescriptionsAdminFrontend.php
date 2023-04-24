@@ -1,42 +1,43 @@
 <?php
 namespace icalc\fe;
 
-use function icalc\util\console_log;
+
+use icalc\db\model\IcalculationsDescription;
 
 class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend
 {
 
     public static function configuration()
     {
-        self::populateIcalcJSData();
-        $data = self::callGetOnEPWithAuthCookie('/icalculation-descriptions');
+	    self::populateIcalcJSData();
+	    $data = IcalculationsDescription::get_all();
 
-        if(is_null($data)) {
+	    if(is_null($data)) {
             error_log("ERROR Fetching data from API");
         }
         $tbody = "";
         $html = "";
 
         foreach ($data as $item) {
-            $modalId = "product" . $item->id . "modal";
+            $modalId = "product" . $item["id"] . "modal";
             $modalData = [];
-            $modalData["name"] = $item->name;
-            $modalData["desc"] = $item->description;
-            $modalData["body"] = $item->body;
-            $modalData["created_at"] = $item->created_at;
-            $modalData["modified_at"] = $item->modified_at;
+            $modalData["name"] = $item["name"];
+            $modalData["desc"] = $item["description"];
+            $modalData["body"] = $item["body"];
+            $modalData["created_at"] = $item["created_at"];
+            $modalData["modified_at"] = $item["modified_at"];
 
 
             $tbody = $tbody . '
             <tr>
-                    <td>' . $item->id . '</td>
-                    <td>' . $item->name . '</td>
-                    <td>' . $item->description . '</td>
-                    <td class="icalc-long-text-clipping">' . $item->body . '</td>
-                    <td>' . $item->created_at . '</td>
-                    <td>' . $item->modified_at . '</td>
-                    <td class="text-center"><button class="btn btn-info" onclick="icalc_process_calculation_edit_action(\'' . $item->id . '\')"><span class="dashicons dashicons-edit"></span></button></td>
-                    <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_calculation_delete_action(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
+                    <td>' . $item["id"] . '</td>
+                    <td>' . $item["name"] . '</td>
+                    <td>' . $item["description"] . '</td>
+                    <td class="icalc-long-text-clipping">' . $item["body"] . '</td>
+                    <td>' . $item["created_at"] . '</td>
+                    <td>' . $item["modified_at"] . '</td>
+                    <td class="text-center"><button class="btn btn-info" onclick="icalc_process_calculation_edit_action(\'' . $item["id"] . '\')"><span class="dashicons dashicons-edit"></span></button></td>
+                    <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_calculation_delete_action(' . $item["id"] . ',\'' . $item["name"] . '\')"><span class="dashicons dashicons-trash"></span></button></td>
                 </tr>';
         }
 

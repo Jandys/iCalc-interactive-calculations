@@ -31,7 +31,13 @@ class BaseDatabaseModel
 
     public static function last_id() {
         global $wpdb;
-        return $wpdb->insert_id;
+	    $result = $wpdb->get_results("SELECT id FROM ". self::_tableName() ." ORDER BY id DESC LIMIT 1;", OBJECT);
+	    if ($result) {
+			return $result[0]->id;
+	    } else {
+		    error_log("error while querying");
+
+	    }
     }
 
 

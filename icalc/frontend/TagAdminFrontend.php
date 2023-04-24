@@ -2,7 +2,6 @@
 
 namespace icalc\fe;
 
-use function icalc\util\console_log;
 
 class TagAdminFrontend extends AbstractAdminFrontend
 {

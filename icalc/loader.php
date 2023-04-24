@@ -14,6 +14,9 @@ require_once ICALC_PATH . '/database/autoload.php';
 require_once ICALC_PATH . '/controller/controllers.php';
 require_once ICALC_PATH . '/frontend/displayTypes/autoload.php';
 require_once ICALC_PATH . '/controller/icalcJWT.php';
+require_once ICALC_PATH . '/integration/IcalcWordpressWidget.php';
+require_once ICALC_PATH . '/integration/wordpress-integration.php';
+require_once ICALC_PATH . '/integration/elementor-integration.php';
 
 // Hook into the 'plugins_loaded' action to make sure WordPress core functions are available.
 add_action('plugins_loaded', 'generate_site_specific_secret_key');

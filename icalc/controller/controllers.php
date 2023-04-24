@@ -209,11 +209,8 @@ function icalc_getNextIcalculationDescriptionId( WP_REST_Request $request ) {
 		return new WP_REST_Response( [ 'msg' => NOT_AUTH_MSG ], 401 );
 	}
 
-	$allDescriptions = \icalc\db\model\IcalculationsDescription::last_id();
-
-	error_log("LAST ID: $allDescriptions");
-
-	return new WP_REST_Response( $allDescriptions + 1 );
+	$lastId = \icalc\db\model\IcalculationsDescription::last_id();
+	return new WP_REST_Response( $lastId + 1 );
 }
 
 

@@ -2,35 +2,36 @@
 
 namespace icalc\fe;
 
+use icalc\db\model\Product;
 use icalc\fe\displayTypes\AutocompleteText;
 use icalc\fe\displayTypes\ChooseList;
 use icalc\fe\displayTypes\DisplayTypeManager;
-use function icalc\util\console_log;
 
 class ProductAdminFrontend extends AbstractAdminFrontend
 {
 
     public static function configuration()
     {
-        self::populateIcalcJSData();
-        $data = self::callGetOnEPWithAuthCookie('/products');
+	    self::populateIcalcJSData();
+	    $data = Product::get_all();
 
-        if(is_null($data)) {
+
+	    if(is_null($data)) {
             error_log("ERROR Fetching data from API");
         }
 
         $tbody = "";
         $html = "";
         foreach ($data as $item) {
-            $modalId = "product" . $item->id . "modal";
+            $modalId = "product" . $item["id"] . "modal";
             $modalData = [];
-            $modalData["name"] = $item->name;
-            $modalData["desc"] = $item->description;
-            $modalData["price"] = $item->price;
-            $modalData["unit"] = $item->unit;
-            $modalData["min_quantity"] = $item->min_quantity;
-            $modalData["tag"] = $item->tag;
-            $modalData["display_type"] = $item->display_type;
+            $modalData["name"] = $item["name"];
+            $modalData["desc"] = $item["description"];
+            $modalData["price"] = $item["price"];
+            $modalData["unit"] = $item["unit"];
+            $modalData["min_quantity"] = $item["min_quantity"];
+            $modalData["tag"] = $item["tag"];
+            $modalData["display_type"] = $item["display_type"];
 
 
             $html = $html . self::configuredModalEdit($modalId, $item->id, $modalData);
@@ -38,16 +39,16 @@ class ProductAdminFrontend extends AbstractAdminFrontend
 
             $tbody = $tbody . '
             <tr>
-                    <td>' . $item->id . '</td>
-                    <td>' . $item->name . '</td>
-                    <td>' . $item->description . '</td>
-                    <td>' . $item->price . '</td>
-                    <td>' . $item->unit . '</td>
-                    <td>' . $item->min_quantity . '</td>
-                    <td>' . $item->tag . '</td>
-                    <td>' . $item->display_type . '</td>
+                    <td>' . $item["id"] . '</td>
+                    <td>' . $item["name"] . '</td>
+                    <td>' . $item["description"] . '</td>
+                    <td>' . $item["price"] . '</td>
+                    <td>' . $item["unit"] . '</td>
+                    <td>' . $item["min_quantity"] . '</td>
+                    <td>' . $item["tag"] . '</td>
+                    <td>' . $item["display_type"] . '</td>
                     <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
-                    <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_product_deletion(' . $item->id . ',\'' . $item->name . '\')"><span class="dashicons dashicons-trash"></span></button></td>
+                    <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_product_deletion(' . $item["id"] . ',\'' . $item["name"] . '\')"><span class="dashicons dashicons-trash"></span></button></td>
                 </tr>';
         }
         $productCreationModal = "productCreationModal";
@@ -88,7 +89,7 @@ class ProductAdminFrontend extends AbstractAdminFrontend
 
     public static function configuredModalEdit($modalId, $id, $formFields): string
     {
-        $displayTypeList = new ChooseList($modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypes(), $formFields['display_type']);
+        $displayTypeList = new ChooseList($modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService(), $formFields['display_type']);
         $unitAutocomplete = new AutocompleteText($modalId . "_unit_form");
 
         $unitAutocomplete->autocomplete();
@@ -156,7 +157,7 @@ class ProductAdminFrontend extends AbstractAdminFrontend
 
     public static function configureCreationModal($modalId): string
     {
-        $displayTypeList = new ChooseList($modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypes());
+        $displayTypeList = new ChooseList($modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService());
         $unitAutocomplete = new AutocompleteText($modalId . "_unit_form");
 
         $unitAutocomplete->autocomplete();
