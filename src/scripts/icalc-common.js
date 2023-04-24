@@ -87,13 +87,6 @@ function icalc_getServiceById(id) {
     return xhr;
 }
 
-function icalc_getNextCalculationId(id) {
-    const xhr = new XMLHttpRequest();
-    const url = `/wp-json/icalc/v1/calculation/next`;
-    xhr.open('GET', url);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    return xhr;
-}
 
 
 function icalc_getCalculationDescriptionById(id) {
@@ -103,7 +96,6 @@ function icalc_getCalculationDescriptionById(id) {
     xhr.setRequestHeader('Content-Type', 'application/json');
     return xhr;
 }
-
 
 
 function icalc_displayComponent(component, calculationId) {
@@ -474,16 +466,16 @@ function icalc_getListDisplayType(component, componentData, calculationId) {
             currentOption = null;
         }
         if (attribute.startsWith('list-option')) {
-            if(component.conf.configuration[attribute]){
+            if (component.conf.configuration[attribute]) {
                 currentOption = component.conf.configuration[attribute];
-            }else {
+            } else {
                 currentValue = null;
                 currentOption = null;
             }
         } else if (attribute.startsWith('list-value')) {
-            if(component.conf.configuration[attribute]){
+            if (component.conf.configuration[attribute]) {
                 currentValue = component.conf.configuration[attribute];
-            }else {
+            } else {
                 currentValue = null;
                 currentOption = null;
             }

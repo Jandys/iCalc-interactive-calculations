@@ -383,20 +383,30 @@ function icalc_getAllProducts(){
 }
 
 
-function icalc_getNextCalculationDescriptionId() {
-    const xhr = new XMLHttpRequest();
-    const url = '/wp-json/icalc/v1/icalculation-descriptions/next';
+async function icalc_getNextCalculationDescriptionId() {
+    return new Promise(function (resolve, reject) {
+        const xhr = new XMLHttpRequest();
+        const url = `/wp-json/icalc/v1/icalculation-descriptions/next`;
+        xhr.open('GET', url);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('user', icalcApiSettings.user);
+        xhr.setRequestHeader('session', icalcApiSettings.session);
 
+        xhr.withCredentials = true;
 
-    xhr.open('GET', url);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('user', icalcApiSettings.user);
-    xhr.setRequestHeader('session', icalcApiSettings.session);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                resolve(JSON.parse(xhr.responseText));
+            } else {
+                reject(xhr.statusText);
+            }
+        };
 
-    xhr.withCredentials = true;
-
-    return xhr;
-
+        xhr.onerror = function () {
+            reject("Network error");
+        };
+        xhr.send();
+    });
 }
 
 

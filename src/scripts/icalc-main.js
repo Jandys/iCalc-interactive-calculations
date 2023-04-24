@@ -1,5 +1,6 @@
 const draggableComponents = document.querySelectorAll('.icalc-draggable');
 const dashboard = document.getElementById('icalc-dashboard');
+const dashboardEdit = document.getElementById('icalc-dashboard-edit');
 
 dashboard.onchange = () => {
     dashboard_content_change();
@@ -446,6 +447,37 @@ function modifyChildIdsWithSuffix(children, suffix) {
 
 let prod1 = null;
 
+async function createUpdateObjectOfNewCalculation() {
+    let children = dashboard.children;
+
+    let calculationTitleObject = document.getElementById('icalc-calulation-new-name');
+    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : "New Calculation title";
+
+    let updateObject = {}
+    updateObject.title = calculationTitle;
+    updateObject.components = [];
+    updateObject.customStyles = "";
+    updateObject.configuration = currentCalculationConfiguration;
+    await icalc_getNextCalculationDescriptionId().then((value) => {
+        updateObject.id = value;
+    }, (error) => {
+        console.log(error);
+    });
+
+    for (const child of children) {
+        console.log("Child: ");
+        console.log(child);
+        const component = getComponentToJSONObject(child.children[0]);
+        if (component != null) {
+            updateObject.components.push(component);
+            updateObject.customStyles = appendStyles(updateObject.customStyles, component);
+        }
+    }
+
+    return updateObject;
+}
+
+
 function getProductInHtml(product) {
     if (prod1 == null) {
         prod1 = product;
@@ -478,55 +510,13 @@ function getProductInHtml(product) {
         "</table>";
 }
 
-let nextCalculationId;
-
-function createUpdateObjectOfNewCalculation() {
-    let children = dashboard.children;
-
-    let calculationTitleObject = document.getElementById('icalc-calulation-new-name');
-    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : "New Calculation title";
-
-    let updateObject = {}
-    updateObject.title = calculationTitle;
-    updateObject.components = [];
-    updateObject.customStyles = "";
-    updateObject.configuration = currentCalculationConfiguration;
-
-    for (const child of children) {
-        console.log("Child: ");
-        console.log(child);
-        const component = getComponentToJSONObject(child.children[0]);
-        if (component != null) {
-            updateObject.components.push(component);
-            updateObject.customStyles = appendStyles(updateObject.customStyles, component);
-        }
+async function dashboard_content_change() {
+    try {
+        let updateObjectJson = await createUpdateObjectOfNewCalculation();
+        updatePreview(updateObjectJson);
+    } catch (error) {
+        console.error(error);
     }
-
-    if (nextCalculationId) {
-        updateObject.id = nextCalculationId;
-        return JSON.stringify(updateObject);
-    } else {
-        let nextIdXHR = icalc_getNextCalculationDescriptionId();
-
-        nextIdXHR.onreadystatechange = function () {
-            if (nextIdXHR.readyState === XMLHttpRequest.DONE) {
-                if (nextIdXHR.status === 200) {
-                    let nextId = JSON.parse(nextIdXHR.responseText);
-                    updateObject.id = nextId;
-                    nextCalculationId = nextId;
-                    return JSON.stringify(updateObject);
-                } else {
-                    console.log('Error fetching data:', nextIdXHR.status);
-                }
-            }
-        };
-        nextIdXHR.send();
-    }
-}
-
-function dashboard_content_change() {
-    let updateObjectJson = createUpdateObjectOfNewCalculation();
-    updatePreview(updateObjectJson);
 }
 
 function getComponentToJSONObject(component) {
@@ -597,9 +587,9 @@ function getProductToJSONObject(productComponent) {
             keyValuePairs[header] = values[index];
         });
 
-
         return {
             "domId": validProduct.id,
+            "parentComponent": productComponent.id,
             "type": "product",
             "id": parseInt(validProduct.id.split("-")[0].match(/\d+/)[0], 10),
             "conf": {
@@ -667,6 +657,7 @@ function getServiceToJSONObject(serviceComponent) {
 
         return {
             "domId": validService.id,
+            "parentComponent": serviceComponent.id,
             "type": "service",
             "id": parseInt(validService.id.split("-")[0].match(/\d+/)[0], 10),
             "conf": {
@@ -708,6 +699,7 @@ function getGenericComponentToJSONObject(genericComponent) {
 
     return {
         "domId": genericComponent.id,
+        "parentComponent": genericComponent.id,
         "type": "genericComponent",
         "id": parseInt(select.id.match(/\d+/)[0], 10),
         "conf": {
@@ -721,7 +713,7 @@ function getGenericComponentToJSONObject(genericComponent) {
 function getConfigureModal(id) {
 
     return `
-    <div class="icalc-modal-wrapper hidden">
+    <div class="icalc-modal-wrapper hidden icalc-component-configuration-modal">
         <div id="modal-${id}" class="icalc-config-modal">
         <div class="modal-content p-3">
         <span>
@@ -1007,7 +999,13 @@ function updatePreview(jsonBodyToUpdate) {
     const preview = document.getElementById('icalc-preview');
     preview.innerHTML = '';
 
-    const updateObject = JSON.parse(jsonBodyToUpdate);
+    let updateObject;
+    if (typeof jsonBodyToUpdate  === 'string'){
+        updateObject = JSON.parse(jsonBodyToUpdate);
+    }else if(typeof jsonBodyToUpdate === 'object'){
+        updateObject = jsonBodyToUpdate;
+    }
+
     const wrapperDiv = document.createElement("div")
     wrapperDiv.id = 'icalc-preview-wrapper';
 
@@ -1126,10 +1124,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    saveCalculation.onclick = () => {
-        try {
-            const updateObjectOfNewCalculationJSON = createUpdateObjectOfNewCalculation();
-            const updateObjectOfNewCalculation = JSON.parse(updateObjectOfNewCalculationJSON);
+    saveCalculation.onclick = async () => {
+            let updateObjectOfNewCalculationJSON = await createUpdateObjectOfNewCalculation();
+
+            console.log("SAAAVE");
+            console.log(updateObjectOfNewCalculationJSON);
+
+            let updateObjectOfNewCalculation;
+            if (typeof updateObjectOfNewCalculationJSON === 'string') {
+                updateObjectOfNewCalculation = JSON.parse(updateObjectOfNewCalculationJSON);
+            } else if (typeof updateObjectOfNewCalculationJSON === 'object') {
+                updateObjectOfNewCalculation = updateObjectOfNewCalculationJSON;
+                updateObjectOfNewCalculationJSON = JSON.stringify(updateObjectOfNewCalculationJSON);
+            }
+
+            console.log("SAVE COMPONENTS")
+            console.log(updateObjectOfNewCalculation['components'])
 
             if (updateObjectOfNewCalculation['components'].length > 0) {
                 let calcCreationXHR = icalc_process_calculation_description_creation();
@@ -1148,9 +1158,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 alert("There are no valid components to be saved to calculation");
             }
-        } catch (exception) {
-            alert("There are no valid components to be saved to calculation");
-        }
     }
 
     editConfiguration.onclick = () => {
@@ -1317,15 +1324,22 @@ function icalc_fill_components_of_edit_calculation(components) {
         "service-component": 1,
         "component-component": 1
     };
-    for (const component of components){
-        const domId = component.domId;
-        const domText = domId.map(str => str.replace(/\d+/g, ''));
-        const id = domId.map(str => str.match(/\d+/g)?.[0]);
+    for (const component of components) {
 
-        if(id > nextIds[domText]){
+        console.log("EDITING CALC. COMPONENT:");
+        console.log(component);
+
+        const domId = component["parentComponent"];
+        const domText = domId.replace(/\d+/g, '');
+        const id = domId.match(/\d+/g)?.[0];
+
+
+        if (id > nextIds[domText]) {
             nextIds[domText] = id;
         }
 
+        console.log("DOMTEXT:");
+        console.log(domText);
         let draggableComponent = document.getElementById(domText);
         draggableComponent.id = domId;
         let insertedComponent = setNewClonedComponent(draggableComponent);
@@ -1335,9 +1349,9 @@ function icalc_fill_components_of_edit_calculation(components) {
         dashboardItem.appendChild(insertedComponent);
 
         addMovableButtons(insertedComponent, dashboardItem);
-        dashboard.appendChild(insertedComponent);
+        dashboardEdit.appendChild(insertedComponent);
 
-        icalc_insertDataToComponent(insertedComponent,component);
+        icalc_insertDataToComponent(insertedComponent, component);
     }
 
     const draggableProduct = document.getElementById('draggableProduct');
@@ -1346,24 +1360,23 @@ function icalc_fill_components_of_edit_calculation(components) {
     draggableService.setAttribute("data-next-id", nextIds["service-component"]);
     const draggableComponent = document.getElementById('draggableComponent');
     draggableComponent.setAttribute("data-next-id", nextIds["component-component"]);
-
-
 }
 
 
-function icalc_insertDataToComponent(insertedComponent,jsonData){
-    icalc_insertDataToComponentModal(insertedComponent,jsonData);
+function icalc_insertDataToComponent(insertedComponent, jsonData) {
+    icalc_insertDataToComponentModal(insertedComponent, jsonData);
 }
 
 //"conf":{"confId":"modal-conf-component-component0","configuration":{"show-label":"","custom-label":"","label-class":"","base-value":"","slider-max":"","slider-show-value":"","list-option1":"","list-value1":"","input-class":"","custom-css":""}},
-function icalc_insertDataToComponentModal(insertedComponent,jsonData){
+function icalc_insertDataToComponentModal(insertedComponent, jsonData) {
     const modal = document.getElementById(jsonData.conf.confId);
-    for (const attribute in jsonData.conf.configuration){
+    for (const attribute in jsonData.conf.configuration) {
         const inputValue = document.getElementById(attribute);
         attribute.value = jsonData.conf.configuration[attribute];
         attribute.dataset.previous = jsonData.conf.configuration[attribute];
-        if(jsonData.conf.configuration[attribute] )
-        attribute.dataset.previous = // TODO
+        if (jsonData.conf.configuration[attribute]) {
+            // attribute.dataset.previous = // TODO
+        }
     }
 }
 
@@ -1377,6 +1390,8 @@ function icalc_process_calculation_edit_action(id) {
                 const databaseObject = JSON.parse(calculationXHR.responseText);
                 const calculationObject = JSON.parse(databaseObject.body);
                 console.log(calculationObject)
+
+                icalc_clear_create_calculation_data();
 
                 icalc_set_calculation_configuration_values(calculationObject.configuration);
                 icalc_handle_button_and_div_swap();
@@ -1408,5 +1423,21 @@ function icalc_clear_edit_calculation_data() {
     draggableService.setAttribute("data-next-id", 1);
     const draggableComponent = document.getElementById('draggableComponent');
     draggableComponent.setAttribute("data-next-id", 1);
+}
 
+
+function icalc_clear_create_calculation_data() {
+    const dashboard = document.getElementById('icalc-dashboard');
+    dashboard.innerHTML = "";
+    const preview = document.getElementById('icalc-preview');
+    preview.innerHTML = "";
+
+    icalc_clear_configure_modals();
+}
+
+function icalc_clear_configure_modals() {
+    let modals = document.body.querySelectorAll(".icalc-component-configuration-modal");
+    for (const modal of modals) {
+        document.body.removeChild(modal.parentNode);
+    }
 }

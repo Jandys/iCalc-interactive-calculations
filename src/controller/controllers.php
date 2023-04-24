@@ -179,6 +179,8 @@ function icalc_postIcalculationDescriptions(WP_REST_Request $request)
 	$name = $data['title'];
 	$desc = $data['configuration']['calculation-description'];
 
+
+
 	error_log("SAVE DESC");
 	error_log("NAME $name");
 	error_log("DESC $desc");
@@ -194,6 +196,10 @@ function icalc_postIcalculationDescriptions(WP_REST_Request $request)
  * GET /icalculation-descriptions/next
  */
 function icalc_getNextIcalculationDescriptionId( WP_REST_Request $request ) {
+
+	error_log("GET NEXT IDDDDDD");
+
+
 	$validated = validate_icalc_jwt_token( $request );
 	if ( $validated instanceof WP_REST_Response ) {
 		return $validated;
@@ -204,6 +210,8 @@ function icalc_getNextIcalculationDescriptionId( WP_REST_Request $request ) {
 	}
 
 	$allDescriptions = \icalc\db\model\IcalculationsDescription::last_id();
+
+	error_log("LAST ID: $allDescriptions");
 
 	return new WP_REST_Response( $allDescriptions + 1 );
 }
