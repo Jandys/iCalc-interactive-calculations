@@ -392,7 +392,12 @@ function icalc_getSliderDisplayType(component, componentData, calculationId) {
         }
 
         if (component.conf.configuration["slider-show-value"]) {
-            displayValue.textContent = inputElement.value + " " + componentData["unit"];
+            let unit = '';
+            if(componentData["unit"]){
+                unit=componentData["unit"];
+            }
+
+            displayValue.textContent = inputElement.value + " " + unit ;
         } else {
             displayValue.innerHTML = ""
         }

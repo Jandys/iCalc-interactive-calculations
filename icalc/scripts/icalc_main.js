@@ -269,7 +269,9 @@ const genericTypes = new Map(
         [2, "Number input"],
         [3, "Sum"],
         [4, "List"],
-        [5, "Horizontal Rule"]]);
+        [5, "Horizontal Rule"],
+        [6, "Slider"]
+    ]);
 
 function genericTypesGetKeyForValue(lookupKey){
     let returnValue = 0;
