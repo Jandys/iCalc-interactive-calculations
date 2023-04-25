@@ -73,7 +73,8 @@ class MainMenuFrontend extends AbstractAdminFrontend {
 	static function getAllDraggableComponents(): string {
 		$dragables = self::getDraggableProduct();
 		$dragables = $dragables . self::getDraggableService();
-		return $dragables . self::getDraggableComponent();
+		$dragables = $dragables . self::getDraggableComponent();
+		return $dragables . self::getDraggableCalculations();
 	}
 
 
@@ -88,6 +89,9 @@ class MainMenuFrontend extends AbstractAdminFrontend {
 
 	static function getDraggableComponent(): string {
 		return '<div class="icalc-draggable" draggable="true" id="draggableComponent" data-component="component-component" data-next-id="1">' . __( "Generic Component" ) . '</div>';
+	}
+	static function getDraggableCalculations(): string {
+		return '<div class="icalc-draggable" draggable="true" id="draggableCalculations" data-component="calculation-component" data-next-id="1">' . __( "Calculation Component" ) . '</div>';
 	}
 
 
@@ -109,6 +113,12 @@ class MainMenuFrontend extends AbstractAdminFrontend {
                                 <h3>' . __( "Generic Component" ) . '</h3>
                                 <span class="icalc-configuration-bar"></span>
                                 <div id="icalc-dashboard-components" class="icalc-choose-list"></div>     
+                                </div>';
+
+		$returnDiv = $returnDiv . '<div id="calculation-component" class="icalc-draggable-option hidden" draggable="true">
+                                <h3>' . __( "Calculation Component" ) . '</h3>
+                                <span class="icalc-configuration-bar"></span>
+                                <div id="icalc-dashboard-calculations" class="icalc-choose-list"></div>     
                                 </div>';
 
 

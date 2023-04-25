@@ -81,11 +81,10 @@ class Calculation {
 		$appendScripts = new ScriptWrapper();
 		$appendScripts->wrapWithOnLoad( false );
 
-		if ( $this->form->hasSum() ) {
+		if ( $this->form->has('sum') ) {
 			$sumScript = new ScriptWrapper();
 			$sumScript->wrapWithScrip( false );
 			$sumScript->wrapWithOnLoad( false );
-
 
 			$components = $this->form->get_components();
 			foreach ( $components as $component ) {
@@ -96,8 +95,26 @@ class Calculation {
 			if ( ! $sumScript->isEmpty() ) {
 				$appendScripts->addToContent( $sumScript->getScripts() );
 			}
-
 		}
+
+		if( $this->form->has('slider')){
+			$sliderScript = new ScriptWrapper();
+			$sliderScript->wrapWithScrip(false);
+			$sliderScript->wrapWithOnLoad(false);
+
+			$components = $this->form->get_components();
+			foreach ( $components as $component ) {
+				$sliderScript->addToContent( $this->addSliderChangeListener( $component ) );
+			}
+
+
+
+			if ( ! $sliderScript->isEmpty() ) {
+				$appendScripts->addToContent( $sliderScript->getScripts() );
+			}
+		}
+
+
 
 		if ( ! $appendScripts->isEmpty() ) {
 			return $appendScripts->getScripts();
@@ -117,7 +134,6 @@ class Calculation {
 	);
 
 	private function addOnChangeListenerToSum( $component ): string {
-		error_log( "COMPONENT DISPLAY TYPE: " . $component->get_display_type() );
 		$cleanedType = strtolower( trim( $component->get_display_type() ) );
 		if ( in_array( $cleanedType, Calculation::ICALC_COMPONENTS_WITH_NO_ONCHANGE ) ) {
 			return "";
@@ -125,16 +141,13 @@ class Calculation {
 			return
 				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
 				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
-					" . $this->uniqueName( $component->get_dom_id() ) . ".onchange = () => {
-					    
-					    console.log('TEST EVENT');
-					    
+					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() {
 					    const changedValue = " . $this->uniqueName( $component->get_dom_id() ) . ".value;
 					    const myComponentCalculation = " . $component->get_base_value() . " * changedValue; 
 					    
 					    icalc_update_pre_and_calculation('" . $this->uniqueName( $component->get_dom_id() ) . "'," . $this->calculationId . ",myComponentCalculation);
 						icalc_updateCalculation" . $this->calculationId . "();
-					};
+					});
 
 			";
 		}
@@ -160,9 +173,27 @@ class Calculation {
 		}
 
 		return $function . "}";
-
-
 	}
+
+	private function addSliderChangeListener($component):string{
+		$cleanedType = strtolower( trim( $component->get_display_type() ) );
+		if ( $cleanedType !== 'slider' ) {
+			return "";
+		} else {
+			return
+				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
+				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
+					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() { ".
+				"if(typeof displayValue_" . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ displayValue_" . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('displayValue-" . $component->get_dom_id() . "')}else{" .
+				"var displayValue_" . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('displayValue-" . $component->get_dom_id() . "')}
+				 
+			    displayValue_" . $this->uniqueName( $component->get_dom_id() ) . ".innerText = " . $this->uniqueName( $component->get_dom_id() ) . ".value;
+				});";
+		}
+	}
+
+
+
 
 	private function uniqueName( $domId ): string {
 		return "icalc" . $this->calculationId . "_" . str_replace( '-', '_', $domId );

@@ -266,16 +266,40 @@ window.addEventListener('load', () => {
 const genericTypes = new Map(
     [[0, "-- None --"],
         [1, "Label"],
-        [2, "Number input"],
-        [3, "Sum"],
-        [4, "List"],
-        [5, "Horizontal Rule"],
-        [6, "Slider"]
+        [2, "Text"],
+        [3, "List"],
+        [4, "Number input"],
+        [5, "Slider"],
+        [5, "Checkbox"],
+        [7, "Spacer"],
+        [8, "Horizontal Rule"]
+    ]);
+
+
+const calculationTypes = new Map(
+    [[0, "-- None --"],
+        [1, "Sum"],
+        [2, "Product Calculation"],
+        [3, "Subtract Calculation"],
+        [4, "Complex Calculation"]
     ]);
 
 function genericTypesGetKeyForValue(lookupKey){
     let returnValue = 0;
     genericTypes.forEach(
+        (key, value) => {
+            if (key.toLowerCase().includes(lookupKey.toLowerCase())){
+                returnValue = value;
+            }
+        }
+    )
+    return returnValue;
+}
+
+
+function calculationTypesGetKeyForValue(lookupKey){
+    let returnValue = 0;
+    calculationTypes.forEach(
         (key, value) => {
             if (key.toLowerCase().includes(lookupKey.toLowerCase())){
                 returnValue = value;
@@ -312,6 +336,34 @@ window.addEventListener('load', () => {
 })
 
 
+
+window.addEventListener('load', () => {
+    const dashboardCalculations = document.getElementById('icalc-dashboard-calculations');
+
+    const calculationSelectList = document.createElement('select');
+    calculationSelectList.type = "text";
+    calculationSelectList.id = "calculationSelect";
+    calculationSelectList.name = "calculations";
+
+    const calculationDiv = document.createElement('div');
+    calculationDiv.id = 'calculationDiv';
+    calculationDiv.classList.add("icalc-calculation-div");
+
+    for (const genericType of calculationTypes) {
+        const option = document.createElement('option');
+        option.value = genericType[0].toString();
+        option.innerText = genericType[1];
+
+        calculationSelectList.appendChild(option);
+    }
+
+
+    dashboardCalculations.appendChild(calculationSelectList);
+    dashboardCalculations.appendChild(calculationDiv)
+})
+
+
+
 function setNewClonedComponent(component) {
     let id = component.id;
 
@@ -322,6 +374,8 @@ function setNewClonedComponent(component) {
             return setNewServiceComponent(component);
         case id.startsWith("component-component"):
             return setNewGenericComponent(component);
+        case id.startsWith("calculation-component"):
+            return setNewCalculationComponent(component);
 
     }
 }
@@ -384,6 +438,52 @@ function setNewServiceComponent(serviceComponent) {
         appendConfigButton(dashboard);
     }
     return serviceComponent;
+}
+
+function setNewCalculationComponent(calculationComponent){
+    const id = getSuffixIdFromElement(calculationComponent);
+    let dashboard;
+    let select;
+    let calculationDiv;
+
+    for (const child of calculationComponent.children) {
+        modifyChildIdsWithSuffix(child, id);
+        if (child.id.startsWith("icalc-dashboard-calculations")) {
+            dashboard = child;
+        }
+    }
+
+    for (const child of dashboard.children) {
+        modifyChildIdsWithSuffix(child, id);
+        if (child.id.startsWith("calculationSelect")) {
+            select = child;
+        }
+        if (child.id.startsWith("calculationDiv")) {
+            calculationDiv = child;
+        }
+    }
+
+    for (const child of calculationDiv.children) {
+        modifyChildIdsWithSuffix(child, id);
+    }
+
+
+    select.onchange = (event) => {
+        select.dataset.selected = event.target.value;
+
+        const modalConfigure = document.getElementById('modal-conf-' + calculationComponent.id);
+        modalConfigure.dataset.type = genericTypes.get(Number(event.target.value)).trim().toLowerCase();
+    }
+
+    select.dataset.selected = 0;
+
+    if (select.children.length === 1) {
+        dashboard.removeChild(select);
+        dashboard.appendChild(noComponentFoundError("No Generic Component found"));
+    } else {
+        appendConfigButton(dashboard);
+    }
+    return calculationComponent;
 }
 
 function setNewGenericComponent(genericComponent) {
@@ -615,6 +715,8 @@ function getComponentToJSONObject(component) {
             return getServiceToJSONObject(component);
         case id.startsWith("component-component"):
             return getGenericComponentToJSONObject(component);
+        case id.startsWith("calculation-component"):
+            return getCalculationComponentToJSONObject(component);
     }
 }
 
@@ -771,6 +873,46 @@ function getGenericComponentToJSONObject(genericComponent) {
         "domId": genericComponent.id,
         "parentComponent": genericComponent.id,
         "type": "genericComponent",
+        "id": select.dataset.selected,
+        "conf": {
+            "confId": modalConfId,
+            "configuration": conf
+        },
+        "displayType": genericTypes.get(Number(select.dataset.selected)),
+    };
+}
+function getCalculationComponentToJSONObject(calculationComponent) {
+    const children = calculationComponent.children;
+    let dashboard;
+    let option;
+    let select;
+    for (const child of children) {
+        if (child.id.startsWith("icalc-dashboard")) {
+            dashboard = child;
+        }
+    }
+
+    for (const dashItem of dashboard.children) {
+        if (dashItem.id.startsWith("calculationSelect")) {
+            select = dashItem;
+        }
+    }
+
+
+    const modalConfId = "modal-conf-" + calculationComponent.id
+    let conf = {};
+
+    let modalConf = document.getElementById(modalConfId);
+    let elementNodeListOf = modalConf.querySelectorAll('.icalc-custom-input');
+    for (const customInput of elementNodeListOf) {
+        conf[customInput.name] = customInput.dataset.previous;
+    }
+
+
+    return {
+        "domId": calculationComponent.id,
+        "parentComponent": calculationComponent.id,
+        "type": "calculationComponent",
         "id": select.dataset.selected,
         "conf": {
             "confId": modalConfId,
@@ -1467,7 +1609,8 @@ function icalc_fill_components_of_edit_calculation(components) {
     const nextIds = {
         "product-component": 1,
         "service-component": 1,
-        "component-component": 1
+        "component-component": 1,
+        "calculation-component": 1
     };
     for (const component of components) {
 
@@ -1486,23 +1629,16 @@ function icalc_fill_components_of_edit_calculation(components) {
         let insertedComponent = setNewClonedComponent(clonedElement);
 
         if(domText === 'component-component'){
-            console.log("NEW GENERIC COMPONENT");
-            console.log(insertedComponent);
-            console.log("component");
-            console.log(component);
             let select = insertedComponent.querySelector('select');
-            console.log("select");
-            console.log(select);
-            console.log("displayType");
-            console.log(component.displayType);
 
             const selectedOption = genericTypesGetKeyForValue(component.displayType);
-            console.log("selectedOption");
-            console.log(selectedOption);
              select.dataset.selected= selectedOption.toString();
-            console.log("select");
-            console.log(select);
+        }
+        if(domText === 'calculation-component'){
+            let select = insertedComponent.querySelector('select');
 
+            const selectedOption = calculationTypesGetKeyForValue(component.displayType);
+            select.dataset.selected= selectedOption.toString();
         }
 
         const dashboardItem = document.createElement('div');
