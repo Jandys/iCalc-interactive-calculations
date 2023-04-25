@@ -129,7 +129,7 @@ function inter_calc_main_configuration()
         echo '</div>';
 
 
-        wp_enqueue_script('icalc_main-script', plugins_url('../scripts/icalc_main.js', __FILE__), array(), '0.0.1', false);
+        wp_enqueue_script('icalc_main-script', plugins_url('../scripts/icalc_main.js', __FILE__), array(), ICALC_VERSION, false);
         add_action('wp_enqueue_scripts', 'icalc_main-script');
 
     }
@@ -147,7 +147,6 @@ function ic_menu_products_configuration(){
 
     echo '</div>';
     }
-
 }
 
 function ic_menu_services_configuration(){
@@ -162,7 +161,6 @@ function ic_menu_services_configuration(){
 
     echo '</div>';
     }
-
 }
 
 function ic_menu_tags_configuration(){

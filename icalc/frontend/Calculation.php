@@ -49,11 +49,13 @@ class Calculation {
 
 
 	private function displayTitle():string{
-//		if(!$this->calculationConfiguration->showTitle){
-//			return "";
-//		}
-//		return '<h3 class="icalc-calculation-title">'.$this->calculationName.'</h3>';
-		return "";
+		error_log("configuration");
+		$show_title = $this->calculationConfiguration->{'show-title'};
+
+		if(!$show_title){
+			return "";
+		}
+		return '<h3 class="icalc-calculation-title">'.$this->calculationName.'</h3>';
 	}
 
 	private function createForm():string{

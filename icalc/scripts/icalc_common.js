@@ -1,4 +1,4 @@
-class ObservableArray {
+class ICalc_ObservableArray {
     constructor(array) {
         this.array = array;
         this.listeners = new Set();
@@ -56,7 +56,7 @@ class ObservableArray {
 }
 
 
-let icalc_calculations = new ObservableArray([]);
+let icalc_calculations = new ICalc_ObservableArray([]);
 let icalc_calculationElements = [];
 icalc_calculations.addListener((action, args, calculationId) => {
     if (icalc_calculationElements[calculationId]) {

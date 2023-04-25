@@ -21,16 +21,14 @@ require ICALC_PATH . '/loader.php';
 
 
 add_action( 'plugins_loaded', 'icalc_load_textdomain' );
-add_action( 'plugins_loaded', 'prefix_enqueue' );
 
-
-function prefix_enqueue() {
+prefix_enqueue();
+function prefix_enqueue(): void {
 	// JS
 	wp_register_script( 'prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js' );
 	wp_enqueue_script( 'prefix_bootstrap' );
 
-	add_action( 'wp_enqueue_scripts', 'icalc_load_scripts' );
-
+	icalc_load_scripts();
 
 	// CSS
 	wp_register_style( 'prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css' );
@@ -42,6 +40,7 @@ function prefix_enqueue() {
 
 function icalc_load_scripts() {
 	wp_enqueue_script( 'icalc_common_scripts', plugins_url( '/scripts/icalc_common.js', ICALC_FILE ), array(), ICALC_VERSION, false );
+	add_action('wp_enqueue_scripts', 'icalc_common_scripts');
 	if ( is_admin() ) {
 		wp_enqueue_script( 'icalc_admin_scripts', plugins_url( '/scripts/icalc_admin.js', ICALC_FILE ), array(), ICALC_VERSION, false );
 		add_action( 'wp_enqueue_scripts', 'icalc_admin_scripts' );

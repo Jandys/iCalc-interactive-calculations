@@ -9,7 +9,6 @@ if(is_admin()){
 }
 
 require_once ICALC_PATH . '/util/utilities.php';
-require_once ICALC_PATH . '/util/script-require.php';
 require_once ICALC_PATH . '/database/autoload.php';
 require_once ICALC_PATH . '/controller/controllers.php';
 require_once ICALC_PATH . '/frontend/displayTypes/autoload.php';
