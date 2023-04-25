@@ -193,6 +193,31 @@ function icalc_postIcalculationDescriptions(WP_REST_Request $request)
 }
 
 /**
+ * PUT /icalculation-descriptions
+ */
+function icalc_putIcalculationDescriptions(WP_REST_Request $request)
+{
+	$validated = validate_icalc_jwt_token($request);
+	if ($validated instanceof WP_REST_Response) {
+		return $validated;
+	}
+
+	if(!$validated){
+		return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
+	}
+
+	$data = $request->get_json_params();
+	$body = json_decode($data['body']);
+	$id = $body->id;
+	$name = $body->title;
+	$desc = $body->configuration->{'calculation-description'};
+
+	$success = \icalc\db\model\IcalculationsDescription::updateById($id,$name,$desc,json_encode($body));
+
+	return new WP_REST_Response("success");
+}
+
+/**
  * GET /icalculation-descriptions/next
  */
 function icalc_getNextIcalculationDescriptionId( WP_REST_Request $request ) {

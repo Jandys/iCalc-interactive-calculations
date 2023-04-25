@@ -36,5 +36,15 @@ class IcalculationsDescription extends BaseDatabaseModel {
 		return parent::insert( $data );
 	}
 
+	public static function updateById($id,
+		$name,
+		$description,
+		$body)
+	{
+		$data = array('name' => $name,
+		              'description' => $description,
+		              'body' => $body);
+		return parent::update($data, $id);
+	}
 
 }

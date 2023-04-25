@@ -439,6 +439,20 @@ function icalc_process_calculation_description_creation(){
     return xhr;
 }
 
+function icalc_process_calculation_description_edit(){
+    const xhr = new XMLHttpRequest();
+    const url = '/wp-json/icalc/v1/icalculation-descriptions';
+
+    xhr.open('PUT', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('user', icalcApiSettings.user);
+    xhr.setRequestHeader('session', icalcApiSettings.session);
+
+    xhr.withCredentials = true;
+
+    return xhr;
+}
+
 function icalc_process_calculation_delete_action(id, name){
 
     const result = confirm("Opravdu chcete odstranit Kalkulaci: " + name + "?" );
