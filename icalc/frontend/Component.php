@@ -22,6 +22,10 @@ class Component {
 	private $configuration;
 	private $componentRenderer;
 
+	private $sumPrefix;
+	private $sumPostFix;
+
+	private $baseValue;
 	private $masterObjectData;
 
 	/**
@@ -41,6 +45,7 @@ class Component {
 		$this->configuration   = $configuration;
 
 		$this->createComponentRenderer();
+		$this->setCalculationValues();
 	}
 
 
@@ -86,11 +91,56 @@ class Component {
 
 	}
 
+	private function setCalculationValues(){
+		if(strtolower(trim($this->type)) == 'genericcomponent'){
+			$this->baseValue=$this->configuration->configuration->{'base-value'};
+			$this->sumPostFix=$this->configuration->configuration->{'sum-postfix'};
+			$this->sumPrefix=$this->configuration->configuration->{'sum-prefix'};
+		}else{
+			$this->baseValue=$this->masterObjectData->price;
+		}
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function get_base_value() {
+		if(!is_numeric( $this->baseValue)){
+			return 1;
+		}else{
+			return $this->baseValue;
+		}
+	}
+
+
 	/**
 	 * @return mixed
 	 */
 	public function get_type() {
 		return $this->type;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function get_display_type() {
+		return $this->displayType;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function get_dom_id() {
+		return $this->domId;
+	}
+
+	public function getSumPrefix(){
+		return $this->sumPrefix;
+	}
+
+
+	public function getSumPostFix(){
+		return $this->sumPostFix;
 	}
 
 

@@ -7,5 +7,8 @@ function icalc_register_elementor_widgets() {
 		require_once(ICALC_PATH . '/integration/IcalcElementorWidget.php');
 		$widget_manager = \Elementor\Plugin::$instance->widgets_manager;
 		$widget_manager->register(new IcalcElementorWidget());
+
+		wp_enqueue_script( 'icalc_pages_scripts', plugins_url( '/scripts/icalc_pages.js', ICALC_FILE ), array(), ICALC_VERSION, false );
+		add_action('wp_enqueue_scripts', 'icalc_pages_scripts');
 	}
 }

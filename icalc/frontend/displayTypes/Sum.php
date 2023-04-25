@@ -4,9 +4,9 @@ namespace icalc\fe\displayTypes;
 
 class Sum extends DisplayType {
 
-	private $id;
-	private $labelClasses;
-	private $label;
+	protected $id;
+	protected $labelClasses;
+	protected $label;
 
 	public function render(): string {
 		$wrapper = '<div class="icalc-form-group form-outline form-group row">';
@@ -33,7 +33,7 @@ class Sum extends DisplayType {
 
 	}
 
-	private function showLabel() {
+	protected function showLabel() {
 		if ( $this->displayLabel ) {
 			$label = new Label();
 			$label->showLabel( $this->id, $this->labelClasses, $this->label );
@@ -44,7 +44,7 @@ class Sum extends DisplayType {
 		return "";
 	}
 
-	private function displayInput() {
+	protected function displayInput() {
 		return '<input id="'. $this->id .'" type="text" disabled class="form-control icalc-calculation-sum">';
 	}
 }

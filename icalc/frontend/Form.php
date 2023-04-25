@@ -4,7 +4,7 @@ namespace icalc\fe;
 
 class Form {
 
-	private $components = array();
+	private array $components = array();
 
 	public function __construct() {
 	}
@@ -37,13 +37,22 @@ class Form {
 
 	public function hasSum():bool{
 		foreach ($this->components as $component){
-			$type = $component->getType();
+			$type = $component->get_display_type();
 			if(strtolower(trim($type))=="sum"){
 				return true;
 			}
 		}
 		return false;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function get_components(): array {
+		return $this->components;
+	}
+
+
 
 
 }

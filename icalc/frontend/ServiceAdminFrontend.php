@@ -3,7 +3,6 @@
 namespace icalc\fe;
 
 use icalc\db\model\Service;
-use icalc\fe\displayTypes\AutocompleteText;
 use icalc\fe\displayTypes\ChooseList;
 use icalc\fe\displayTypes\DisplayTypeManager;
 
@@ -87,9 +86,7 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
 
 	public static function configuredModalEdit( $modalId, $id, $formFields ): string {
 		$displayTypeList  = new ChooseList( $modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService(), $formFields['display_type'] );
-		$unitAutocomplete = new AutocompleteText( $modalId . "_unit_form" );
 
-		$unitAutocomplete->autocomplete();
 
 		return '<div class="modal mt-5 fade w-100 p-3" id="' . $modalId . '" role="dialog">
                         <div class="modal-dialog modal-lg">
@@ -119,9 +116,6 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
                                 </div>
                                 <div class="col">
                                   <label for="' . $modalId . '_unit_form">' . __( "Unit" ) . '</label>
-                                  ' .
-		       $unitAutocomplete->render()
-		       . '
                                   <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __( "Unit" ) . '" value="' . $formFields['unit'] . '">
                                 </div> 
                                 <div class="col">
@@ -155,9 +149,6 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
 
 	public static function configureCreationModal( $modalId ): string {
 		$displayTypeList  = new ChooseList( $modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService() );
-		$unitAutocomplete = new AutocompleteText( $modalId . "_unit_form" );
-
-		$unitAutocomplete->autocomplete();
 
 		return '<div class="modal mt-5 fade w-100 p-3" id="' . $modalId . '"  role="dialog">
                         <div class="modal-dialog modal-lg">
@@ -195,9 +186,7 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
                                 </div> 
                                  <div class="col">
                                   <label for="' . $modalId . '_display_type_form">' . __( "Display Type" ) . '</label>
-                                  ' .
-		       $displayTypeList->render()
-		       . '
+                               
                                 </div>
                               </div>
                             <div class="d-flex justify-content-end">

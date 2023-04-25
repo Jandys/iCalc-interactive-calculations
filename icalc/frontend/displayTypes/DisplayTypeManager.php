@@ -16,6 +16,8 @@ class DisplayTypeManager {
 		"hr"              => HorizontalRule::class,
 		"horizontal rule" => HorizontalRule::class,
 		"sum" => Sum::class,
+		"complex calculation" => ComplexCalculation::class,
+		"complex_calculation" => ComplexCalculation::class,
 		"--none--"        => null,
 		"-- none --"      => null,
 	);

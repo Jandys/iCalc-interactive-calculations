@@ -58,10 +58,17 @@ class ICalc_ObservableArray {
 
 let icalc_calculations = new ICalc_ObservableArray([]);
 let icalc_calculationElements = [];
+let icalc_calculationElementConfigurations = [];
 icalc_calculations.addListener((action, args, calculationId) => {
     if (icalc_calculationElements[calculationId]) {
         for (const element of icalc_calculationElements[calculationId]) {
-            element.value = icalc_calculate(calculationId);
+            console.log("CALCULATION ELEMENT");
+            console.log(element);
+            console.log("args");
+            console.log(args);
+            let prefix = icalc_calculationElementConfigurations[calculationId]['sum-prefix']
+            let postfix = icalc_calculationElementConfigurations[calculationId]['sum-postfix']
+            element.value = prefix + icalc_calculate(calculationId).toString() + postfix;
         }
     }
 });
@@ -83,7 +90,6 @@ function icalc_getServiceById(id) {
     xhr.setRequestHeader('Content-Type', 'application/json');
     return xhr;
 }
-
 
 
 function icalc_getCalculationDescriptionById(id) {
@@ -232,6 +238,8 @@ function icalc_getSumDisplayType(component, calculationId) {
         }
     }
 
+    icalc_calculationElementConfigurations[calculationId] = component.conf.configuration;
+
     if (!icalc_calculationElements[calculationId]) {
         icalc_calculationElements[calculationId] = [];
     }
@@ -267,13 +275,6 @@ function icalc_simpleCalculation(calculationPart) {
 
 
 function icalc_getNumberDisplayType(component, componentData, calculationId) {
-    console.log("COMPONENT")
-    console.log(component)
-
-    console.log("COMPONENT Data")
-    console.log(componentData)
-
-
     const showLabel = component.conf.configuration["show-label"];
     const wrapper = document.createElement("div");
     if (showLabel === "true") {

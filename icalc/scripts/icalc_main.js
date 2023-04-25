@@ -271,6 +271,18 @@ const genericTypes = new Map(
         [4, "List"],
         [5, "Horizontal Rule"]]);
 
+function genericTypesGetKeyForValue(lookupKey){
+    let returnValue = 0;
+    genericTypes.forEach(
+        (key, value) => {
+            if (key.toLowerCase().includes(lookupKey.toLowerCase())){
+                returnValue = value;
+            }
+        }
+    )
+    return returnValue;
+}
+
 
 window.addEventListener('load', () => {
     const dashboardComponents = document.getElementById('icalc-dashboard-components');
@@ -814,6 +826,15 @@ function getConfigureModal(id, displayType) {
             
             <button id="list-add-option" class="icalc-config-btn btn-info mt-2 close-btn icalc-float-right"><i class="dashicons dashicons-plus-alt"></i></button>
         </span>
+        
+            <span class="hidden" id="sum-configuration">
+            <span class="row">
+                <label class="col-2" for="list-option1">Prefix:</label>
+                <input type="text" id="sum-prefix" name="sum-prefix" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
+                <label class="col-2" for="sum-postfix">Postfix:</label>
+                <input type="text" id="sum-postfix" name="sum-postfix" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
+            </span>    
+        </span>
          
           <span id="input-classes-configuration">
                <label class="col-2" for="input-classes">Input classes:</label>
@@ -997,7 +1018,11 @@ function appendConfigButton(div) {
         });
 
         let listConfiguration = modal.querySelector("#list-configuration");
-        baseValueConfiguration.classList.add("hidden");
+        listConfiguration.classList.add("hidden");
+
+
+        let sumConfiguration = modal.querySelector("#sum-configuration");
+        sumConfiguration.classList.add("hidden");
 
         let listInputs = listConfiguration.querySelectorAll('.icalc-custom-input');
         listInputs.forEach((input) => {
@@ -1030,6 +1055,10 @@ function appendConfigButton(div) {
             case "list":
             case "choose list":
                 modal.querySelector("#list-configuration").classList.remove("hidden");
+                break;
+
+            case "sum":
+                modal.querySelector("#sum-configuration").classList.remove("hidden");
                 break;
 
             case "range":
@@ -1065,8 +1094,6 @@ function updatePreview(jsonBodyToUpdate) {
 }
 
 function masterUpdatePreview(jsonBodyToUpdate, previewId) {
-    console.log(jsonBodyToUpdate);
-
     if (jsonBodyToUpdate === undefined) {
         return;
     }
@@ -1104,6 +1131,11 @@ function masterUpdatePreview(jsonBodyToUpdate, previewId) {
 
 
     for (const component of updateObject["components"]) {
+        console.log("component");
+        console.log(component);
+
+
+
         if (component["displayType"].trim().replaceAll(" ", "").replaceAll("-", "").toLowerCase() === "none") {
             continue;
         }
@@ -1206,9 +1238,6 @@ document.addEventListener('DOMContentLoaded', () => {
     saveCalculation.onclick = async () => {
         let updateObjectOfNewCalculationJSON = await createUpdateObjectOfNewCalculation();
 
-        console.log("SAAAVE");
-        console.log(updateObjectOfNewCalculationJSON);
-
         let updateObjectOfNewCalculation;
         if (typeof updateObjectOfNewCalculationJSON === 'string') {
             updateObjectOfNewCalculation = JSON.parse(updateObjectOfNewCalculationJSON);
@@ -1216,9 +1245,6 @@ document.addEventListener('DOMContentLoaded', () => {
             updateObjectOfNewCalculation = updateObjectOfNewCalculationJSON;
             updateObjectOfNewCalculationJSON = JSON.stringify(updateObjectOfNewCalculationJSON);
         }
-
-        console.log("SAVE COMPONENTS")
-        console.log(updateObjectOfNewCalculation['components'])
 
         if (updateObjectOfNewCalculation['components'].length > 0) {
             let calcCreationXHR = icalc_process_calculation_description_creation();
@@ -1242,9 +1268,6 @@ document.addEventListener('DOMContentLoaded', () => {
     editCalculation.onclick = () => {
         let updateObjectOfNewCalculationJSON =  editUpdateObjectOfNewCalculation();
 
-        console.log("EDIT CALCULATION");
-        console.log(updateObjectOfNewCalculationJSON);
-
         let updateObjectOfNewCalculation;
         if (typeof updateObjectOfNewCalculationJSON === 'string') {
             updateObjectOfNewCalculation = JSON.parse(updateObjectOfNewCalculationJSON);
@@ -1252,9 +1275,6 @@ document.addEventListener('DOMContentLoaded', () => {
             updateObjectOfNewCalculation = updateObjectOfNewCalculationJSON;
             updateObjectOfNewCalculationJSON = JSON.stringify(updateObjectOfNewCalculationJSON);
         }
-
-        console.log("SAVE COMPONENTS")
-        console.log(updateObjectOfNewCalculation['components'])
 
         if (updateObjectOfNewCalculation['components'].length > 0) {
             let calcCreationXHR = icalc_process_calculation_description_edit();
@@ -1442,8 +1462,6 @@ function icalc_add_custom_styles_edit_calculation(customStyles) {
 }
 
 function icalc_fill_components_of_edit_calculation(components) {
-    console.log("COMPONENTS:");
-    console.log(components);
     const nextIds = {
         "product-component": 1,
         "service-component": 1,
@@ -1451,16 +1469,10 @@ function icalc_fill_components_of_edit_calculation(components) {
     };
     for (const component of components) {
 
-        console.log("EDITING CALC. COMPONENT:");
-        console.log(component);
 
         const domId = component["parentComponent"];
         const domText = domId.replace(/\d+/g, '');
         const id = domId.match(/\d+/g)?.[0];
-
-        console.log(component.type);
-        console.log(id);
-        console.log(nextIds[domText]);
 
         if (Number(id) >= Number(nextIds[domText])) {
             nextIds[domText] = Number(id) + 1;
@@ -1470,6 +1482,26 @@ function icalc_fill_components_of_edit_calculation(components) {
         let clonedElement = draggableComponent.cloneNode(true);
         clonedElement.id = domId;
         let insertedComponent = setNewClonedComponent(clonedElement);
+
+        if(domText === 'component-component'){
+            console.log("NEW GENERIC COMPONENT");
+            console.log(insertedComponent);
+            console.log("component");
+            console.log(component);
+            let select = insertedComponent.querySelector('select');
+            console.log("select");
+            console.log(select);
+            console.log("displayType");
+            console.log(component.displayType);
+
+            const selectedOption = genericTypesGetKeyForValue(component.displayType);
+            console.log("selectedOption");
+            console.log(selectedOption);
+             select.dataset.selected= selectedOption.toString();
+            console.log("select");
+            console.log(select);
+
+        }
 
         const dashboardItem = document.createElement('div');
         dashboardItem.classList.add('icalc-dashboard-item');
@@ -1493,17 +1525,11 @@ function icalc_fill_components_of_edit_calculation(components) {
 
 function icalc_insertDataToComponent(insertedComponent, jsonData) {
     insertedComponent.classList.remove("hidden");
-    console.log("INSERTED COMPONENT");
-    console.log(insertedComponent);
-    console.log("JSON DATA");
-    console.log(jsonData);
 
     // const id = jsonData.parentComponent.
 
 
     const possibleItem = insertedComponent.querySelector("#" + jsonData["domId"]);
-    console.log("possibleItem");
-    console.log(possibleItem);
     if (possibleItem !== null) {
         possibleItem.classList.remove("hidden");
     }
