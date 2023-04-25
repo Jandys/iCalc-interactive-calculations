@@ -35,5 +35,15 @@ class Form {
 		return $formRendering . "</form>";
 	}
 
+	public function hasSum():bool{
+		foreach ($this->components as $component){
+			$type = $component->getType();
+			if(strtolower(trim($type))=="sum"){
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 }

@@ -14,7 +14,7 @@ class IcalcElementorWidget extends Widget_Base {
 	}
 
 	public function get_icon() {
-		return 'fa fa-calculator';
+		return 'eicon-posts-group';
 	}
 
 	public function get_keywords() {

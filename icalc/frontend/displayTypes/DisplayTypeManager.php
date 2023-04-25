@@ -2,34 +2,38 @@
 
 namespace icalc\fe\displayTypes;
 
-class DisplayTypeManager
-{
+class DisplayTypeManager {
 
 
-    private static $dislpayTypes = Array(
-      "number"=>Number::class,
-      "number input"=>Number::class,
-      "slider"=>Slider::class,
-	  "list"=>ChooseList::class,
-      "label"=>Label::class,
-      "text"=>Text::class,
-	  "checkbox"=>CheckBox::class,
-    );
-
-	private static $dislpayTypesProductAndService = Array(
-		"number"=>Number::class,
-		"slider"=>Slider::class,
-		"label"=>Label::class,
-		"text"=>Text::class,
-		"checkbox"=>CheckBox::class
+	private static $dislpayTypes = array(
+		"number"          => Number::class,
+		"number input"    => Number::class,
+		"slider"          => Slider::class,
+		"list"            => ChooseList::class,
+		"label"           => Label::class,
+		"text"            => Text::class,
+		"checkbox"        => CheckBox::class,
+		"hr"              => HorizontalRule::class,
+		"horizontal rule" => HorizontalRule::class,
+		"sum" => Sum::class,
+		"--none--"        => null,
+		"-- none --"      => null,
 	);
 
-    public static function getAllDisplayTypesForProductAndService(): array
-    {
-       return array_keys(DisplayTypeManager::$dislpayTypesProductAndService);
-    }
+	private static $dislpayTypesProductAndService = array(
+		"number"   => Number::class,
+		"slider"   => Slider::class,
+		"label"    => Label::class,
+		"text"     => Text::class,
+		"checkbox" => CheckBox::class
+	);
 
-    public static function fromNameToClass($name){
-        return DisplayTypeManager::$dislpayTypes[trim(strtolower($name))];
-    }
+	public static function getAllDisplayTypesForProductAndService(): array {
+		return array_keys( DisplayTypeManager::$dislpayTypesProductAndService );
+	}
+
+	public static function fromNameToClass( $name ) {
+		error_log("trinyg to get display type $name");
+		return DisplayTypeManager::$dislpayTypes[ trim( strtolower( $name ) ) ];
+	}
 }

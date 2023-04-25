@@ -73,20 +73,26 @@ class Component {
 
 
 	public function createDisplayType( $type, $id, $configuration, $masterObject ) {
+		error_log("ASKING FOR OBJECT TYPE: $type");
 		$classToCreate = DisplayTypeManager::fromNameToClass( $type );
 		if ( ! $classToCreate ) {
 			return null;
 		}
 
 		$displayType = new $classToCreate;
-
-//
 		$args        = array( 'id' => $id, 'conf' => $configuration, 'masterObject' => $masterObject );
-//		$displayType = call_user_func( array( $classToCreate, '__construct' ) );
 		$displayType->fillData( $args );
-
 		return $displayType;
 
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function get_type() {
+		return $this->type;
+	}
+
+
 
 }

@@ -8,6 +8,7 @@ class Calculation {
 	private $body;
 	private $calculationConfiguration;
 	private $customStyles;
+	private $form;
 
 	public function __construct($calculationId) {
 		$this->calculationId= intval($calculationId);
@@ -44,6 +45,9 @@ class Calculation {
 		$calculationBlock = $calculationBlock . $this->createForm();
 
 		$calculationBlock = $calculationBlock . '</div>';
+
+		$calculationBlock = $calculationBlock . $this->appendScripts();
+
 		return $calculationBlock;
 	}
 
@@ -59,14 +63,25 @@ class Calculation {
 	}
 
 	private function createForm():string{
-		$form = new Form();
+		$this->form = new Form();
 
 		$components = $this->body->components;
 		foreach($components as $component){
-			$form->addComponent($component);
+			$this->form ->addComponent($component);
 		}
 
-		return $form->render();
+		return $this->form ->render();
+	}
+
+	private  function appendScrips(){
+		//do we have sum in calculation
+		if($this->form->hasSum()){
+
+		}
+
+
+
+
 	}
 
 

@@ -19,7 +19,7 @@ class Number extends DisplayType {
 	}
 
 	function render(): string {
-		$wrapper = '<div class="form-group row">';
+		$wrapper = '<div class="icalc-form-group form-outline form-group row">';
 
 		$wrapper = $wrapper . $this->showLabel();
 

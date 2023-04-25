@@ -36,6 +36,9 @@ function prefix_enqueue(): void {
 
 	wp_enqueue_style( 'icalc_custom_style', plugins_url( '/styles/icalc-custom-style.css', __FILE__ ), array(), ICALC_VERSION, false );
 	add_action( 'wp_enqueue_style', 'icalc_custom_style' );
+
+	wp_enqueue_style( 'icalc_page_style', plugins_url( '/styles/icalc-pages-generic.css', __FILE__ ), array(), ICALC_VERSION, false );
+	add_action( 'wp_enqueue_style', 'icalc_custom_style' );
 }
 
 function icalc_load_scripts() {

@@ -1,0 +1,18 @@
+.icalc-calculation-number-input{
+    margin-left: 5px !important;
+
+}
+.icalc-form-group{
+    display: flex;
+    margin: 5px !important;
+    flex-direction: row;
+    align-items: center;
+}
+
+.icalc-form-group .row{
+}
+
+.icalc-calculation-label{
+    font-family: var(--wp--preset--font-family--source-serif-pro);
+    margin-bottom: 0;
+}
