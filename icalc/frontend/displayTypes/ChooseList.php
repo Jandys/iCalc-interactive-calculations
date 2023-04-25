@@ -12,18 +12,11 @@ class ChooseList extends DisplayType
     private $is_multiple;
     private $default;
 
+	public function __construct() {
+	}
 
-    public function __construct($id, $name, $class, $options, $default=null, $is_multiple = false)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->class = $class;
-        $this->options = $options;
-        $this->is_multiple = $is_multiple;
-        $this->default = $default;
-    }
 
-    function render() :string
+	function render() :string
     {
 
         $multiple = $this->is_multiple ? ' multiple ' : ' ';
@@ -49,4 +42,8 @@ class ChooseList extends DisplayType
         return $select . '</select>';
 
     }
+
+	public function fillData( $args ): void {
+		// TODO: Implement fillData() method.
+	}
 }

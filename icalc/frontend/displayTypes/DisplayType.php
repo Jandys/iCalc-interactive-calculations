@@ -12,4 +12,8 @@ abstract class DisplayType
 
 
     abstract public function render() :string;
+
+
+	//$args=array('id'=>$id,'conf'=>$configuration,'masterObject'=>$masterObject);
+	abstract public function fillData($args):void;
 }

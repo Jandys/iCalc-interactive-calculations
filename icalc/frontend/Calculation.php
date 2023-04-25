@@ -59,7 +59,14 @@ class Calculation {
 	}
 
 	private function createForm():string{
-		return "";
+		$form = new Form();
+
+		$components = $this->body->components;
+		foreach($components as $component){
+			$form->addComponent($component);
+		}
+
+		return $form->render();
 	}
 
 

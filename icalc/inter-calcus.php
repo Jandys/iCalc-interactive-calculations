@@ -39,9 +39,9 @@ function prefix_enqueue(): void {
 }
 
 function icalc_load_scripts() {
-	wp_enqueue_script( 'icalc_common_scripts', plugins_url( '/scripts/icalc_common.js', ICALC_FILE ), array(), ICALC_VERSION, false );
-	add_action('wp_enqueue_scripts', 'icalc_common_scripts');
 	if ( is_admin() ) {
+		wp_enqueue_script( 'icalc_common_scripts', plugins_url( '/scripts/icalc_common.js', ICALC_FILE ), array(), ICALC_VERSION, false );
+		add_action('wp_enqueue_scripts', 'icalc_common_scripts');
 		wp_enqueue_script( 'icalc_admin_scripts', plugins_url( '/scripts/icalc_admin.js', ICALC_FILE ), array(), ICALC_VERSION, false );
 		add_action( 'wp_enqueue_scripts', 'icalc_admin_scripts' );
 	}

@@ -8,11 +8,12 @@ class DisplayTypeManager
 
     private static $dislpayTypes = Array(
       "number"=>Number::class,
+      "number input"=>Number::class,
       "slider"=>Slider::class,
 	  "list"=>ChooseList::class,
       "label"=>Label::class,
       "text"=>Text::class,
-	  "checkbox"=>CheckBox::class
+	  "checkbox"=>CheckBox::class,
     );
 
 	private static $dislpayTypesProductAndService = Array(
@@ -29,10 +30,6 @@ class DisplayTypeManager
     }
 
     public static function fromNameToClass($name){
-        return DisplayTypeManager::$dislpayTypes[$name];
+        return DisplayTypeManager::$dislpayTypes[trim(strtolower($name))];
     }
-
-
-
-
 }
