@@ -38,8 +38,6 @@ function prefix_enqueue(): void {
 	icalc_load_scripts();
 
 
-
-
 	// CSS
 	wp_register_style( 'prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css' );
 	wp_enqueue_style( 'prefix_bootstrap' );
@@ -48,7 +46,7 @@ function prefix_enqueue(): void {
 	add_action( 'wp_enqueue_style', 'icalc_custom_style' );
 
 	wp_enqueue_style( 'icalc_page_style', plugins_url( '/styles/icalc-pages-generic.css', __FILE__ ), array(), ICALC_VERSION, false );
-	add_action( 'wp_enqueue_style', 'icalc_custom_style' );
+	add_action( 'wp_enqueue_style', 'icalc_page_style' );
 }
 
 function icalc_load_scripts() {

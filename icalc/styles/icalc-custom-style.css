@@ -10,3 +10,8 @@
 }
 
 
+.icalc-edit-table-space-between{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

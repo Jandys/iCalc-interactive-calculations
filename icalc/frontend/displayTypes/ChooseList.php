@@ -15,6 +15,17 @@ class ChooseList extends DisplayType
 	public function __construct() {
 	}
 
+	public function directConfiguration($id, $name, $class, $options, $default=null, $is_multiple = false)
+	{
+		$this->id = $id;
+		$this->name = $name;
+		$this->class = $class;
+		$this->options = $options;
+		$this->is_multiple = $is_multiple;
+		$this->default = $default;
+	}
+
+
 
 	function render() :string
     {

@@ -32,12 +32,13 @@
     overflow: auto;
 }
 
-#icalc-preview{
+#icalc-preview {
     background-color: whitesmoke;
 
     border-left: #0b0b0b 1px solid;
 }
-.icalc-configuration-bar{
+
+.icalc-configuration-bar {
     display: flex;
     gap: 5px;
     flex-direction: row-reverse;
@@ -45,15 +46,15 @@
     margin-bottom: 6px;
 }
 
-.icalc-configurable-draggable-option > h3{
-    margin: 5px 20px 0 5px ;
+.icalc-configurable-draggable-option > h3 {
+    margin: 5px 20px 0 5px;
 }
 
-.icalc-choose-list{
+.icalc-choose-list {
     margin-left: 5px;
 }
 
-.icalc-btn-gray{
+.icalc-btn-gray {
     color: #5e5b5b !important;
     border-color: #5e5b5b !important;
 }
@@ -66,33 +67,33 @@
     align-items: center;
 }
 
-.icalc-float-right{
+.icalc-float-right {
     position: relative !important;
     left: 100% !important;
     transform: translateX(-80%);
 }
 
-.icalc-translate-middle{
-    transform: translate(-50%,-50%) !important;
+.icalc-translate-middle {
+    transform: translate(-50%, -50%) !important;
 }
 
-.icalc-button-save-color{
+.icalc-button-save-color {
     background-color: #1ab163 !important;
     border-color: #1e7e34 !important;
 }
 
-.icalc-button-save-color:hover{
+.icalc-button-save-color:hover {
     color: whitesmoke;
     background-color: #1c7430 !important;
     border-color: #0b2e13 !important;
 }
 
-.icalc-button-edit-color{
+.icalc-button-edit-color {
     background-color: #005cbf !important;
     border-color: #0d7fad !important;
 }
 
-.icalc-button-edit-color:hover{
+.icalc-button-edit-color:hover {
     color: whitesmoke;
     background-color: #024c9c !important;
     border-color: #0069d9 !important;
@@ -110,7 +111,7 @@
     display: none;
 }
 
-.icalc-config-btn{
+.icalc-config-btn {
     width: fit-content;
     display: flex !important;
     align-content: center;
@@ -129,12 +130,12 @@
     border-radius: 1px;
 }
 
-.icalc-configurable-draggable-option{
+.icalc-configurable-draggable-option {
     display: flex;
     flex-direction: column;
 }
 
-.icalc-display-slider-value{
+.icalc-display-slider-value {
     text-align: center;
     font-weight: bold;
 }
@@ -149,18 +150,18 @@
     height: 80%;
 }
 
-.modal-content{
+.modal-content {
     overflow-y: scroll;
     overflow-x: hidden;
 }
 
 
-.icalc-tooltip-container{
+.icalc-tooltip-container {
     position: relative;
     display: inline-block;
 }
 
-.icalc-tooltip{
+.icalc-tooltip {
     visibility: hidden;
     background-color: #333;
     color: #fff;
@@ -173,12 +174,12 @@
     white-space: nowrap;
 }
 
-.icalc-tooltip-container:hover  .icalc-tooltip {
+.icalc-tooltip-container:hover .icalc-tooltip {
     opacity: 1;
     visibility: visible;
 }
 
-.icalc-modal-wrapper{
+.icalc-modal-wrapper {
     position: fixed;
     top: 0;
     left: 0;
@@ -188,25 +189,25 @@
     z-index: 150;
 }
 
-.icalc-draggable-option{
+.icalc-draggable-option {
     border: 1px solid #0b0b0b;
     border-radius: 5px;
     box-shadow: #0d7fad 5px 3px 5px;
     overflow-block: auto;
 }
 
-.icalc-product-div, .icalc-service-div{
+.icalc-product-div, .icalc-service-div {
     overflow-block: auto;
 }
 
-.icalc-preview-box:before{
+.icalc-preview-box:before {
     content: "Preview:";
 }
 
 
 /* /////////////// dashboard styles end*/
 
-.icalc-main-wrapper{
+.icalc-main-wrapper {
     position: relative;
 }
 
@@ -226,17 +227,17 @@
     animation: comeout 1s 0.5s ease-in-out forwards;
 }
 
-.display-none{
+.display-none {
     display: none;
 }
 
 @keyframes comeout {
-    0%{
+    0% {
         scale: 0;
         opacity: 0;
 
     }
-    100%{
+    100% {
         scale: 100%;
         opacity: 1;
     }
@@ -248,11 +249,11 @@
 }
 
 @keyframes hideout {
-    0%{
+    0% {
         scale: 100%;
         opacity: 1;
     }
-    100%{
+    100% {
         scale: 0;
         opacity: 1;
     }
@@ -279,25 +280,41 @@ button.icalc-toggle-creation:hover {
     background-color: #0056b3;
 }
 
-.icalc-reappear{
-    animation: reappearButton 1s forwards ease-in-out ;
+.icalc-reappear {
+    animation: reappearButton 1s forwards ease-in-out;
 }
 
 @keyframes reapperButton {
-    0%{
+    0% {
         opacity: 100;
     }
-    50%{
+    50% {
         opacity: 0;
     }
-    100%{
+    100% {
         opacity: 100;
     }
 }
 
-.icalc-long-text-clipping{
+.icalc-long-text-clipping {
     max-width: 150px; /* Adjust this value to your desired width */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.icalc-shortcode-reminder {
+    right: 0;
+    position: relative;
+    left: 40%;
+    width: 60%;
+    display: block;
+    text-align: right;
+    font-size: 8px;
+    color: gray;
+    margin-bottom: 3px;
+}
+
+.icalc-shortcode {
+    color: #494949;
 }

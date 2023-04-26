@@ -30,7 +30,7 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
 			$modalData["display_type"] = $item["display_type"];
 
 
-			$html = $html . self::configuredModalEdit( $modalId, $item->id, $modalData );
+			$html = $html . self::configuredModalEdit( $modalId, $item["id"], $modalData );
 
 
 			$tbody = $tbody . '
@@ -85,7 +85,8 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
 	}
 
 	public static function configuredModalEdit( $modalId, $id, $formFields ): string {
-		$displayTypeList  = new ChooseList( $modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService(), $formFields['display_type'] );
+		$displayTypeList = new ChooseList();
+		$displayTypeList->directConfiguration( $modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService(), $formFields['display_type'] );
 
 
 		return '<div class="modal mt-5 fade w-100 p-3" id="' . $modalId . '" role="dialog">
@@ -98,35 +99,35 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
                               <h4 class="modal-title">' . __( "Edit Service" ) . '</h4>
                               <form id="' . $modalId . '_form">
                               <div class="form-row icalc-service-form-row">
-                                <div class="col">
+                                <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_id_form">' . __( "ID" ) . '</label>
                                   <input id="' . $modalId . '_id_form" type="text" class="form-control" value="' . $id . '" readonly>
                                 </div>
-                                <div class="col">
+                                <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_name_form">' . __( "Name" ) . '</label>
                                   <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="' . __( "Name" ) . '" value="' . $formFields['name'] . '">
                                 </div>
-                                 <div class="col">
+                                 <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_desc_form">' . __( "Description" ) . '</label>
                                   <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __( "Description" ) . '" value="' . $formFields['desc'] . '">
                                 </div>
-                                <div class="col">
+                                <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_price_form">' . __( "Price per Unit" ) . '</label>
                                   <input id="' . $modalId . '_price_form" type="text" class="form-control" placeholder="' . __( "Price per Unit" ) . '" value="' . $formFields['price'] . '">
                                 </div>
-                                <div class="col">
+                                <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_unit_form">' . __( "Unit" ) . '</label>
                                   <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __( "Unit" ) . '" value="' . $formFields['unit'] . '">
                                 </div> 
-                                <div class="col">
+                                <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_min_quantity_form">' . __( "Minimal Quantity" ) . '</label>
                                   <input id="' . $modalId . '_min_quantity_form" type="text" class="form-control" placeholder="' . __( "Minimal Quantity" ) . '" value="' . $formFields['min_quantity'] . '">
                                 </div>
-                                 <div class="col">
+                                 <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_tag_form">' . __( "Tag" ) . '</label>
                                   <input id="' . $modalId . '_tag_form" type="text" class="form-control" placeholder="' . __( "Tag" ) . '" value="' . $formFields['tag'] . '">
                                 </div>
-                                 <div class="col">
+                                 <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_display_type_form">' . __( "Display Type" ) . '</label>
                                     ' .
 		       $displayTypeList->render()
@@ -148,7 +149,8 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
 	}
 
 	public static function configureCreationModal( $modalId ): string {
-		$displayTypeList  = new ChooseList( $modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService() );
+		$displayTypeList = new ChooseList();
+		$displayTypeList->directConfiguration( $modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService() );
 
 		return '<div class="modal mt-5 fade w-100 p-3" id="' . $modalId . '"  role="dialog">
                         <div class="modal-dialog modal-lg">
@@ -160,33 +162,35 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
                               <h4 class="modal-title">' . __( "Create New Service" ) . '</h4>
                               <form id="' . $modalId . '_form">
                               <div class="form-row icalc-service-form-row">
-                                <div class="col">
+                                <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_name_form">' . __( "Name" ) . '</label>
                                   <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="' . __( "Service Name" ) . '">
                                 </div>
-                                 <div class="col">
+                                 <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_desc_form">' . __( "Description" ) . '</label>
                                   <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __( "Service Description" ) . '" >
                                 </div>
-                                <div class="col">
+                                <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_price_form">' . __( "Price per Unit" ) . '</label>
                                   <input id="' . $modalId . '_price_form" type="number" class="form-control" placeholder="' . __( "Service Price" ) . '" >
                                 </div>
-                                <div class="col">
+                                <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_unit_form">' . __( "Unit" ) . '</label>
                                   <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __( "Service Unit" ) . '" >
                                 </div>
-                                <div class="col">
+                                <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_min_quantity_form">' . __( "Minimal Quantity" ) . '</label>
                                   <input id="' . $modalId . '_min_quantity_form" type="number" class="form-control" placeholder="' . __( "Service Minimal Quantity" ) . '" >
                                 </div>
-                                 <div class="col">
+                                 <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_tag_form">' . __( "Tag" ) . '</label>
                                   <input id="' . $modalId . '_tag_form" type="text" class="form-control" placeholder="' . __( "Service Tag" ) . '" >
                                 </div> 
-                                 <div class="col">
+                                 <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_display_type_form">' . __( "Display Type" ) . '</label>
-                               
+                                                                   ' .
+		       $displayTypeList->render()
+		       . '
                                 </div>
                               </div>
                             <div class="d-flex justify-content-end">

@@ -42,7 +42,7 @@ class Calculation {
 	}
 
 	public function render(): string {
-		$calculationBlock = '<div class="icalc-calculation-wrapper">';
+		$calculationBlock = '<div id="icalc-calculation-' . $this->calculationId . '" class="icalc-calculation-wrapper">';
 		$calculationBlock = $calculationBlock . $this->displayTitle();
 		$calculationBlock = $calculationBlock . $this->createForm();
 
@@ -81,7 +81,7 @@ class Calculation {
 		$appendScripts = new ScriptWrapper();
 		$appendScripts->wrapWithOnLoad( false );
 
-		if ( $this->form->has('sum') ) {
+		if ( $this->form->has( 'sum' ) ) {
 			$sumScript = new ScriptWrapper();
 			$sumScript->wrapWithScrip( false );
 			$sumScript->wrapWithOnLoad( false );
@@ -97,10 +97,10 @@ class Calculation {
 			}
 		}
 
-		if( $this->form->has('slider')){
+		if ( $this->form->has( 'slider' ) ) {
 			$sliderScript = new ScriptWrapper();
-			$sliderScript->wrapWithScrip(false);
-			$sliderScript->wrapWithOnLoad(false);
+			$sliderScript->wrapWithScrip( false );
+			$sliderScript->wrapWithOnLoad( false );
 
 			$components = $this->form->get_components();
 			foreach ( $components as $component ) {
@@ -108,12 +108,22 @@ class Calculation {
 			}
 
 
-
 			if ( ! $sliderScript->isEmpty() ) {
 				$appendScripts->addToContent( $sliderScript->getScripts() );
 			}
 		}
 
+
+		$listenTointeractions = new ScriptWrapper();
+		$listenTointeractions->wrapWithOnLoad( false );
+		$listenTointeractions->wrapWithScrip( false );
+		$interactionScript = "window.addEventListener('load', function () {
+							 let " . $this->uniqueName( 'icalc-calculation-' . $this->calculationId ) . " = document.getElementById('icalc-calculation-" . $this->calculationId . "');" .
+		                     "icalc_register_interactions(".$this->uniqueName( 'icalc-calculation-' . $this->calculationId ) ."," . $this->calculationId . ");});";
+		$listenTointeractions->addToContent( $interactionScript );
+
+
+		$appendScripts->addToContent( $listenTointeractions->getScripts() );
 
 
 		if ( ! $appendScripts->isEmpty() ) {
@@ -176,7 +186,7 @@ class Calculation {
 		return $function . "}";
 	}
 
-	private function addSliderChangeListener($component):string{
+	private function addSliderChangeListener( $component ): string {
 		$cleanedType = strtolower( trim( $component->get_display_type() ) );
 		if ( $cleanedType !== 'slider' ) {
 			return "";
@@ -184,7 +194,7 @@ class Calculation {
 			return
 				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
 				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
-					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() { ".
+					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() { " .
 				"if(typeof displayValue_" . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ displayValue_" . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('displayValue-" . $component->get_dom_id() . "')}else{" .
 				"var displayValue_" . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('displayValue-" . $component->get_dom_id() . "')}
 				 
@@ -192,8 +202,6 @@ class Calculation {
 				});";
 		}
 	}
-
-
 
 
 	private function uniqueName( $domId ): string {

@@ -1,34 +1,33 @@
 <?php
+
 namespace icalc\fe;
 
 
 use icalc\db\model\IcalculationsDescription;
 
-class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend
-{
+class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend {
 
-    public static function configuration()
-    {
-	    self::populateIcalcJSData();
-	    $data = IcalculationsDescription::get_all();
+	public static function configuration() {
+		self::populateIcalcJSData();
+		$data = IcalculationsDescription::get_all();
 
-	    if(is_null($data)) {
-            error_log("ERROR Fetching data from API");
-        }
-        $tbody = "";
-        $html = "";
+		if ( is_null( $data ) ) {
+			error_log( "ERROR Fetching data from API" );
+		}
+		$tbody = "";
+		$html  = "";
 
-        foreach ($data as $item) {
-            $modalId = "product" . $item["id"] . "modal";
-            $modalData = [];
-            $modalData["name"] = $item["name"];
-            $modalData["desc"] = $item["description"];
-            $modalData["body"] = $item["body"];
-            $modalData["created_at"] = $item["created_at"];
-            $modalData["modified_at"] = $item["modified_at"];
+		foreach ( $data as $item ) {
+			$modalId                  = "product" . $item["id"] . "modal";
+			$modalData                = [];
+			$modalData["name"]        = $item["name"];
+			$modalData["desc"]        = $item["description"];
+			$modalData["body"]        = $item["body"];
+			$modalData["created_at"]  = $item["created_at"];
+			$modalData["modified_at"] = $item["modified_at"];
 
 
-            $tbody = $tbody . '
+			$tbody = $tbody . '
             <tr>
                     <td>' . $item["id"] . '</td>
                     <td>' . $item["name"] . '</td>
@@ -39,20 +38,27 @@ class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend
                     <td class="text-center"><button class="btn btn-info" onclick="icalc_process_calculation_edit_action(\'' . $item["id"] . '\')"><span class="dashicons dashicons-edit"></span></button></td>
                     <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_calculation_delete_action(' . $item["id"] . ',\'' . $item["name"] . '\')"><span class="dashicons dashicons-trash"></span></button></td>
                 </tr>';
-        }
+		}
 
-      $html = $html . '
+		$howToInsertCalculation = "";
+		if ( ! empty( $tbody ) ) {
+			$howToInsertCalculation = __( "To insert calculation use shortcode in form: <span class='icalc-shortcode'>[icalc_calculation id=3]</span> or if you are using Elementor plugin you can just drag and drop widget" );
+		}
+
+
+		$html = $html . '
     <div class="container pt-5">
             <!-- Table -->
+            <span class="icalc-shortcode-reminder">'.$howToInsertCalculation.'</span>
             <table class="table table-bordered table-striped table-hover col-12">
                 <thead class="thead-dark">
                     <tr class="col-12">
-                        <th class="p-2 m-2">'.__("ID").'</th>
-                        <th class="p-2 m-2">'.__("Name").'</th>
-                        <th class="p-2 m-2">'.__("Description").'</th>
-                        <th class="p-2 m-2 icalc-long-text-clipping">'.__("Body").'</th>
-                        <th class="p-2 m-2">'.__("Created At").'</th>
-                        <th class="p-2 m-2">'.__("Modified At").'</th>
+                        <th class="p-2 m-2">' . __( "ID" ) . '</th>
+                        <th class="p-2 m-2">' . __( "Name" ) . '</th>
+                        <th class="p-2 m-2">' . __( "Description" ) . '</th>
+                        <th class="p-2 m-2 icalc-long-text-clipping">' . __( "Body" ) . '</th>
+                        <th class="p-2 m-2">' . __( "Created At" ) . '</th>
+                        <th class="p-2 m-2">' . __( "Modified At" ) . '</th>
                         <th class="col-1"></th>
                         <th class="col-1"></th>
                     </tr>
@@ -67,6 +73,6 @@ class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend
         </div>
     </div>';
 
-        return $html;
-    }
+		return $html;
+	}
 }
