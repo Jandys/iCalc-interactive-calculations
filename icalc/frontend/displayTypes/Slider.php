@@ -50,7 +50,7 @@ class Slider extends DisplayType {
 			$this->unit  = $masterObject->unit;
 		}
 
-		$this->classes = $conf->configuration->{'input-classes'};
+		$this->classes = str_replace( ";", " ", $conf->configuration->{'input-classes'} );
 		$this->name    = $id;
 		$this->max     = $conf->configuration->{'slider-max'};
 		$this->value   = 0;

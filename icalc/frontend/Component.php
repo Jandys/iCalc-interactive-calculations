@@ -94,10 +94,12 @@ class Component {
 	private function setCalculationValues(){
 		if(strtolower(trim($this->type)) == 'genericcomponent'){
 			$this->baseValue=$this->configuration->configuration->{'base-value'};
-			$this->sumPostFix=$this->configuration->configuration->{'sum-postfix'};
-			$this->sumPrefix=$this->configuration->configuration->{'sum-prefix'};
 		}else{
 			$this->baseValue=$this->masterObjectData->price;
+		}
+		if(strtolower(trim($this->displayType))=='sum'){
+			$this->sumPostFix=$this->configuration->configuration->{'sum-postfix'};
+			$this->sumPrefix=$this->configuration->configuration->{'sum-prefix'};
 		}
 	}
 

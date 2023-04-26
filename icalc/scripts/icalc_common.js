@@ -195,7 +195,7 @@ function icalc_getDisplayType(component, componentData, calculationId) {
 
         case "horizontal rule":
         case "hr":
-            return icalc_getHorizontalRule(component, componentData, calculationId);
+            return icalc_getHorizontalRule(component);
 
         case "sum":
             return icalc_getSumDisplayType(component, calculationId);
@@ -203,12 +203,17 @@ function icalc_getDisplayType(component, componentData, calculationId) {
         case "text":
             return icalc_getTextDisplayType(component,componentData,calculationId);
 
-
         case "checkbox":
             return icalc_getCheckboxDisplayType(component,componentData,calculationId);
 
         case "list":
             return icalc_getListDisplayType(component, componentData, calculationId);
+
+        case "spacer":
+            return icalc_getSpacerDisplayType(component);
+
+        default:
+            return document.createElement("div");
 
 
     }
@@ -238,8 +243,8 @@ function icalc_getSumDisplayType(component, calculationId) {
     inputElement.type = 'text';
     inputElement.disabled = true
     inputElement.classList.add("form-control");
-    if (component.conf.configuration["input-class"]) {
-        let inputClasses = component.conf.configuration["input-class"].split(";");
+    if (component.conf.configuration["input-classes"]) {
+        let inputClasses = component.conf.configuration["input-classes"].split(";");
         for (const inputClass of inputClasses) {
             inputElement.classList.add(inputClass);
         }
@@ -373,8 +378,8 @@ function icalc_getSliderDisplayType(component, componentData, calculationId) {
     const inputElement = document.createElement('input');
     inputElement.type = 'range';
     inputElement.classList.add("form-range");
-    if (component.conf.configuration["input-class"]) {
-        let inputClasses = component.conf.configuration["input-class"].split(";");
+    if (component.conf.configuration["input-classes"]) {
+        let inputClasses = component.conf.configuration["input-classes"].split(";");
         for (const inputClass of inputClasses) {
             inputElement.classList.add(inputClass);
         }
@@ -455,8 +460,8 @@ function icalc_getCheckboxDisplayType(component, componentData, calculationId) {
     const inputElement = document.createElement('input');
     inputElement.type = 'checkbox';
     inputElement.classList.add("form-control");
-    if (component.conf.configuration["input-class"]) {
-        let inputClasses = component.conf.configuration["input-class"].split(";");
+    if (component.conf.configuration["input-classes"]) {
+        let inputClasses = component.conf.configuration["input-classes"].split(";");
         for (const inputClass of inputClasses) {
             inputElement.classList.add(inputClass);
         }
@@ -472,7 +477,7 @@ function icalc_getCheckboxDisplayType(component, componentData, calculationId) {
 
         const times = inputElement.checked? 1 : 0;
         const inputCalculation = {
-            "baseValue": Number(componentData["price"]),
+            "baseValue": Number(value),
             "times": Number(times),
             "negative": false
         }
@@ -519,8 +524,8 @@ function icalc_getTextDisplayType(component, componentData, calculationId) {
     const inputElement = document.createElement('input');
     inputElement.type = 'text';
     inputElement.classList.add("form-text");
-    if (component.conf.configuration["input-class"]) {
-        let inputClasses = component.conf.configuration["input-class"].split(";");
+    if (component.conf.configuration["input-classes"]) {
+        let inputClasses = component.conf.configuration["input-classes"].split(";");
         for (const inputClass of inputClasses) {
             inputElement.classList.add(inputClass);
         }
@@ -542,8 +547,27 @@ function icalc_getLabelDisplayType(component) {
     return label;
 }
 
-function icalc_getHorizontalRule() {
-    return document.createElement("hr");
+function icalc_getHorizontalRule(component) {
+    const hr = document.createElement("hr");
+    if (component.conf.configuration["input-classes"]) {
+        let inputClasses = component.conf.configuration["input-classes"].split(";");
+        for (const inputClass of inputClasses) {
+            hr.classList.add(inputClass);
+        }
+    }
+    return hr;
+
+}
+
+function icalc_getSpacerDisplayType(component) {
+    const spacer = document.createElement("div");
+    if (component.conf.configuration["input-classes"]) {
+        let inputClasses = component.conf.configuration["input-classes"].split(";");
+        for (const inputClass of inputClasses) {
+            spacer.classList.add(inputClass);
+        }
+    }
+    return spacer;
 }
 
 
@@ -577,8 +601,8 @@ function icalc_getListDisplayType(component, componentData, calculationId) {
     const select = document.createElement('select');
     select.classList.add("form-control")
 
-    if (component.conf.configuration["input-class"]) {
-        let inputClasses = component.conf.configuration["input-class"].split(";");
+    if (component.conf.configuration["input-classes"]) {
+        let inputClasses = component.conf.configuration["input-classes"].split(";");
         for (const inputClass of inputClasses) {
             select.classList.add(inputClass);
         }

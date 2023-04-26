@@ -1298,8 +1298,6 @@ function masterUpdatePreview(jsonBodyToUpdate, previewId) {
         console.log("component");
         console.log(component);
 
-
-
         if (component["displayType"].trim().replaceAll(" ", "").replaceAll("-", "").toLowerCase() === "none") {
             continue;
         }

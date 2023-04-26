@@ -130,7 +130,8 @@ class Calculation {
 		"horizontal rule",
 		"-- none --",
 		"--none--",
-		"text"
+		"text",
+		"spacer"
 	);
 
 	private function addOnChangeListenerToSum( $component ): string {

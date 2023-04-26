@@ -47,7 +47,7 @@ class Number extends DisplayType {
 
 		}
 
-		$this->classes = $conf->configuration->{'input-classes'};
+		$this->classes = str_replace( ";", " ", $conf->configuration->{'input-classes'} );
 		$this->name    = $id;
 		$this->min     = 0;
 		$this->value   = $this->min;

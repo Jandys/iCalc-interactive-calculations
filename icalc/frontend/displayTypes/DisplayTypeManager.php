@@ -15,9 +15,14 @@ class DisplayTypeManager {
 		"checkbox"        => CheckBox::class,
 		"hr"              => HorizontalRule::class,
 		"horizontal rule" => HorizontalRule::class,
+		"spacer" => Spacer::class,
 		"sum" => Sum::class,
 		"complex calculation" => ComplexCalculation::class,
 		"complex_calculation" => ComplexCalculation::class,
+		"product_calculation" => ProductCalculation::class,
+		"product calculation" => ProductCalculation::class,
+		"subtract calculation" => SubtractCalculation::class,
+		"subtract_calculation" => SubtractCalculation::class,
 		"--none--"        => null,
 		"-- none --"      => null,
 	);
@@ -35,7 +40,6 @@ class DisplayTypeManager {
 	}
 
 	public static function fromNameToClass( $name ) {
-		error_log("trinyg to get display type $name");
 		return DisplayTypeManager::$dislpayTypes[ trim( strtolower( $name ) ) ];
 	}
 }

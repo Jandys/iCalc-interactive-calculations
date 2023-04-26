@@ -2,12 +2,12 @@
 
 namespace icalc\fe\displayTypes;
 
-class HorizontalRule extends DisplayType {
+class Spacer extends DisplayType {
 
 	private $classes;
 
 	public function render(): string {
-		return '<hr class=" '. $this->classes .'" />';
+		return '<div class=" '. $this->classes .'" ></div>';
 	}
 
 	public function fillData( $args ): void {
