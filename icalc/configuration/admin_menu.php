@@ -184,11 +184,10 @@ function ic_menu_statistics(){
 
     \icalc\db\DatabaseInit::init();
 
-
     echo '<div class="wrap">
         <h2>'.__("Statistics Menu", "icalc").'</h2>';
 
-//    \icalc\fe\TagAdminFrontend::configuration();
+    \icalc\fe\StatisticsAdminFrontend::configuration();
 
         echo '</div>';
     }

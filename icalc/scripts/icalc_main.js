@@ -152,8 +152,8 @@ function moveComponent(dashboardItem, direction) {
                 dashboardEdit.insertBefore(dashboardItem.nextElementSibling, dashboardItem);
                 dashboard_edit_content_change();
             } else {
-                dashboardEdit.insertBefore(dashboardItem.nextElementSibling, dashboardItem);
-                dashboard_edit_content_change();
+                dashboard.insertBefore(dashboardItem.nextElementSibling, dashboardItem);
+                dashboard_content_change();
             }
 
         }

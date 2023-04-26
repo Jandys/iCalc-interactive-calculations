@@ -15,7 +15,7 @@ class Icalculations extends BaseDatabaseModel
 
         $sql = "CREATE TABLE IF NOT EXISTS ".$table_name." (
                           id INT AUTO_INCREMENT PRIMARY KEY,
-                          calculationDescription INT,
+                          calculationId INT,
                           body JSON NOT NULL,
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                         ) {$wpdb->get_charset_collate()};";

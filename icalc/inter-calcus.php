@@ -22,6 +22,13 @@ require ICALC_PATH . '/loader.php';
 
 add_action( 'plugins_loaded', 'icalc_load_textdomain' );
 
+add_action( 'init', 'icalc_start_session' );
+function icalc_start_session() {
+	if ( ! session_id() ) {
+		session_start();
+	}
+}
+
 prefix_enqueue();
 function prefix_enqueue(): void {
 	// JS
