@@ -472,14 +472,14 @@ function setNewCalculationComponent(calculationComponent){
         select.dataset.selected = event.target.value;
 
         const modalConfigure = document.getElementById('modal-conf-' + calculationComponent.id);
-        modalConfigure.dataset.type = genericTypes.get(Number(event.target.value)).trim().toLowerCase();
+        modalConfigure.dataset.type = calculationTypes.get(Number(event.target.value)).trim().toLowerCase();
     }
 
     select.dataset.selected = 0;
 
     if (select.children.length === 1) {
         dashboard.removeChild(select);
-        dashboard.appendChild(noComponentFoundError("No Generic Component found"));
+        dashboard.appendChild(noComponentFoundError("No Calculation Component found"));
     } else {
         appendConfigButton(dashboard);
     }
@@ -918,7 +918,7 @@ function getCalculationComponentToJSONObject(calculationComponent) {
             "confId": modalConfId,
             "configuration": conf
         },
-        "displayType": genericTypes.get(Number(select.dataset.selected)),
+        "displayType": calculationTypes.get(Number(select.dataset.selected)),
     };
 }
 
@@ -933,35 +933,35 @@ function getConfigureModal(id, displayType) {
            <button class="icalc-config-btn btn-danger mt-2 close-btn icalc-float-right"><i class="dashicons dashicons-no"></i></button>
         </span>
           
-        <span id="show-label-configuration">
+        <span id="show-label-configuration" class="row m-0 align-items-center">
               <label class="col-2" for="show-label">Show label:</label>
               <input type="checkbox" id="show-label" name="show-label" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
         </span>
         
-        <span class="hidden" id="custom-label-configuration">
+        <span class="display-none row m-0 align-items-center" id="custom-label-configuration">
               <label class="col-2" for="custom-label">Custom label:</label>
               <input type="text" id="custom-label" name="custom-label" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
         </span>
          
-         <span class="hidden" id="label-configuration">
+         <span class="display-none row m-0 align-items-center" id="label-configuration" >
                <label for="label-classes">Label classes:</label>
                <input type="text" id="label-classes" name="label-classes" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
         </span>
         
-         <span class="hidden" id="base-value-configuration">
+         <span class="display-none row m-0 align-items-center" id="base-value-configuration" >
                <label for="base-value" class="col-2">Base Value:</label>
                <input type="number" id="base-value" name="base-value" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
         </span>
         
-        <span class="hidden" id="slider-configuration">
+        <span class="display-none row m-0 align-items-center" id="slider-configuration">
             <label class="col-2" for="slider-max">Slider max:</label>
             <input type="number" id="slider-max" name="slider-max" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/>
             <label for="slider-show-value">Show Value:</label>
             <input type="checkbox" id="slider-show-value" name="slider-show-value" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/>  
         </span>
         
-        <span class="hidden" id="list-configuration" data-option="1">
-            <span class="row">
+        <span class="display-none" id="list-configuration" data-option="1">
+            <span class="row m-0 align-items-center">
                 <label class="col-2" for="list-option1">Option:</label>
                 <input type="text" id="list-option1" name="list-option1" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
                 <label class="col-2" for="list-value1">Value:</label>
@@ -971,8 +971,8 @@ function getConfigureModal(id, displayType) {
             <button id="list-add-option" class="icalc-config-btn btn-info mt-2 close-btn icalc-float-right"><i class="dashicons dashicons-plus-alt"></i></button>
         </span>
         
-            <span class="hidden" id="sum-configuration">
-            <span class="row">
+            <span class="display-none" id="sum-configuration">
+            <span class="row m-0 align-items-center">
                 <label class="col-2" for="list-option1">Prefix:</label>
                 <input type="text" id="sum-prefix" name="sum-prefix" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
                 <label class="col-2" for="sum-postfix">Postfix:</label>
@@ -980,7 +980,7 @@ function getConfigureModal(id, displayType) {
             </span>    
         </span>
          
-          <span id="input-classes-configuration">
+          <span id="input-classes-configuration" class="row m-0 align-items-center">
                <label class="col-2" for="input-classes">Input classes:</label>
                <input type="text" id="input-classes" name="input-classes" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
           </span>
@@ -1111,11 +1111,11 @@ function appendConfigButton(div) {
     }
 
     function changeLabel() {
-        let wrappingSpan = modal.querySelector("#label-configuration");
+        let wrappingSpan = modal.querySelector("#custom-label-configuration");
         if (showLabel.checked === true) {
-            wrappingSpan.classList.remove("hidden");
+            wrappingSpan.classList.remove("display-none");
         } else {
-            wrappingSpan.classList.add("hidden");
+            wrappingSpan.classList.add("display-none");
 
             let labelConfigurations = wrappingSpan.querySelectorAll('.icalc-custom-input');
             labelConfigurations.forEach((input) => {
@@ -1124,91 +1124,111 @@ function appendConfigButton(div) {
         }
     }
 
-    function resetState() {
+    function resetState(displayType, previousType) {
+        console.log("resetState");
         let showLabelSpan = modal.querySelector("#show-label-configuration");
-        showLabelSpan.classList.remove("hidden");
-
-        let labelConfigurations = showLabelSpan.querySelectorAll('.icalc-custom-input');
-        labelConfigurations.forEach((input) => {
-            input.value = ""
-        });
+        showLabelSpan.classList.remove("display-none");
 
         let labelSpan = modal.querySelector("#custom-label-configuration");
-        labelSpan.classList.add("hidden");
-
-        let labelInputs = labelSpan.querySelectorAll('.icalc-custom-input');
-        labelInputs.forEach((input) => {
-            input.value = ""
-        });
+        labelSpan.classList.add("display-none");
 
         let sliderConfSpan = modal.querySelector("#slider-configuration");
-        sliderConfSpan.classList.add("hidden");
+        sliderConfSpan.classList.add("display-none");
 
-        let sliderConfigurations = sliderConfSpan.querySelectorAll('.icalc-custom-input');
-        sliderConfigurations.forEach((input) => {
-            if (input.type === "checkbox") {
-                input.checked = false
-            } else {
-                input.value = ""
-            }
-        });
 
         let baseValueConfiguration = modal.querySelector("#base-value-configuration");
-        baseValueConfiguration.classList.remove("hidden");
-
-        let baseValueInputs = showLabelSpan.querySelectorAll('.icalc-custom-input');
-        baseValueInputs.forEach((input) => {
-            input.value = ""
-        });
+        baseValueConfiguration.classList.add("display-none");
+        console.log("baseValueConfiguration");
+        console.log(baseValueConfiguration);
 
         let listConfiguration = modal.querySelector("#list-configuration");
-        listConfiguration.classList.add("hidden");
-
+        listConfiguration.classList.add("display-none");
 
         let sumConfiguration = modal.querySelector("#sum-configuration");
-        sumConfiguration.classList.add("hidden");
+        sumConfiguration.classList.add("display-none");
 
-        let listInputs = listConfiguration.querySelectorAll('.icalc-custom-input');
-        listInputs.forEach((input) => {
-            input.value = ""
-        });
+
+        if (previousType) {
+            if (displayType !== previousType) {
+                let labelInputs = labelSpan.querySelectorAll('.icalc-custom-input');
+                labelInputs.forEach((input) => {
+                    input.value = ""
+                });
+
+                let sliderConfigurations = sliderConfSpan.querySelectorAll('.icalc-custom-input');
+                sliderConfigurations.forEach((input) => {
+                    if (input.type === "checkbox") {
+                        input.checked = false
+                    } else {
+                        input.value = ""
+                    }
+                });
+
+                let baseValueInputs = baseValueConfiguration.querySelectorAll('.icalc-custom-input');
+                baseValueInputs.forEach((input) => {
+                    input.value = ""
+                });
+
+                let listInputs = listConfiguration.querySelectorAll('.icalc-custom-input');
+                listInputs.forEach((input) => {
+                    input.value = ""
+                });
+
+                let labelConfigurations = showLabelSpan.querySelectorAll('.icalc-custom-input');
+                labelConfigurations.forEach((input) => {
+                    input.value = ""
+                });
+            }
+        }else {
+            modal.dataset.previousType = displayType;
+        }
     }
 
     function processDisplayTypeChanges() {
         const displayType = modal.dataset.type;
-        if (modal.dataset.previousType) {
-            if (displayType !== modal.dataset.previousType) {
-                resetState();
-            }
-        } else {
-            modal.dataset.previousType = displayType
-        }
+
+
+        console.log("PRocess display type change")
+        console.log(displayType.toLowerCase());
+
+        resetState(displayType,modal.dataset.previousType);
+
 
 
         switch (displayType.toLowerCase()) {
             case "label":
-                modal.querySelector("#show-label-configuration").classList.add("hidden");
-                modal.querySelector("#input-classes-configuration").classList.add("hidden");
-                modal.querySelector("#custom-label-configuration").classList.remove("hidden");
-                break;
-            case "number input":
-                modal.querySelector("#base-value-configuration").classList.remove("hidden");
+                modal.querySelector("#show-label-configuration").classList.add("display-none");
+                modal.querySelector("#input-classes-configuration").classList.add("display-none");
+                modal.querySelector("#custom-label-configuration").classList.remove("display-none");
                 break;
 
+            case "checkbox":
+            case "number input":
+                modal.querySelector("#base-value-configuration").classList.remove("display-none");
+                break;
+
+            case "hr":
+            case "horizontal rule":
+                modal.querySelector('#show-label-configuration').classList.add("display-none")
 
             case "list":
             case "choose list":
-                modal.querySelector("#list-configuration").classList.remove("hidden");
+                modal.querySelector("#list-configuration").classList.remove("display-none");
                 break;
 
             case "sum":
-                modal.querySelector("#sum-configuration").classList.remove("hidden");
+                modal.querySelector("#sum-configuration").classList.remove("display-none");
                 break;
 
             case "range":
             case "slider":
-                modal.querySelector("#slider-configuration").classList.remove("hidden");
+                modal.querySelector("#slider-configuration").classList.remove("display-none");
                 break;
+        }
+        switch (true){
+            case modal.id.includes("component-component"):
+                modal.querySelector("#custom-label-configuration").classList.remove("display-none");
+                break
         }
     }
 
@@ -1684,6 +1704,7 @@ function icalc_insertDataToComponentModal(insertedComponent, jsonData) {
 
     const modal = document.getElementById(jsonData.conf.confId);
     modal.dataset.type = jsonData.displayType.toLowerCase()
+    modal.dataset.previousType = jsonData.displayType.toLowerCase()
 
     const configuration = jsonData.conf.configuration;
     for (const attribute in configuration) {

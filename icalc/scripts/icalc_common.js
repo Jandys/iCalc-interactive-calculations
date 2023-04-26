@@ -108,8 +108,8 @@ function icalc_displayComponent(component, calculationId) {
         case "service":
             return icalc_displayService(component, calculationId);
         case "genericComponent":
+        case "calculationComponent":
             return icalc_displayGenericComponent(component, calculationId);
-
         default:
             return document.createElement("div");
     }
@@ -200,6 +200,13 @@ function icalc_getDisplayType(component, componentData, calculationId) {
         case "sum":
             return icalc_getSumDisplayType(component, calculationId);
 
+        case "text":
+            return icalc_getTextDisplayType(component,componentData,calculationId);
+
+
+        case "checkbox":
+            return icalc_getCheckboxDisplayType(component,componentData,calculationId);
+
         case "list":
             return icalc_getListDisplayType(component, componentData, calculationId);
 
@@ -213,7 +220,7 @@ function icalc_getSumDisplayType(component, calculationId) {
     colLabel.classList.add("col");
     colLabel.classList.add("form-label");
     const label = document.createElement("label");
-    label.innerText = "Result:"
+    label.innerText = component.conf.configuration['custom-label'];
     label.setAttribute('for', `${component.type}-${component.id}-numberInput`);
     if (component.conf.configuration["label-class"]) {
         let labelClasses = component.conf.configuration["label-class"].split(";");
@@ -282,7 +289,11 @@ function icalc_getNumberDisplayType(component, componentData, calculationId) {
         colLabel.classList.add("col");
         colLabel.classList.add("form-label");
         const label = document.createElement("label");
-        label.innerText = componentData.name
+        if(componentData.name){
+            label.innerText = componentData.name;
+        }else {
+            label.innerText = component.conf.configuration['custom-label'];
+        }
         label.setAttribute('for', `${component.domId}-numberInput`);
         if (component.conf.configuration["label-class"]) {
             let labelClasses = component.conf.configuration["label-class"].split(";");
@@ -341,7 +352,11 @@ function icalc_getSliderDisplayType(component, componentData, calculationId) {
         colLabel.classList.add("col");
         colLabel.classList.add("form-label");
         const label = document.createElement("label");
-        label.innerText = componentData.name
+        if(componentData.name){
+            label.innerText = componentData.name;
+        }else {
+            label.innerText = component.conf.configuration['custom-label'];
+        }
         label.setAttribute('for', `${component.domId}-slider`);
         if (component.conf.configuration["label-class"]) {
             let labelClasses = component.conf.configuration["label-class"].split(";");
@@ -411,6 +426,115 @@ function icalc_getSliderDisplayType(component, componentData, calculationId) {
     return wrapper;
 }
 
+function icalc_getCheckboxDisplayType(component, componentData, calculationId) {
+    const showLabel = component.conf.configuration["show-label"];
+    const wrapper = document.createElement("div");
+    if (showLabel === "true") {
+        const colLabel = document.createElement("div");
+        colLabel.classList.add("col");
+        colLabel.classList.add("form-label");
+        const label = document.createElement("label");
+        if(componentData.name){
+            label.innerText = componentData.name;
+        }else {
+            label.innerText = component.conf.configuration['custom-label'];
+        }
+        label.setAttribute('for', `${component.domId}-checkbox`);
+        if (component.conf.configuration["label-class"]) {
+            let labelClasses = component.conf.configuration["label-class"].split(";");
+            for (const labelClass of labelClasses) {
+                label.classList.add(labelClass);
+            }
+        }
+        colLabel.appendChild(label);
+        wrapper.appendChild(colLabel);
+    }
+
+    const colInput = document.createElement("div");
+    colInput.classList.add("col");
+    const inputElement = document.createElement('input');
+    inputElement.type = 'checkbox';
+    inputElement.classList.add("form-control");
+    if (component.conf.configuration["input-class"]) {
+        let inputClasses = component.conf.configuration["input-class"].split(";");
+        for (const inputClass of inputClasses) {
+            inputElement.classList.add(inputClass);
+        }
+    }
+
+    colInput.onchange = () => {
+        let value;
+        if (componentData["price"]){
+            value = componentData["price"];
+        }else {
+            value = component.conf.configuration["base-value"];
+        }
+
+        const times = inputElement.checked? 1 : 0;
+        const inputCalculation = {
+            "baseValue": Number(componentData["price"]),
+            "times": Number(times),
+            "negative": false
+        }
+
+        icalc_calculations.setFrom(calculationId, `${component.domId}-checkbox`, inputCalculation);
+    }
+
+
+    inputElement.setAttribute('id', `${component.domId}-checkbox`);
+    inputElement.setAttribute('name', `${component.domId}-checkbox`);
+
+    colInput.appendChild(inputElement);
+    wrapper.appendChild(colInput);
+    return wrapper;
+}
+
+function icalc_getTextDisplayType(component, componentData, calculationId) {
+    const showLabel = component.conf.configuration["show-label"];
+    const wrapper = document.createElement("div");
+    if (showLabel === "true") {
+        const colLabel = document.createElement("div");
+        colLabel.classList.add("col");
+        colLabel.classList.add("form-label");
+        const label = document.createElement("label");
+        if(componentData.name){
+            label.innerText = componentData.name;
+        }else {
+            label.innerText = component.conf.configuration['custom-label'];
+        }
+
+        label.setAttribute('for', `${component.domId}-text`);
+        if (component.conf.configuration["label-class"]) {
+            let labelClasses = component.conf.configuration["label-class"].split(";");
+            for (const labelClass of labelClasses) {
+                label.classList.add(labelClass);
+            }
+        }
+        colLabel.appendChild(label);
+        wrapper.appendChild(colLabel);
+    }
+
+    const colInput = document.createElement("div");
+    colInput.classList.add("col");
+    const inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.classList.add("form-text");
+    if (component.conf.configuration["input-class"]) {
+        let inputClasses = component.conf.configuration["input-class"].split(";");
+        for (const inputClass of inputClasses) {
+            inputElement.classList.add(inputClass);
+        }
+    }
+
+    inputElement.setAttribute('id', `${component.domId}-text`);
+    inputElement.setAttribute('name', `${component.domId}-text`);
+
+
+    colInput.appendChild(inputElement);
+    wrapper.appendChild(colInput);
+    return wrapper;
+}
+
 
 function icalc_getLabelDisplayType(component) {
     const label = document.createElement("label")
@@ -431,7 +555,11 @@ function icalc_getListDisplayType(component, componentData, calculationId) {
         colLabel.classList.add("col");
         colLabel.classList.add("form-label");
         const label = document.createElement("label");
-        label.innerText = componentData.name
+        if(componentData.name){
+            label.innerText = componentData.name;
+        }else {
+            label.innerText = component.conf.configuration['custom-label'];
+        }
         label.setAttribute('for', `${component.domId}-list`);
         if (component.conf.configuration["label-class"]) {
             let labelClasses = component.conf.configuration["label-class"].split(";");
