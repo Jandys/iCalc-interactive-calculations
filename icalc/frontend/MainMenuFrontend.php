@@ -7,9 +7,6 @@ use icalc\fe\displayTypes\ChooseList;
 
 class MainMenuFrontend extends AbstractAdminFrontend {
 
-//       $numberInput = new Number("icalc-numbar","Label input:","Nameee",0,2000,1,10);
-//        $myChoseList = new ChooseList("icalc-list","MyName","icalc-test-class",["opt1"=>"test","opt2"=>"value"],"opt2");
-
 	public static function configuration() {
 		self::populateIcalcJSData();
 		$calculationsDescriptionsAdminFrontend = new CalculationsDescriptionsAdminFrontend();

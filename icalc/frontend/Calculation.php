@@ -129,6 +129,23 @@ class Calculation {
 			}
 		}
 
+		if ( $this->form->has( 'complex calculation' ) ) {
+			$complexScript = new ScriptWrapper();
+			$complexScript->wrapWithScrip( false );
+			$complexScript->wrapWithOnLoad( false );
+
+			$components          = $this->form->get_components();
+			$complexCalculations = $this->getOnlyComponents( $components, "complex calculation" );
+			foreach ( $components as $component ) {
+				$complexScript->addToContent( $this->addOnChangeListenerToComplexCalculation( $component, $complexCalculations ) );
+			}
+			$complexScript->addToContent( $this->addComplexCalculationListeners( $components ) );
+
+			if ( ! $complexScript->isEmpty() ) {
+				$appendScripts->addToContent( $complexScript->getScripts() );
+			}
+		}
+
 		if ( $this->form->has( 'slider' ) ) {
 			$sliderScript = new ScriptWrapper();
 			$sliderScript->wrapWithScrip( false );
@@ -138,7 +155,6 @@ class Calculation {
 			foreach ( $components as $component ) {
 				$sliderScript->addToContent( $this->addSliderChangeListener( $component ) );
 			}
-
 
 			if ( ! $sliderScript->isEmpty() ) {
 				$appendScripts->addToContent( $sliderScript->getScripts() );
@@ -152,10 +168,10 @@ class Calculation {
 			$interactionScript = "let " . $this->uniqueName( 'icalc-calculation-' . $this->calculationId ) . " = document.getElementById('icalc-calculation-" . $this->calculationId . "');" .
 			                     "icalc_register_interactions(" . $this->uniqueName( 'icalc-calculation-' . $this->calculationId ) . "," . $this->calculationId . ");";
 			$listenTointeractions->addToContent( $interactionScript );
-
-
 			$appendScripts->addToContent( $listenTointeractions->getScripts() );
+		}
 
+		if ( ! $appendScripts->isEmpty() ) {
 			return $appendScripts->getScripts();
 		}
 
@@ -347,14 +363,71 @@ class Calculation {
 	}
 
 
+	private function addOnChangeListenerToComplexCalculation( $component, $complexCalculations ): string {
+		$cleanedType = $this->getCleaned_DisplayType( $component );
+		if ( in_array( $cleanedType, Calculation::ICALC_COMPONENTS_WITH_NO_ONCHANGE ) ) {
+			return "";
+		} else {
+			$getValue = ";";
+			switch ( $component->get_display_type() ) {
+				case "checkbox":
+					$getValue = $this->uniqueName( $component->get_dom_id() ) . ".checked ? " . $component->get_base_value() . " : " . $component->get_unchecked_value();
+					break;
+				default:
+					$getValue = $this->uniqueName( $component->get_dom_id() ) . ".value";
+			}
+
+
+			$scriptPart =
+				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "');}else{" .
+				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "');}
+					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() {
+					    const value = " . $getValue . ";";
+
+			foreach ( $complexCalculations as $calculation ) {
+				$scriptPart = $scriptPart . "icalc_update_complex_calculation('" . $calculation->get_dom_id() . "','" . $component->get_parent_component() . "',value);";
+			}
+
+			return $scriptPart . "});";
+		}
+	}
+
+	private function addComplexCalculationListeners( $components ): string {
+		$calculationObjects = [];
+
+		foreach ( $components as $component ) {
+			if ( strcasecmp( $component->get_display_type(), 'complex calculation' ) == 0 ) {
+				$calculationObjects[ $component->get_dom_id() ] = $component;
+			}
+		}
+
+		$function = "";
+		foreach ( $calculationObjects as $complexCalculation ) {
+
+			$regex = '/\[([^\]]+)\/[^\]]+\]/';
+			$calculationDescription = preg_replace($regex, '[$1]',  $complexCalculation->get_complex_calculation() );
+
+
+			$function = $function .
+			            "if(typeof " . $this->uniqueName( $complexCalculation->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $complexCalculation->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "');}else{" .
+			            "var " . $this->uniqueName( $complexCalculation->get_dom_id() ) . " = document.getElementById('" . $complexCalculation->get_dom_id() . "');}" .
+			            $this->uniqueName( $complexCalculation->get_dom_id() ) . ".dataset.prefix='" . $complexCalculation->getSumPrefix() . "';" .
+			            $this->uniqueName( $complexCalculation->get_dom_id() ) . ".dataset.sufix='" . $complexCalculation->getSumPostFix() . "';" .
+			            "icalc_complexCalculations['" . $complexCalculation->get_dom_id() . "']= '" . $calculationDescription . "';";
+		}
+
+		return $function;
+	}
+
+
 	private function addSliderChangeListener( $component ): string {
 		$cleanedType = $this->getCleaned_DisplayType( $component );
 		if ( $cleanedType !== 'slider' ) {
 			return "";
 		} else {
 			return
-				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
-				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
+				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "');}else{" .
+				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "');}
 					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() { " .
 				"if(typeof displayValue_" . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ displayValue_" . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('displayValue-" . $component->get_dom_id() . "')}else{" .
 				"var displayValue_" . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('displayValue-" . $component->get_dom_id() . "')}
@@ -362,6 +435,17 @@ class Calculation {
 			    displayValue_" . $this->uniqueName( $component->get_dom_id() ) . ".innerText = " . $this->uniqueName( $component->get_dom_id() ) . ".value;
 				});";
 		}
+	}
+
+	private function getOnlyComponents( $components, $type ): array {
+		$returnArr = [];
+		foreach ( $components as $component ) {
+			if ( strcasecmp( $component->get_display_type(), $type ) == 0 ) {
+				$returnArr[] = $component;
+			}
+		}
+
+		return $returnArr;
 	}
 
 

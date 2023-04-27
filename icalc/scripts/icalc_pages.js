@@ -3,7 +3,7 @@ let icalc_pages_preCalculations = [];
 
 function icalc_evaluate_calculation(calculationId, method) {
     console.log("evaluate: " + icalc_pages_calculations[calculationId][method]);
-    let result = eval(icalc_pages_calculations[calculationId][method]);
+    let result = eval(icalc_make_string_viable_for_eval(icalc_pages_calculations[calculationId][method]));
     if (typeof result === 'number' || typeof result === 'string') {
         return result.toFixed(2);
     } else if (typeof result === 'object') {
@@ -39,6 +39,26 @@ function icalc_update_pre_and_calculation(domId, calculationId, calculation, met
 
     icalc_pages_calculations[calculationId] ||= {};
     icalc_pages_calculations[calculationId][method] = updatedCalculation;
+}
+
+let icalc_complexCalculations = {};
+
+function icalc_update_complex_calculation(complexCalcId, component, value) {
+    let resultInput = document.getElementById(complexCalcId);
+    icalc_complexCalculations[complexCalcId + "-" + component] = value;
+
+    let calculation = icalc_complexCalculations[complexCalcId];
+    let matches = calculation.match(/\[(.*?)\]/g);
+    for (const match of matches) {
+        const componentId = match.replaceAll(/[\[\]]/g, "");
+        let lastValue = icalc_complexCalculations[complexCalcId + '-' + componentId];
+        if (typeof lastValue === "undefined") {
+            calculation = calculation.replaceAll(match.toString(), "");
+        } else {
+            calculation = calculation.replaceAll(match.toString(), lastValue);
+        }
+    }
+    resultInput.value = resultInput.dataset.prefix + eval(icalc_make_string_viable_for_eval(calculation)) + resultInput.dataset.sufix;
 }
 
 function icalc_parse_toValid(number, method) {
@@ -130,15 +150,12 @@ function icalc_register_interactions(wrappingDiv, calcId) {
     })
 }
 
-
-function icalc_process_product_creation(modalId) {
-
-    let nameElement = document.getElementById(modalId + '_name_form');
-    let descriptionElement = document.getElementById(modalId + '_desc_form');
-    let priceElement = document.getElementById(modalId + '_price_form');
-    let unitElement = document.getElementById(modalId + '_unit_form');
-    let minQualityElement = document.getElementById(modalId + '_min_quantity_form');
-    let displayTypeElement = document.getElementById(modalId + '_display_type_form');
-
-
+function icalc_make_string_viable_for_eval(evalString) {
+    while (["+", "-", "*", "/", " ", "\s"].includes(evalString.slice(-1))) {
+        evalString = evalString.slice(0, -1);
+    }
+    evalString = evalString.replace(/--/g, "+");
+    evalString = evalString.replace(/\+\+/g, "+");
+    return evalString;
 }
+

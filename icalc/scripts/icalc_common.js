@@ -62,13 +62,9 @@ let icalc_calculationElementConfigurations = [];
 icalc_calculations.addListener((action, args, calculationId) => {
     if (icalc_calculationElements[calculationId]) {
         for (const element of icalc_calculationElements[calculationId]) {
-            console.log("CALCULATION ELEMENT");
-            console.log(element);
-            console.log("args");
-            console.log(args);
             let prefix = icalc_calculationElementConfigurations[calculationId]['sum-prefix']
             let postfix = icalc_calculationElementConfigurations[calculationId]['sum-postfix']
-            element.value = prefix + icalc_calculate(calculationId,element).toString() + postfix;
+            element.value = prefix + icalc_calculate(calculationId, element).toString() + postfix;
         }
     }
 });
@@ -101,7 +97,7 @@ function icalc_getCalculationDescriptionById(id) {
 }
 
 
-function icalc_displayComponent(component, calculationId) {
+function icalc_displayComponent(component, calculationId, components) {
     switch (component.type) {
         case "product":
             return icalc_displayProduct(component, calculationId);
@@ -109,7 +105,7 @@ function icalc_displayComponent(component, calculationId) {
             return icalc_displayService(component, calculationId);
         case "genericComponent":
         case "calculationComponent":
-            return icalc_displayGenericComponent(component, calculationId);
+            return icalc_displayGenericComponent(component, calculationId, components);
         default:
             return document.createElement("div");
     }
@@ -164,8 +160,8 @@ function icalc_displayService(service, calculationId) {
     return serviceDiv;
 }
 
-function icalc_displayGenericComponent(genericComponent, calculationId) {
-    return icalc_getDisplayType(genericComponent, {}, calculationId);
+function icalc_displayGenericComponent(genericComponent, calculationId, components) {
+    return icalc_getDisplayType(genericComponent, {}, calculationId, components);
 
 }
 
@@ -180,7 +176,7 @@ function icalc_createCustomStyle(customStyles) {
 }
 
 
-function icalc_getDisplayType(component, componentData, calculationId) {
+function icalc_getDisplayType(component, componentData, calculationId, components) {
     switch (component.displayType.toLowerCase()) {
         case "number":
         case "number input":
@@ -209,16 +205,19 @@ function icalc_getDisplayType(component, componentData, calculationId) {
             return icalc_getProductCalculationDisplayType(component, calculationId);
 
         case "text":
-            return icalc_getTextDisplayType(component,componentData,calculationId);
+            return icalc_getTextDisplayType(component, componentData, calculationId);
 
         case "checkbox":
-            return icalc_getCheckboxDisplayType(component,componentData,calculationId);
+            return icalc_getCheckboxDisplayType(component, componentData, calculationId);
 
         case "list":
             return icalc_getListDisplayType(component, componentData, calculationId);
 
         case "spacer":
             return icalc_getSpacerDisplayType(component);
+
+        case "complex calculation":
+            return icalc_getComplexCalculationDisplayType(component, componentData, components);
 
         default:
             return document.createElement("div");
@@ -357,12 +356,104 @@ function icalc_getSubtractCalculation(component, calculationId) {
     return wrapper;
 }
 
+
+function icalc_getComplexCalculationDisplayType(component, componentData, components) {
+    const wrapper = document.createElement("div");
+    const colLabel = document.createElement("div");
+    colLabel.classList.add("col");
+    colLabel.classList.add("form-label");
+    const label = document.createElement("label");
+    label.innerText = component.conf.configuration['custom-label'];
+    label.setAttribute('for', `${component.type}-${component.id}-complex-calculation`);
+    if (component.conf.configuration["label-class"]) {
+        let labelClasses = component.conf.configuration["label-class"].split(";");
+        for (const labelClass of labelClasses) {
+            label.classList.add(labelClass);
+        }
+    }
+    colLabel.appendChild(label);
+    wrapper.appendChild(colLabel);
+
+    const colResult = document.createElement("div");
+    colResult.classList.add("col");
+    const inputElement = document.createElement('input');
+    inputElement.id = `${component.type}-${component.id}-complex-calculation`
+    inputElement.type = 'text';
+    inputElement.disabled = true
+    inputElement.dataset.prefix = component.conf.configuration["sum-prefix"];
+    inputElement.dataset.sufix = component.conf.configuration["sum-postfix"];
+    if (component.conf.configuration["input-classes"]) {
+        let inputClasses = component.conf.configuration["input-classes"].split(";");
+        for (const inputClass of inputClasses) {
+            inputElement.classList.add(inputClass);
+        }
+    }
+
+    let calculationDescription = component.conf.configuration["complex-calculation"];
+    let regex = /\[([^\]]+)\/[^\]]+\]/g;
+    calculationDescription = calculationDescription.replace(regex, "[$1]");
+    complexCalculations[`${component.type}-${component.id}-complex-calculation`] = calculationDescription;
+
+
+    setTimeout(() => {
+        for (const replaceableComponent of components) {
+            if (!replaceableComponent.domId.includes("calculation") && listenableDisplayTypes.includes(replaceableComponent.displayType.toLowerCase())) {
+
+                if (calculationDescription.includes('[' + replaceableComponent.parentComponent + ']')) {
+
+                    const inputElement = document.getElementById(`${replaceableComponent.domId}-` + replaceableComponent.displayType.toLowerCase().split(" ")[0]);
+                    inputElement.addEventListener('change', function () {
+                        let value;
+                        if (replaceableComponent.displayType.toLowerCase().split(" ")[0] === "checkbox") {
+                            value = inputElement.checked ? replaceableComponent.conf.configuration["base-value"] : replaceableComponent.conf.configuration["unchecked-value"];
+                        } else if (replaceableComponent.displayType.toLowerCase().split(" ")[0] === "list") {
+                            value = replaceableComponent.conf.configuration["list-value" + Number(inputElement.selectedIndex - 1)];
+                        } else {
+                            value = inputElement.value;
+                        }
+
+                        icalc_update_complex_calculation(`${component.type}-${component.id}-complex-calculation`, replaceableComponent.parentComponent, value);
+
+                    });
+                }
+            }
+        }
+    }, 125);
+
+
+    colResult.appendChild(inputElement);
+    wrapper.appendChild(colResult);
+    return wrapper;
+}
+
+
+function icalc_update_complex_calculation(complexCalcId, component, value) {
+    let resultInput = document.getElementById(complexCalcId);
+    complexCalculations[complexCalcId + "-" + component] = value;
+
+    let calculation = complexCalculations[complexCalcId];
+    let matches = calculation.match(/\[(.*?)\]/g);
+    for (const match of matches) {
+        const componentId = match.replaceAll(/[\[\]]/g, "");
+        let lastValue = complexCalculations[complexCalcId + '-' + componentId];
+        if (typeof lastValue === "undefined") {
+            calculation = calculation.replaceAll(match.toString(), "");
+        } else {
+            calculation = calculation.replaceAll(match.toString(), lastValue);
+        }
+    }
+    resultInput.value = resultInput.dataset.prefix + eval(icalc_make_string_viable_for_eval(calculation)) + resultInput.dataset.sufix;
+}
+
+let complexCalculations = {};
+let listenableDisplayTypes = ['list', "number", "number input", "slider", "checkbox"]
+
 function icalc_calculate(idOfCalculation, calculationElement) {
     let result = 0;
-    if (calculationElement.id.includes("subtract")){
+    if (calculationElement.id.includes("subtract")) {
         result = calculationElement.dataset.subtractValue;
     }
-    if (calculationElement.id.includes("product")){
+    if (calculationElement.id.includes("product")) {
         result = 1;
     }
     const calculationObject = icalc_calculations.get(idOfCalculation);
@@ -382,13 +473,23 @@ function icalc_calculate(idOfCalculation, calculationElement) {
     return result;
 }
 
+
+function icalc_make_string_viable_for_eval(evalString) {
+    while (["+", "-", "*", "/", "\s", " "].includes(evalString.slice(-1))) {
+        evalString = evalString.slice(0, -1);
+    }
+    evalString = evalString.replace(/--/g, "+");
+    evalString = evalString.replace(/\+\+/g, "+");
+    return evalString;
+}
+
 /**
  *
  * @param calculationPart {"baseValue":15.4, "times": 5, "negative": false}
  */
 function icalc_simpleCalculation(calculationPart) {
     let preCalc = eval(calculationPart["baseValue"] * calculationPart["times"]);
-    return calculationPart["negative"] ? eval(preCalc * -1 ): preCalc;
+    return calculationPart["negative"] ? eval(preCalc * -1) : preCalc;
 }
 
 
@@ -400,12 +501,12 @@ function icalc_getNumberDisplayType(component, componentData, calculationId) {
         colLabel.classList.add("col");
         colLabel.classList.add("form-label");
         const label = document.createElement("label");
-        if(componentData.name){
+        if (componentData.name) {
             label.innerText = componentData.name;
-        }else {
+        } else {
             label.innerText = component.conf.configuration['custom-label'];
         }
-        label.setAttribute('for', `${component.domId}-numberInput`);
+        label.setAttribute('for', `${component.domId}-number`);
         if (component.conf.configuration["label-class"]) {
             let labelClasses = component.conf.configuration["label-class"].split(";");
             for (const labelClass of labelClasses) {
@@ -422,8 +523,8 @@ function icalc_getNumberDisplayType(component, componentData, calculationId) {
     inputElement.type = 'number';
     inputElement.classList.add("form-control");
 
-    inputElement.setAttribute('id', `${component.domId}-numberInput`);
-    inputElement.setAttribute('name', `${component.domId}-numberInput`);
+    inputElement.setAttribute('id', `${component.domId}-number`);
+    inputElement.setAttribute('name', `${component.domId}-number`);
     inputElement.setAttribute('min', '0');
     if (componentData["min_quantity"]) {
         inputElement.setAttribute('step', componentData["min_quantity"]);
@@ -442,11 +543,9 @@ function icalc_getNumberDisplayType(component, componentData, calculationId) {
         }
 
         const inputCalculation = {
-            "baseValue": Number(baseValue),
-            "times": Number(inputElement.value),
-            "negative": false
+            "baseValue": Number(baseValue), "times": Number(inputElement.value), "negative": false
         }
-        icalc_calculations.setFrom(calculationId, `${component.domId}-numberInput`, inputCalculation);
+        icalc_calculations.setFrom(calculationId, `${component.domId}-number`, inputCalculation);
     }
 
     colInput.appendChild(inputElement);
@@ -463,9 +562,9 @@ function icalc_getSliderDisplayType(component, componentData, calculationId) {
         colLabel.classList.add("col");
         colLabel.classList.add("form-label");
         const label = document.createElement("label");
-        if(componentData.name){
+        if (componentData.name) {
             label.innerText = componentData.name;
-        }else {
+        } else {
             label.innerText = component.conf.configuration['custom-label'];
         }
         label.setAttribute('for', `${component.domId}-slider`);
@@ -512,18 +611,16 @@ function icalc_getSliderDisplayType(component, componentData, calculationId) {
 
     colInput.onchange = () => {
         const inputCalculation = {
-            "baseValue": Number(componentData["price"]),
-            "times": Number(inputElement.value),
-            "negative": false
+            "baseValue": Number(componentData["price"]), "times": Number(inputElement.value), "negative": false
         }
 
         if (component.conf.configuration["slider-show-value"]) {
             let unit = '';
-            if(componentData["unit"]){
-                unit=componentData["unit"];
+            if (componentData["unit"]) {
+                unit = componentData["unit"];
             }
 
-            displayValue.textContent = inputElement.value + " " + unit ;
+            displayValue.textContent = inputElement.value + " " + unit;
         } else {
             displayValue.innerHTML = ""
         }
@@ -545,9 +642,9 @@ function icalc_getCheckboxDisplayType(component, componentData, calculationId) {
         colLabel.classList.add("col");
         colLabel.classList.add("form-label");
         const label = document.createElement("label");
-        if(componentData.name){
+        if (componentData.name) {
             label.innerText = componentData.name;
-        }else {
+        } else {
             label.innerText = component.conf.configuration['custom-label'];
         }
         label.setAttribute('for', `${component.domId}-checkbox`);
@@ -575,17 +672,15 @@ function icalc_getCheckboxDisplayType(component, componentData, calculationId) {
 
     colInput.onchange = () => {
         let value;
-        if (componentData["price"]){
+        if (componentData["price"]) {
             value = componentData["price"];
-        }else {
+        } else {
             value = component.conf.configuration["base-value"];
         }
 
-        const times = inputElement.checked? 1 : 0;
+        const times = inputElement.checked ? 1 : 0;
         const inputCalculation = {
-            "baseValue": Number(value),
-            "times": Number(times),
-            "negative": false
+            "baseValue": Number(value), "times": Number(times), "negative": false
         }
 
         icalc_calculations.setFrom(calculationId, `${component.domId}-checkbox`, inputCalculation);
@@ -608,9 +703,9 @@ function icalc_getTextDisplayType(component, componentData, calculationId) {
         colLabel.classList.add("col");
         colLabel.classList.add("form-label");
         const label = document.createElement("label");
-        if(componentData.name){
+        if (componentData.name) {
             label.innerText = componentData.name;
-        }else {
+        } else {
             label.innerText = component.conf.configuration['custom-label'];
         }
 
@@ -685,9 +780,9 @@ function icalc_getListDisplayType(component, componentData, calculationId) {
         colLabel.classList.add("col");
         colLabel.classList.add("form-label");
         const label = document.createElement("label");
-        if(componentData.name){
+        if (componentData.name) {
             label.innerText = componentData.name;
-        }else {
+        } else {
             label.innerText = component.conf.configuration['custom-label'];
         }
         label.setAttribute('for', `${component.domId}-list`);
@@ -706,6 +801,7 @@ function icalc_getListDisplayType(component, componentData, calculationId) {
     colInput.classList.add("col");
     const select = document.createElement('select');
     select.classList.add("form-control")
+    select.id = `${component.domId}-list`;
 
     if (component.conf.configuration["input-classes"]) {
         let inputClasses = component.conf.configuration["input-classes"].split(";");

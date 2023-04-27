@@ -160,6 +160,9 @@ function moveComponent(dashboardItem, direction) {
     }
 }
 
+let icalc_products;
+let icalc_services;
+
 // loaders
 window.addEventListener('load', () => {
     const dashboardProducts = document.getElementById('icalc-dashboard-products');
@@ -178,7 +181,7 @@ window.addEventListener('load', () => {
         if (productsXHR.readyState === XMLHttpRequest.DONE) {
             if (productsXHR.status === 200) {
                 let products = JSON.parse(productsXHR.responseText);
-
+                icalc_products = products;
                 if (products.length > 0) {
                     let noneSelected = document.createElement('option');
                     noneSelected.value = "";
@@ -229,7 +232,7 @@ window.addEventListener('load', () => {
         if (servicesXHR.readyState === XMLHttpRequest.DONE) {
             if (servicesXHR.status === 200) {
                 let services = JSON.parse(servicesXHR.responseText);
-
+                icalc_services = services;
                 if (services.length > 0) {
                     let noneSelected = document.createElement('option');
                     noneSelected.value = "";
@@ -284,11 +287,11 @@ const calculationTypes = new Map(
         [4, "Complex Calculation"]
     ]);
 
-function genericTypesGetKeyForValue(lookupKey){
+function genericTypesGetKeyForValue(lookupKey) {
     let returnValue = 0;
     genericTypes.forEach(
         (key, value) => {
-            if (key.toLowerCase().includes(lookupKey.toLowerCase())){
+            if (key.toLowerCase().includes(lookupKey.toLowerCase())) {
                 returnValue = value;
             }
         }
@@ -297,11 +300,11 @@ function genericTypesGetKeyForValue(lookupKey){
 }
 
 
-function calculationTypesGetKeyForValue(lookupKey){
+function calculationTypesGetKeyForValue(lookupKey) {
     let returnValue = 0;
     calculationTypes.forEach(
         (key, value) => {
-            if (key.toLowerCase().includes(lookupKey.toLowerCase())){
+            if (key.toLowerCase().includes(lookupKey.toLowerCase())) {
                 returnValue = value;
             }
         }
@@ -336,7 +339,6 @@ window.addEventListener('load', () => {
 })
 
 
-
 window.addEventListener('load', () => {
     const dashboardCalculations = document.getElementById('icalc-dashboard-calculations');
 
@@ -361,7 +363,6 @@ window.addEventListener('load', () => {
     dashboardCalculations.appendChild(calculationSelectList);
     dashboardCalculations.appendChild(calculationDiv)
 })
-
 
 
 function setNewClonedComponent(component) {
@@ -440,7 +441,7 @@ function setNewServiceComponent(serviceComponent) {
     return serviceComponent;
 }
 
-function setNewCalculationComponent(calculationComponent){
+function setNewCalculationComponent(calculationComponent) {
     const id = getSuffixIdFromElement(calculationComponent);
     let dashboard;
     let select;
@@ -879,6 +880,7 @@ function getGenericComponentToJSONObject(genericComponent) {
         "displayType": genericTypes.get(Number(select.dataset.selected)),
     };
 }
+
 function getCalculationComponentToJSONObject(calculationComponent) {
     const children = calculationComponent.children;
     let dashboard;
@@ -949,7 +951,21 @@ function getConfigureModal(id, displayType) {
          <span class="display-none row m-0 align-items-center" id="base-value-configuration" >
                <label for="base-value" class="col-2">Base Value:</label>
                <input type="number" id="base-value" name="base-value" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
-        </span>
+        </span>        
+          
+        <span class="display-none row m-0 align-items-center" id="unchecked-value-configuration" >
+               <label for="unchecked-value" class="col-2">Unchecked Value:</label>
+               <input type="number" id="unchecked-value" name="unchecked-value" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
+        </span>       
+         
+         <div class="display-none m-0 align-items-center" id="complex-calculation-configuration" >
+               <label for="complex-calculation" class="col-4">Complex calculation configuration:</label>
+               <textarea class="icalc-custom-input col-10 mt-0 mb-4 ml-4 mr-4"  id="complex-calculation" name="complex-calculation" rows="3" cols="45" data-previous=""></textarea>
+               <span class="mb-2 align-items-center">
+                   <label for="complex-calculation-components">Add component reference:</label>
+                   <select class="mb-4" id="complex-calculation-components"></select>
+               </span>
+        </div>
         
          <span class="display-none row m-0 align-items-center" id="subtract-calculation-configuration" >
                <label for="subtract-value" class="col-2">Original Value to Subtract from:</label>
@@ -974,7 +990,7 @@ function getConfigureModal(id, displayType) {
             <button id="list-add-option" class="icalc-config-btn btn-info mt-2 close-btn icalc-float-right"><i class="dashicons dashicons-plus-alt"></i></button>
         </span>
         
-            <span class="display-none" id="sum-configuration">
+        <span class="display-none" id="sum-configuration">
             <span class="row m-0 align-items-center">
                 <label class="col-2" for="list-option1">Prefix:</label>
                 <input type="text" id="sum-prefix" name="sum-prefix" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
@@ -1079,8 +1095,43 @@ function appendConfigButton(div) {
     }
 
 
+    function addOptionsToComplexCalculation() {
+        if (modal.dataset.type === 'complex calculation') {
+            const select = modal.querySelector("#complex-calculation-components");
+            const textarea = modal.querySelector('#complex-calculation');
+            select.innerHTML = "";
+            const blankOption = document.createElement("option");
+            blankOption.id = "";
+            blankOption.textContent = ""
+            select.appendChild(blankOption);
+
+
+            const currentDashboard = div.parentElement.parentElement.parentElement;
+            for (const item of currentDashboard.children) {
+                const component = item.querySelector("div");
+                if (!component.id.includes("calculation") && listenableDisplayTypes.includes(icalc_getDisplayTypeOfSelectedChild(component))) {
+                    const option = document.createElement("option");
+                    let selected = component.querySelector('select');
+
+                    option.value = component.id + '/' + selected.selectedOptions[0].innerText;
+                    option.textContent = selected.selectedOptions[0].innerText + ' (' + component.id + ')';
+                    select.appendChild(option);
+                }
+            }
+
+            select.onchange = (event) => {
+                if (event.target.value !== "") {
+                    textarea.value = textarea.value.concat('[' + event.target.value + ']');
+                }
+                select.selectedIndex = 0;
+            };
+        }
+    }
+
+
     // Function to open the modal
     function openModal() {
+        addOptionsToComplexCalculation();
         modal.parentNode.classList.remove("hidden");
     }
 
@@ -1128,7 +1179,6 @@ function appendConfigButton(div) {
     }
 
     function resetState(displayType, previousType) {
-        console.log("resetState");
         let showLabelSpan = modal.querySelector("#show-label-configuration");
         showLabelSpan.classList.remove("display-none");
 
@@ -1138,11 +1188,8 @@ function appendConfigButton(div) {
         let sliderConfSpan = modal.querySelector("#slider-configuration");
         sliderConfSpan.classList.add("display-none");
 
-
         let baseValueConfiguration = modal.querySelector("#base-value-configuration");
         baseValueConfiguration.classList.add("display-none");
-        console.log("baseValueConfiguration");
-        console.log(baseValueConfiguration);
 
         let listConfiguration = modal.querySelector("#list-configuration");
         listConfiguration.classList.add("display-none");
@@ -1153,9 +1200,16 @@ function appendConfigButton(div) {
         let subtractConfiguration = modal.querySelector("#subtract-calculation-configuration");
         subtractConfiguration.classList.add("display-none");
 
+        let complexCalcConfiguration = modal.querySelector("#complex-calculation-configuration");
+        complexCalcConfiguration.classList.add("display-none");
+
+        let uncheckedValueConfiguration = modal.querySelector("#unchecked-value-configuration");
+        uncheckedValueConfiguration.classList.add("display-none");
+
 
         if (previousType) {
             if (displayType !== previousType) {
+
                 let labelInputs = labelSpan.querySelectorAll('.icalc-custom-input');
                 labelInputs.forEach((input) => {
                     input.value = ""
@@ -1189,8 +1243,18 @@ function appendConfigButton(div) {
                 subtractValue.forEach((input) => {
                     input.value = "0"
                 });
+
+                let complexInputs = complexCalcConfiguration.querySelectorAll('.icalc-custom-input');
+                complexInputs.forEach((input) => {
+                    input.value = ""
+                })
+
+                let uncheckedValues = uncheckedValueConfiguration.querySelectorAll('.icalc-custom-input');
+                uncheckedValues.forEach((input) => {
+                    input.value = "1";
+                });
             }
-        }else {
+        } else {
             modal.dataset.previousType = displayType;
         }
     }
@@ -1202,8 +1266,7 @@ function appendConfigButton(div) {
         console.log("PRocess display type change")
         console.log(displayType.toLowerCase());
 
-        resetState(displayType,modal.dataset.previousType);
-
+        resetState(displayType, modal.dataset.previousType);
 
 
         switch (displayType.toLowerCase()) {
@@ -1229,7 +1292,15 @@ function appendConfigButton(div) {
 
             case "subtract calculation":
                 modal.querySelector("#subtract-calculation-configuration").classList.remove("display-none");
+                modal.querySelector("#sum-configuration").classList.remove("display-none");
+                break
 
+            case "complex calculation":
+                modal.querySelector("#complex-calculation-configuration").classList.remove("display-none");
+                modal.querySelector("#sum-configuration").classList.remove("display-none");
+                break
+
+            case "product calculation":
             case "sum":
                 modal.querySelector("#sum-configuration").classList.remove("display-none");
                 break;
@@ -1239,7 +1310,7 @@ function appendConfigButton(div) {
                 modal.querySelector("#slider-configuration").classList.remove("display-none");
                 break;
         }
-        switch (true){
+        switch (true) {
             case modal.id.includes("component-component"):
                 modal.querySelector("#custom-label-configuration").classList.remove("display-none");
                 break
@@ -1315,7 +1386,7 @@ function masterUpdatePreview(jsonBodyToUpdate, previewId) {
         if (component["displayType"].trim().replaceAll(" ", "").replaceAll("-", "").toLowerCase() === "none") {
             continue;
         }
-        form.appendChild(icalc_displayComponent(component, updateObject["id"]));
+        form.appendChild(icalc_displayComponent(component, updateObject["id"], updateObject["components"]));
     }
 
 
@@ -1442,7 +1513,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     editCalculation.onclick = () => {
-        let updateObjectOfNewCalculationJSON =  editUpdateObjectOfNewCalculation();
+        let updateObjectOfNewCalculationJSON = editUpdateObjectOfNewCalculation();
 
         let updateObjectOfNewCalculation;
         if (typeof updateObjectOfNewCalculationJSON === 'string') {
@@ -1660,17 +1731,17 @@ function icalc_fill_components_of_edit_calculation(components) {
         clonedElement.id = domId;
         let insertedComponent = setNewClonedComponent(clonedElement);
 
-        if(domText === 'component-component'){
+        if (domText === 'component-component') {
             let select = insertedComponent.querySelector('select');
 
             const selectedOption = genericTypesGetKeyForValue(component.displayType);
-             select.dataset.selected= selectedOption.toString();
+            select.dataset.selected = selectedOption.toString();
         }
-        if(domText === 'calculation-component'){
+        if (domText === 'calculation-component') {
             let select = insertedComponent.querySelector('select');
 
             const selectedOption = calculationTypesGetKeyForValue(component.displayType);
-            select.dataset.selected= selectedOption.toString();
+            select.dataset.selected = selectedOption.toString();
         }
 
         const dashboardItem = document.createElement('div');
@@ -1769,7 +1840,7 @@ function icalc_process_calculation_edit_action(id) {
 
                 icalc_fill_components_of_edit_calculation(calculationObject.components);
 
-                editingCalculation=id;
+                editingCalculation = id;
 
                 dashboard_edit_content_change();
 
@@ -1804,5 +1875,18 @@ function icalc_clear_configure_modals() {
     let modals = document.body.querySelectorAll(".icalc-component-configuration-modal");
     for (const modal of modals) {
         document.body.removeChild(modal.parentNode);
+    }
+}
+
+function icalc_getDisplayTypeOfSelectedChild(component) {
+    let querySelector = component.querySelector("select");
+    let selectedIndex = querySelector.selectedIndex;
+    switch (true) {
+        case querySelector.name.includes("product"):
+            return icalc_products[selectedIndex - 1]["display_type"];
+        case querySelector.name.includes("service"):
+            return icalc_services[selectedIndex - 1]["display_type"];
+        case querySelector.name.includes("component"):
+            return genericTypes.get(selectedIndex).toLowerCase().trim();
     }
 }

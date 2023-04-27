@@ -4,12 +4,7 @@ namespace icalc\fe;
 
 use icalc\db\model\Product;
 use icalc\db\model\Service;
-use icalc\fe\displayTypes\CheckBox;
-use icalc\fe\displayTypes\ChooseList;
 use icalc\fe\displayTypes\DisplayTypeManager;
-use icalc\fe\displayTypes\Label;
-use icalc\fe\displayTypes\Number;
-use icalc\fe\displayTypes\Slider;
 
 class Component {
 
@@ -22,6 +17,9 @@ class Component {
 	private $configuration;
 	private $componentRenderer;
 
+	private $uncheckedValue;
+
+	private string $complexCalculation;
 	private $sumPrefix;
 	private $sumPostFix;
 
@@ -78,7 +76,7 @@ class Component {
 
 
 	public function createDisplayType( $type, $id, $configuration, $masterObject ) {
-		error_log("ASKING FOR OBJECT TYPE: $type");
+		error_log( "ASKING FOR OBJECT TYPE: $type" );
 		$classToCreate = DisplayTypeManager::fromNameToClass( $type );
 		if ( ! $classToCreate ) {
 			return null;
@@ -87,19 +85,29 @@ class Component {
 		$displayType = new $classToCreate;
 		$args        = array( 'id' => $id, 'conf' => $configuration, 'masterObject' => $masterObject );
 		$displayType->fillData( $args );
+
 		return $displayType;
 
 	}
 
-	private function setCalculationValues(){
-		if(strtolower(trim($this->type)) == 'genericcomponent'){
-			$this->baseValue=$this->configuration->configuration->{'base-value'};
-		}else{
-			$this->baseValue=$this->masterObjectData->price;
+	private function setCalculationValues() {
+		if ( strtolower( trim( $this->type ) ) == 'genericcomponent' ) {
+			$this->baseValue = $this->configuration->configuration->{'base-value'};
+		} else {
+			$this->baseValue = $this->masterObjectData->price;
 		}
-		if(strtolower(trim($this->displayType))=='sum'){
-			$this->sumPostFix=$this->configuration->configuration->{'sum-postfix'};
-			$this->sumPrefix=$this->configuration->configuration->{'sum-prefix'};
+		if ( strtolower( trim( $this->displayType ) ) == 'sum'
+		     || strtolower( trim( $this->displayType ) ) == "product calculation"
+		     || strtolower( trim( $this->displayType ) ) == "subtract calculation"
+		     || strtolower( trim( $this->displayType ) ) == "complex calculation" ) {
+			$this->sumPostFix = $this->configuration->configuration->{'sum-postfix'};
+			$this->sumPrefix  = $this->configuration->configuration->{'sum-prefix'};
+		}
+		if ( strtolower( trim( $this->displayType ) ) == "complex calculation" ) {
+			$this->complexCalculation = $this->configuration->configuration->{"complex-calculation"};
+		}
+		if ( strtolower( trim( $this->displayType ) ) == "checkbox" ) {
+			$this->uncheckedValue = $this->configuration->configuration->{"unchecked-value"};
 		}
 	}
 
@@ -107,9 +115,9 @@ class Component {
 	 * @return mixed
 	 */
 	public function get_base_value() {
-		if(!is_numeric( $this->baseValue)){
+		if ( ! is_numeric( $this->baseValue ) ) {
 			return 1;
-		}else{
+		} else {
 			return $this->baseValue;
 		}
 	}
@@ -136,15 +144,39 @@ class Component {
 		return $this->domId;
 	}
 
-	public function getSumPrefix(){
+	public function getSumPrefix() {
 		return $this->sumPrefix;
 	}
 
 
-	public function getSumPostFix(){
+	public function getSumPostFix() {
 		return $this->sumPostFix;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function get_complex_calculation(): string {
+		return $this->complexCalculation;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function get_unchecked_value() {
+		if ( ! isset( $this->uncheckedValue ) ) {
+			return 1;
+		}
+
+		return $this->uncheckedValue;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function get_parent_component() {
+		return $this->parentComponent;
+	}
 
 
 }
