@@ -79,7 +79,6 @@ class Calculation {
 	private function appendScrips(): string {
 		//do we have sum in calculation
 		$appendScripts = new ScriptWrapper();
-		$appendScripts->wrapWithOnLoad( false );
 
 		if ( $this->form->has( 'sum' ) ) {
 			$sumScript = new ScriptWrapper();
@@ -94,6 +93,23 @@ class Calculation {
 
 			if ( ! $sumScript->isEmpty() ) {
 				$appendScripts->addToContent( $sumScript->getScripts() );
+			}
+		}
+
+
+		if ( $this->form->has( 'subtract calculation' ) ) {
+			$subtractScript = new ScriptWrapper();
+			$subtractScript->wrapWithScrip( false );
+			$subtractScript->wrapWithOnLoad( false );
+
+			$components = $this->form->get_components();
+			foreach ( $components as $component ) {
+				$subtractScript->addToContent( $this->addOnChangeListenerToSubtract( $component ) );
+			}
+			$subtractScript->addToContent( $this->addSubtractListeners( $components ) );
+
+			if ( ! $subtractScript->isEmpty() ) {
+				$appendScripts->addToContent( $subtractScript->getScripts() );
 			}
 		}
 
@@ -113,20 +129,17 @@ class Calculation {
 			}
 		}
 
-
-		$listenTointeractions = new ScriptWrapper();
-		$listenTointeractions->wrapWithOnLoad( false );
-		$listenTointeractions->wrapWithScrip( false );
-		$interactionScript = "window.addEventListener('load', function () {
-							 let " . $this->uniqueName( 'icalc-calculation-' . $this->calculationId ) . " = document.getElementById('icalc-calculation-" . $this->calculationId . "');" .
-		                     "icalc_register_interactions(".$this->uniqueName( 'icalc-calculation-' . $this->calculationId ) ."," . $this->calculationId . ");});";
-		$listenTointeractions->addToContent( $interactionScript );
-
-
-		$appendScripts->addToContent( $listenTointeractions->getScripts() );
+		if(!$appendScripts->isEmpty()){
+			$listenTointeractions = new ScriptWrapper();
+			$listenTointeractions->wrapWithScrip( false );
+			$listenTointeractions->wrapWithOnLoad(false);
+			$interactionScript = "let " . $this->uniqueName( 'icalc-calculation-' . $this->calculationId ) . " = document.getElementById('icalc-calculation-" . $this->calculationId . "');" .
+			                     "icalc_register_interactions(".$this->uniqueName( 'icalc-calculation-' . $this->calculationId ) ."," . $this->calculationId . ");";
+			$listenTointeractions->addToContent( $interactionScript );
 
 
-		if ( ! $appendScripts->isEmpty() ) {
+			$appendScripts->addToContent( $listenTointeractions->getScripts() );
+
 			return $appendScripts->getScripts();
 		}
 
@@ -135,6 +148,9 @@ class Calculation {
 
 	const ICALC_COMPONENTS_WITH_NO_ONCHANGE = array(
 		"sum",
+		"subtract calculation",
+		"product calculation",
+		"complex calculation",
 		"label",
 		"hr",
 		"horizontal rule",
@@ -145,7 +161,7 @@ class Calculation {
 	);
 
 	private function addOnChangeListenerToSum( $component ): string {
-		$cleanedType = strtolower( trim( $component->get_display_type() ) );
+		$cleanedType = $this->getCleaned_DisplayType( $component );
 		if ( in_array( $cleanedType, Calculation::ICALC_COMPONENTS_WITH_NO_ONCHANGE ) ) {
 			return "";
 		}else if ($cleanedType == "checkbox"){
@@ -156,8 +172,8 @@ class Calculation {
 					    const changedValue = " . $this->uniqueName( $component->get_dom_id() ) . ".checked? 1 : 0;
 					    const myComponentCalculation = " . $component->get_base_value() . " * changedValue; 
 					    
-					    icalc_update_pre_and_calculation('" . $this->uniqueName( $component->get_dom_id() ) . "'," . $this->calculationId . ",myComponentCalculation);
-						icalc_updateCalculation" . $this->calculationId . "();
+					    icalc_update_pre_and_calculation('" . $this->uniqueName( $component->get_dom_id() ) . "'," . $this->calculationId . ",myComponentCalculation,'sum');
+						icalc_updateSumCalculation" . $this->calculationId . "();
 					});
 
 			";
@@ -169,8 +185,8 @@ class Calculation {
 					    const changedValue = " . $this->uniqueName( $component->get_dom_id() ) . ".value;
 					    const myComponentCalculation = " . $component->get_base_value() . " * changedValue; 
 					    
-					    icalc_update_pre_and_calculation('" . $this->uniqueName( $component->get_dom_id() ) . "'," . $this->calculationId . ",myComponentCalculation);
-						icalc_updateCalculation" . $this->calculationId . "();
+					    icalc_update_pre_and_calculation('" . $this->uniqueName( $component->get_dom_id() ) . "'," . $this->calculationId . ",myComponentCalculation,'sum');
+						icalc_updateSumCalculation" . $this->calculationId . "();
 					});
 
 			";
@@ -186,21 +202,79 @@ class Calculation {
 			}
 		}
 
-		$function = "function icalc_updateCalculation" . $this->calculationId . "(){" .
+		$function = "function icalc_updateSumCalculation" . $this->calculationId . "(){" .
 		            "if(!icalc_pages_calculations[" . $this->calculationId . "]){icalc_pages_calculations[" . $this->calculationId . "]=[]}";
 		foreach ( $sumObjects as $sum ) {
 			$function = $function .
 			            "if(typeof " . $this->uniqueName( $sum->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $sum->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
 			            "var " . $this->uniqueName( $sum->get_dom_id() ) . " = document.getElementById('" . $sum->get_dom_id() . "');}" .
-			            $this->uniqueName( $sum->get_dom_id() ) . ".value = '" . $sum->getSumPrefix() . "' + icalc_evaluate_calculation(" . $this->calculationId . ").toString() + '" . $sum->getSumPostFix() . "';";
+			            $this->uniqueName( $sum->get_dom_id() ) . ".value = '" . $sum->getSumPrefix() . "' + icalc_evaluate_calculation(" . $this->calculationId . ",'sum').toString() + '" . $sum->getSumPostFix() . "';";
 
 		}
 
 		return $function . "}";
 	}
 
+	private function addOnChangeListenerToSubtract($component):string{
+		$cleanedType = $this->getCleaned_DisplayType( $component );
+		if ( in_array( $cleanedType, Calculation::ICALC_COMPONENTS_WITH_NO_ONCHANGE ) ) {
+			return "";
+		}else if ($cleanedType == "checkbox"){
+			return
+				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
+				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
+					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() {
+					    const changedValue = " . $this->uniqueName( $component->get_dom_id() ) . ".checked? 1 : 0;
+					    const myComponentCalculation = " . $component->get_base_value() . " * changedValue; 
+					    
+					    icalc_update_pre_and_calculation('" . $this->uniqueName( $component->get_dom_id() ) . "'," . $this->calculationId . ",myComponentCalculation,'subtract');
+						icalc_updateSubtractCalculation" . $this->calculationId . "();
+					});
+
+			";
+		} else {
+			return
+				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
+				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
+					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() {
+					    const changedValue = " . $this->uniqueName( $component->get_dom_id() ) . ".value;
+					    const myComponentCalculation = " . $component->get_base_value() . " * changedValue; 
+					    
+					    icalc_update_pre_and_calculation('" . $this->uniqueName( $component->get_dom_id() ) . "'," . $this->calculationId . ",myComponentCalculation,'subtract');
+						icalc_updateSubtractCalculation" . $this->calculationId . "();
+					});
+
+			";
+		}
+	}
+
+	private function addSubtractListeners( $components ): string {
+		$subtractObjects = [];
+
+		foreach ( $components as $component ) {
+			if ( strtolower( trim( $component->get_display_type() ) ) == 'subtract calculation' ) {
+				$subtractObjects[ $component->get_dom_id() ] = $component;
+			}
+		}
+
+		$function = "function icalc_updateSubtractCalculation" . $this->calculationId . "(){" .
+		            "if(!icalc_pages_calculations[" . $this->calculationId . "]){icalc_pages_calculations[" . $this->calculationId . "]=[]}";
+		foreach ( $subtractObjects as $subtract ) {
+			$function = $function .
+			            "if(typeof " . $this->uniqueName( $subtract->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $subtract->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
+			            "var " . $this->uniqueName( $subtract->get_dom_id() ) . " = document.getElementById('" . $subtract->get_dom_id() . "');}" .
+			            "if(typeof " . $this->uniqueName( $subtract->get_dom_id() ) . "_baseValue  !== 'undefined'){ " . $this->uniqueName( $subtract->get_dom_id() ) . "_baseValue =".$this->uniqueName( $subtract->get_dom_id() ).".dataset.startingValue;}else{" .
+			            "var " . $this->uniqueName( $subtract->get_dom_id() ) . "_baseValue = ".$this->uniqueName( $subtract->get_dom_id() ).".dataset.startingValue;}".
+			            "icalc_update_pre_and_calculation('" . $this->uniqueName( $subtract->get_dom_id() ) . "'," . $this->calculationId . ", -1 * Number(".$this->uniqueName( $subtract->get_dom_id() ) . "_baseValue)".",'subtract');".
+			            $this->uniqueName( $subtract->get_dom_id() ) . ".value = '" . $subtract->getSumPrefix() . "' + icalc_evaluate_calculation(" . $this->calculationId . ",'subtract').toString() + '" . $subtract->getSumPostFix() . "';";
+		}
+
+		return $function . "}";
+	}
+
+
 	private function addSliderChangeListener( $component ): string {
-		$cleanedType = strtolower( trim( $component->get_display_type() ) );
+		$cleanedType = $this->getCleaned_DisplayType( $component );
 		if ( $cleanedType !== 'slider' ) {
 			return "";
 		} else {
@@ -219,6 +293,17 @@ class Calculation {
 
 	private function uniqueName( $domId ): string {
 		return "icalc" . $this->calculationId . "_" . str_replace( '-', '_', $domId );
+	}
+
+	/**
+	 * @param $component
+	 *
+	 * @return string
+	 */
+	public function getCleaned_DisplayType( $component ): string {
+		$cleanedType = strtolower( trim( $component->get_display_type() ) );
+
+		return $cleanedType;
 	}
 
 

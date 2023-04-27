@@ -7,7 +7,7 @@ class CheckBox extends DisplayType {
 
 	private $id;
 	private $name;
-	private $value;
+	private float $value;
 	private $classes;
 	private $displayLabel = false;
 	private $label;
@@ -38,10 +38,10 @@ class CheckBox extends DisplayType {
 		$this->labelClasses = $conf->configuration->{'label-classes'};
 		if ( $masterObject == null ) {
 			$this->label = $conf->configuration->{'custom-label'};
-			$this->value = $conf->configuration->{'base-value'};
+			$this->value = floatval( $conf->configuration->{'base-value'} );
 		} else {
 			$this->label = $masterObject->name;
-			$this->value = $masterObject->price;
+			$this->value = floatval( $masterObject->price );
 		}
 
 		$this->classes = str_replace( ";", " ", $conf->configuration->{'input-classes'} );

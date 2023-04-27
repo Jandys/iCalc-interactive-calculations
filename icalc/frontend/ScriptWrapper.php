@@ -20,7 +20,7 @@ class ScriptWrapper {
 		}
 
 		if ($this->wrapWithOnLoad){
-			$retVal = $retVal . 'document.addEventListener(\'DOMContentLoaded\', () => {';
+			$retVal = $retVal . 'window.addEventListener(\'load\', function () {';
 		}
 
 		$retVal = $retVal . $this->contents;

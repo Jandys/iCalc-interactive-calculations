@@ -270,7 +270,7 @@ const genericTypes = new Map(
         [3, "List"],
         [4, "Number input"],
         [5, "Slider"],
-        [5, "Checkbox"],
+        [6, "Checkbox"],
         [7, "Spacer"],
         [8, "Horizontal Rule"]
     ]);

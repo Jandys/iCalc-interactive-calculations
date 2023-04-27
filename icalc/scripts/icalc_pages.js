@@ -1,8 +1,9 @@
-let icalc_pages_calculations = [];
+let icalc_pages_calculations = [[]];
 let icalc_pages_preCalculations = [];
 
-function icalc_evaluate_calculation(calculationId) {
-    let result = eval(icalc_pages_calculations[calculationId]);
+function icalc_evaluate_calculation(calculationId, method) {
+    console.log("evaluate: " + icalc_pages_calculations[calculationId][method]);
+    let result = eval(icalc_pages_calculations[calculationId][method]);
     if (typeof result === 'number' || typeof result === 'string') {
         return result;
     } else if (typeof result === 'object') {
@@ -10,22 +11,44 @@ function icalc_evaluate_calculation(calculationId) {
     }
 }
 
-function icalc_update_pre_and_calculation(domId, calculationId, calculation, type = '+') {
+function icalc_update_pre_and_calculation(domId, calculationId, calculation, method = 'sum') {
     if (!icalc_pages_preCalculations[calculationId]) {
         icalc_pages_preCalculations[calculationId] = [];
     }
+
+
     icalc_pages_preCalculations[calculationId][domId] = calculation;
 
     let updatedCalculation = "";
     for (const domCalculation in icalc_pages_preCalculations[calculationId]) {
 
+
         if (updatedCalculation) {
-            updatedCalculation = updatedCalculation + type + icalc_pages_preCalculations[calculationId][domCalculation];
+            updatedCalculation = '(' + updatedCalculation + ')' + icalc_get_calculation_type(method) + '(' + icalc_pages_preCalculations[calculationId][domCalculation] + ')';
         } else {
-            updatedCalculation = icalc_pages_preCalculations[calculationId][domCalculation];
+            updatedCalculation = icalc_get_calculation_type(method) + icalc_pages_preCalculations[calculationId][domCalculation];
         }
+
     }
-    icalc_pages_calculations[calculationId] = updatedCalculation;
+
+
+    icalc_pages_calculations[calculationId] ||= {};
+    icalc_pages_calculations[calculationId][method] = updatedCalculation;
+}
+
+
+function icalc_get_calculation_type(method) {
+    switch (method) {
+        case "sum":
+            return '+';
+        case "subtract":
+            return '-';
+        case "product":
+            return '*';
+        case "complex":
+            return "+";
+    }
+
 }
 
 
@@ -48,11 +71,11 @@ function generateUUID() {
 
 
 let icalc_timeouts = {};
+
 function icalc_register_interactions(wrappingDiv, calcId) {
     wrappingDiv.addEventListener('change', function () {
-        console.log("on change");
         let UUID = getOrCreateUUID();
-        if(icalc_timeouts[UUID]){
+        if (icalc_timeouts[UUID]) {
             if (icalc_timeouts[UUID] != null) {
                 clearTimeout(icalc_timeouts[UUID]);
                 icalc_timeouts[UUID] = null;
@@ -62,7 +85,6 @@ function icalc_register_interactions(wrappingDiv, calcId) {
         let querySelectorAll = wrappingDiv.querySelectorAll('input');
         let body = {};
         for (const input of querySelectorAll) {
-            console.log(input);
             let ins = {};
             ins["type"] = input.type;
             ins["value"] = input.value;
@@ -72,15 +94,12 @@ function icalc_register_interactions(wrappingDiv, calcId) {
         }
         body["calculationId"] = calcId;
         icalc_timeouts[UUID] = setTimeout(() => {
-            console.log("Interaction!");
-            console.log(body);
-
             const xhr = new XMLHttpRequest();
             const url = '/wp-json/icalc/v1/icalculations/interactions';
             const data = JSON.stringify({
                 calculationId: calcId,
                 body: body,
-                userId:UUID
+                userId: UUID
             });
 
             xhr.open('POST', url);
@@ -88,7 +107,6 @@ function icalc_register_interactions(wrappingDiv, calcId) {
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
-                        console.log('Interaction registered:', xhr.responseText);
                     } else {
                         console.log('Error registering interaction:', xhr.status);
                     }
@@ -101,14 +119,14 @@ function icalc_register_interactions(wrappingDiv, calcId) {
 }
 
 
-function icalc_process_product_creation(modalId){
+function icalc_process_product_creation(modalId) {
 
-    let nameElement = document.getElementById(modalId+'_name_form');
-    let descriptionElement = document.getElementById(modalId+'_desc_form');
-    let priceElement = document.getElementById(modalId+'_price_form');
-    let unitElement = document.getElementById(modalId+'_unit_form');
-    let minQualityElement = document.getElementById(modalId+'_min_quantity_form');
-    let displayTypeElement = document.getElementById(modalId+'_display_type_form');
+    let nameElement = document.getElementById(modalId + '_name_form');
+    let descriptionElement = document.getElementById(modalId + '_desc_form');
+    let priceElement = document.getElementById(modalId + '_price_form');
+    let unitElement = document.getElementById(modalId + '_unit_form');
+    let minQualityElement = document.getElementById(modalId + '_min_quantity_form');
+    let displayTypeElement = document.getElementById(modalId + '_display_type_form');
 
 
 }

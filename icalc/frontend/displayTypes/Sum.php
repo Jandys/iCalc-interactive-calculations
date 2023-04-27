@@ -29,8 +29,6 @@ class Sum extends DisplayType {
 		$this->displayLabel = boolval( $conf->configuration->{'show-label'} );
 		$this->labelClasses = $conf->configuration->{'label-classes'};
 
-
-
 	}
 
 	protected function showLabel() {
