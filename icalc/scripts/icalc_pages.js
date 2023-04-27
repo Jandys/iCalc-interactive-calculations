@@ -5,7 +5,7 @@ function icalc_evaluate_calculation(calculationId, method) {
     console.log("evaluate: " + icalc_pages_calculations[calculationId][method]);
     let result = eval(icalc_pages_calculations[calculationId][method]);
     if (typeof result === 'number' || typeof result === 'string') {
-        return result;
+        return result.toFixed(2);
     } else if (typeof result === 'object') {
         return 0;
     }
@@ -19,14 +19,19 @@ function icalc_update_pre_and_calculation(domId, calculationId, calculation, met
 
     icalc_pages_preCalculations[calculationId][domId] = calculation;
 
-    let updatedCalculation = "";
+    let updatedCalculation;
+    if (method === 'product') {
+        updatedCalculation = "1";
+    } else {
+        updatedCalculation = "";
+    }
     for (const domCalculation in icalc_pages_preCalculations[calculationId]) {
 
 
         if (updatedCalculation) {
-            updatedCalculation = '(' + updatedCalculation + ')' + icalc_get_calculation_type(method) + '(' + icalc_pages_preCalculations[calculationId][domCalculation] + ')';
+            updatedCalculation = updatedCalculation + icalc_get_calculation_type(method) + icalc_parse_toValid(icalc_pages_preCalculations[calculationId][domCalculation], method);
         } else {
-            updatedCalculation = icalc_get_calculation_type(method) + icalc_pages_preCalculations[calculationId][domCalculation];
+            updatedCalculation = icalc_get_calculation_type(method) + icalc_parse_toValid(icalc_pages_preCalculations[calculationId][domCalculation], method);
         }
 
     }
@@ -34,6 +39,13 @@ function icalc_update_pre_and_calculation(domId, calculationId, calculation, met
 
     icalc_pages_calculations[calculationId] ||= {};
     icalc_pages_calculations[calculationId][method] = updatedCalculation;
+}
+
+function icalc_parse_toValid(number, method) {
+    if (parseFloat(number) < 0 && method === "subtract") {
+        return '(' + number + ')';
+    }
+    return number;
 }
 
 

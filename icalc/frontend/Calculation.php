@@ -113,6 +113,22 @@ class Calculation {
 			}
 		}
 
+		if ( $this->form->has( 'product calculation' ) ) {
+			$productScript = new ScriptWrapper();
+			$productScript->wrapWithScrip( false );
+			$productScript->wrapWithOnLoad( false );
+
+			$components = $this->form->get_components();
+			foreach ( $components as $component ) {
+				$productScript->addToContent( $this->addOnChangeListenerToProduct( $component ) );
+			}
+			$productScript->addToContent( $this->addProductListeners( $components ) );
+
+			if ( ! $productScript->isEmpty() ) {
+				$appendScripts->addToContent( $productScript->getScripts() );
+			}
+		}
+
 		if ( $this->form->has( 'slider' ) ) {
 			$sliderScript = new ScriptWrapper();
 			$sliderScript->wrapWithScrip( false );
@@ -129,12 +145,12 @@ class Calculation {
 			}
 		}
 
-		if(!$appendScripts->isEmpty()){
+		if ( ! $appendScripts->isEmpty() ) {
 			$listenTointeractions = new ScriptWrapper();
 			$listenTointeractions->wrapWithScrip( false );
-			$listenTointeractions->wrapWithOnLoad(false);
+			$listenTointeractions->wrapWithOnLoad( false );
 			$interactionScript = "let " . $this->uniqueName( 'icalc-calculation-' . $this->calculationId ) . " = document.getElementById('icalc-calculation-" . $this->calculationId . "');" .
-			                     "icalc_register_interactions(".$this->uniqueName( 'icalc-calculation-' . $this->calculationId ) ."," . $this->calculationId . ");";
+			                     "icalc_register_interactions(" . $this->uniqueName( 'icalc-calculation-' . $this->calculationId ) . "," . $this->calculationId . ");";
 			$listenTointeractions->addToContent( $interactionScript );
 
 
@@ -164,10 +180,10 @@ class Calculation {
 		$cleanedType = $this->getCleaned_DisplayType( $component );
 		if ( in_array( $cleanedType, Calculation::ICALC_COMPONENTS_WITH_NO_ONCHANGE ) ) {
 			return "";
-		}else if ($cleanedType == "checkbox"){
+		} else if ( $cleanedType == "checkbox" ) {
 			return
-			"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
-			"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
+				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
+				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
 					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() {
 					    const changedValue = " . $this->uniqueName( $component->get_dom_id() ) . ".checked? 1 : 0;
 					    const myComponentCalculation = " . $component->get_base_value() . " * changedValue; 
@@ -215,11 +231,11 @@ class Calculation {
 		return $function . "}";
 	}
 
-	private function addOnChangeListenerToSubtract($component):string{
+	private function addOnChangeListenerToSubtract( $component ): string {
 		$cleanedType = $this->getCleaned_DisplayType( $component );
 		if ( in_array( $cleanedType, Calculation::ICALC_COMPONENTS_WITH_NO_ONCHANGE ) ) {
 			return "";
-		}else if ($cleanedType == "checkbox"){
+		} else if ( $cleanedType == "checkbox" ) {
 			return
 				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
 				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
@@ -263,10 +279,68 @@ class Calculation {
 			$function = $function .
 			            "if(typeof " . $this->uniqueName( $subtract->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $subtract->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
 			            "var " . $this->uniqueName( $subtract->get_dom_id() ) . " = document.getElementById('" . $subtract->get_dom_id() . "');}" .
-			            "if(typeof " . $this->uniqueName( $subtract->get_dom_id() ) . "_baseValue  !== 'undefined'){ " . $this->uniqueName( $subtract->get_dom_id() ) . "_baseValue =".$this->uniqueName( $subtract->get_dom_id() ).".dataset.startingValue;}else{" .
-			            "var " . $this->uniqueName( $subtract->get_dom_id() ) . "_baseValue = ".$this->uniqueName( $subtract->get_dom_id() ).".dataset.startingValue;}".
-			            "icalc_update_pre_and_calculation('" . $this->uniqueName( $subtract->get_dom_id() ) . "'," . $this->calculationId . ", -1 * Number(".$this->uniqueName( $subtract->get_dom_id() ) . "_baseValue)".",'subtract');".
+			            "if(typeof " . $this->uniqueName( $subtract->get_dom_id() ) . "_baseValue  !== 'undefined'){ " . $this->uniqueName( $subtract->get_dom_id() ) . "_baseValue =" . $this->uniqueName( $subtract->get_dom_id() ) . ".dataset.startingValue;}else{" .
+			            "var " . $this->uniqueName( $subtract->get_dom_id() ) . "_baseValue = " . $this->uniqueName( $subtract->get_dom_id() ) . ".dataset.startingValue;}" .
+			            "icalc_update_pre_and_calculation('" . $this->uniqueName( $subtract->get_dom_id() ) . "'," . $this->calculationId . ", -1 * Number(" . $this->uniqueName( $subtract->get_dom_id() ) . "_baseValue)" . ",'subtract');" .
 			            $this->uniqueName( $subtract->get_dom_id() ) . ".value = '" . $subtract->getSumPrefix() . "' + icalc_evaluate_calculation(" . $this->calculationId . ",'subtract').toString() + '" . $subtract->getSumPostFix() . "';";
+		}
+
+		return $function . "}";
+	}
+
+	private function addOnChangeListenerToProduct( $component ): string {
+		$cleanedType = $this->getCleaned_DisplayType( $component );
+		if ( in_array( $cleanedType, Calculation::ICALC_COMPONENTS_WITH_NO_ONCHANGE ) ) {
+			return "";
+		} else if ( $cleanedType == "checkbox" ) {
+			return
+				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
+				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
+					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() {
+					    const changedValue = " . $this->uniqueName( $component->get_dom_id() ) . ".checked? 1 : 0;
+					    var myComponentCalculation = " . $component->get_base_value() . " * changedValue; 
+					    if(myComponentCalculation==0){myComponentCalculation=1;}
+					    
+					    icalc_update_pre_and_calculation('" . $this->uniqueName( $component->get_dom_id() ) . "'," . $this->calculationId . ",myComponentCalculation,'product');
+						icalc_updateProductCalculation" . $this->calculationId . "();
+					});
+
+			";
+		} else {
+			return
+				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
+				"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
+					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() {
+					    const changedValue = " . $this->uniqueName( $component->get_dom_id() ) . ".value;
+					    var myComponentCalculation = " . $component->get_base_value() . " * changedValue; 
+                        if(myComponentCalculation==0){myComponentCalculation=1;}
+
+					    
+					    icalc_update_pre_and_calculation('" . $this->uniqueName( $component->get_dom_id() ) . "'," . $this->calculationId . ",myComponentCalculation,'product');
+						icalc_updateProductCalculation" . $this->calculationId . "();
+					});
+
+			";
+		}
+	}
+
+	private function addProductListeners( $components ): string {
+		$productObjects = [];
+
+		foreach ( $components as $component ) {
+			if ( strtolower( trim( $component->get_display_type() ) ) == 'product calculation' ) {
+				$productObjects[ $component->get_dom_id() ] = $component;
+			}
+		}
+
+		$function = "function icalc_updateProductCalculation" . $this->calculationId . "(){" .
+		            "if(!icalc_pages_calculations[" . $this->calculationId . "]){icalc_pages_calculations[" . $this->calculationId . "]=[]}";
+		foreach ( $productObjects as $product ) {
+			$function = $function .
+			            "if(typeof " . $this->uniqueName( $product->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $product->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
+			            "var " . $this->uniqueName( $product->get_dom_id() ) . " = document.getElementById('" . $product->get_dom_id() . "');}" .
+			            "icalc_update_pre_and_calculation('" . $this->uniqueName( $product->get_dom_id() ) . "'," . $this->calculationId . ", 1 ,'product');" .
+			            $this->uniqueName( $product->get_dom_id() ) . ".value = '" . $product->getSumPrefix() . "' + icalc_evaluate_calculation(" . $this->calculationId . ",'product').toString() + '" . $product->getSumPostFix() . "';";
 		}
 
 		return $function . "}";
