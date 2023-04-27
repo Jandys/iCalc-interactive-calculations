@@ -8,7 +8,6 @@ add_action('admin_init', 'inter_calc_set_cookie');
 const configurationSites = array('inter-calc-configuration',
                                 'ic-products-configuration',
                                 'ic-services-configuration',
-                                'ic-tags-configuration',
                                 'ic-menu-statistics');
 
 global $settingCookie;
@@ -94,12 +93,6 @@ function ic_admin_menu()
         'ic-services-configuration',
         'ic_menu_services_configuration');
     add_submenu_page('inter-calc-configuration',
-        __('Tags - Inter Calcus'),
-        __('IC - Tags'),
-        'manage_options',
-        'ic-tags-configuration',
-        'ic_menu_tags_configuration');
-    add_submenu_page('inter-calc-configuration',
         __('Statistics - Inter Calcus'),
         __('IC - Statistics'),
         'manage_options',
@@ -162,22 +155,6 @@ function ic_menu_services_configuration(){
     echo '</div>';
     }
 }
-
-function ic_menu_tags_configuration(){
-    if(is_admin()){
-
-    \icalc\db\DatabaseInit::init();
-
-
-    echo '<div class="wrap">
-        <h2>'.__("Tags Menu", "icalc").'</h2>';
-
-    \icalc\fe\TagAdminFrontend::configuration();
-
-    echo '</div>';
-    }
-}
-
 
 function ic_menu_statistics(){
     if(is_admin()){

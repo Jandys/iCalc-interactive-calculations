@@ -668,7 +668,6 @@ function getProductInHtml(product) {
         "<th>Description</th>" +
         "<th>Price per Unit</th>" +
         "<th>Unit</th>" +
-        "<th>Tag</th>" +
         "<th>Min Quantity</th>" +
         "<th>Display Type</th>" +
         "</tr>" +
@@ -680,7 +679,6 @@ function getProductInHtml(product) {
         "<td>" + product["description"] + "</td>" +
         "<td>" + product["price"] + "</td>" +
         "<td>" + product["unit"] + "</td>" +
-        "<td>" + product["tag"] + "</td>" +
         "<td>" + product["min_quantity"] + "</td>" +
         "<td>" + product["display_type"] + "</td>" +
         "</tr>" +
@@ -953,6 +951,11 @@ function getConfigureModal(id, displayType) {
                <input type="number" id="base-value" name="base-value" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
         </span>
         
+         <span class="display-none row m-0 align-items-center" id="subtract-calculation-configuration" >
+               <label for="subtract-value" class="col-2">Original Value to Subtract from:</label>
+               <input type="number" id="subtract-value" name="subtract-value" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="0"/> 
+        </span>
+        
         <span class="display-none row m-0 align-items-center" id="slider-configuration">
             <label class="col-2" for="slider-max">Slider max:</label>
             <input type="number" id="slider-max" name="slider-max" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/>
@@ -1147,6 +1150,9 @@ function appendConfigButton(div) {
         let sumConfiguration = modal.querySelector("#sum-configuration");
         sumConfiguration.classList.add("display-none");
 
+        let subtractConfiguration = modal.querySelector("#subtract-calculation-configuration");
+        subtractConfiguration.classList.add("display-none");
+
 
         if (previousType) {
             if (displayType !== previousType) {
@@ -1177,6 +1183,11 @@ function appendConfigButton(div) {
                 let labelConfigurations = showLabelSpan.querySelectorAll('.icalc-custom-input');
                 labelConfigurations.forEach((input) => {
                     input.value = ""
+                });
+
+                let subtractValue = subtractConfiguration.querySelectorAll('.icalc-custom-input');
+                subtractValue.forEach((input) => {
+                    input.value = "0"
                 });
             }
         }else {
@@ -1215,6 +1226,9 @@ function appendConfigButton(div) {
             case "choose list":
                 modal.querySelector("#list-configuration").classList.remove("display-none");
                 break;
+
+            case "subtract calculation":
+                modal.querySelector("#subtract-calculation-configuration").classList.remove("display-none");
 
             case "sum":
                 modal.querySelector("#sum-configuration").classList.remove("display-none");

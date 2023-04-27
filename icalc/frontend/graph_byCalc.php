@@ -26,11 +26,14 @@ $barPlot->value->SetFont(FF_ARIAL, FS_NORMAL, 10);
 $graph = new Graph(600, 400);
 $graph->SetScale("textlin");
 $graph->title->Set('Interactions by Calculation ID');
+$graph->title->SetFont(FF_DEFAULT,FS_BOLD);
 
-$graph->SetMargin(50, 30, 50, 50);
+
+$graph->SetMargin(120, 30, 50, 50);
 $graph->xaxis->SetTickLabels( $calculationIds );
 $graph->xaxis->title->Set('Calculation ID');
 $graph->yaxis->title->Set('Interactions');
+$graph->yaxis->title->SetMargin(15);
 
 $graph->Add($barPlot);
 header('Content-Type: image/png');

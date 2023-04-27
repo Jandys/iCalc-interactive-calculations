@@ -19,7 +19,6 @@ class Product extends BaseDatabaseModel
                   description VARCHAR(255) NOT NULL,
                   price DECIMAL(10,2) NOT NULL,
                   unit VARCHAR(50) NOT NULL,
-                  tag VARCHAR(255) NOT NULL,
                   min_quantity INT NOT NULL,
                   display_type VARCHAR(50) NOT NULL,
                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -34,7 +33,6 @@ class Product extends BaseDatabaseModel
                                      $description,
                                      $price,
                                      $unit,
-                                     $tag,
                                      $min_quantity,
                                      $display_type)
     {
@@ -42,7 +40,6 @@ class Product extends BaseDatabaseModel
             'description' => $description,
             'price' => $price,
             'unit' => $unit,
-            'tag' => $tag,
             'min_quantity' => $min_quantity,
             'display_type' => $display_type);
         Unit::insertNew($unit);
@@ -54,7 +51,6 @@ class Product extends BaseDatabaseModel
                                       $description,
                                       $price,
                                       $unit,
-                                      $tag,
                                       $min_quantity,
                                       $display_type)
     {
@@ -62,7 +58,6 @@ class Product extends BaseDatabaseModel
             'description' => $description,
             'price' => $price,
             'unit' => $unit,
-            'tag' => $tag,
             'min_quantity' => $min_quantity,
             'display_type' => $display_type);
         Unit::insertNew($unit);

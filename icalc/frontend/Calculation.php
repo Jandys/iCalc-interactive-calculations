@@ -148,6 +148,19 @@ class Calculation {
 		$cleanedType = strtolower( trim( $component->get_display_type() ) );
 		if ( in_array( $cleanedType, Calculation::ICALC_COMPONENTS_WITH_NO_ONCHANGE ) ) {
 			return "";
+		}else if ($cleanedType == "checkbox"){
+			return
+			"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .
+			"var " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}
+					" . $this->uniqueName( $component->get_dom_id() ) . ".addEventListener(\"change\", function() {
+					    const changedValue = " . $this->uniqueName( $component->get_dom_id() ) . ".checked? 1 : 0;
+					    const myComponentCalculation = " . $component->get_base_value() . " * changedValue; 
+					    
+					    icalc_update_pre_and_calculation('" . $this->uniqueName( $component->get_dom_id() ) . "'," . $this->calculationId . ",myComponentCalculation);
+						icalc_updateCalculation" . $this->calculationId . "();
+					});
+
+			";
 		} else {
 			return
 				"if(typeof " . $this->uniqueName( $component->get_dom_id() ) . " !== 'undefined'){ " . $this->uniqueName( $component->get_dom_id() ) . " = document.getElementById('" . $component->get_dom_id() . "')}else{" .

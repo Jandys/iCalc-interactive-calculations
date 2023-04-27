@@ -74,9 +74,41 @@ function icalc_register_interactions(wrappingDiv, calcId) {
         icalc_timeouts[UUID] = setTimeout(() => {
             console.log("Interaction!");
             console.log(body);
+
+            const xhr = new XMLHttpRequest();
+            const url = '/wp-json/icalc/v1/icalculations/interactions';
+            const data = JSON.stringify({
+                calculationId: calcId,
+                body: body,
+                userId:UUID
+            });
+
+            xhr.open('POST', url);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log('Interaction registered:', xhr.responseText);
+                    } else {
+                        console.log('Error registering interaction:', xhr.status);
+                    }
+                }
+            };
+            xhr.send(data);
         }, 6500);
 
     })
+}
+
+
+function icalc_process_product_creation(modalId){
+
+    let nameElement = document.getElementById(modalId+'_name_form');
+    let descriptionElement = document.getElementById(modalId+'_desc_form');
+    let priceElement = document.getElementById(modalId+'_price_form');
+    let unitElement = document.getElementById(modalId+'_unit_form');
+    let minQualityElement = document.getElementById(modalId+'_min_quantity_form');
+    let displayTypeElement = document.getElementById(modalId+'_display_type_form');
 
 
 }

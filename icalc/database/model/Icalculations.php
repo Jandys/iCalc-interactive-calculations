@@ -2,26 +2,39 @@
 
 namespace icalc\db\model;
 
-class Icalculations extends BaseDatabaseModel
-{
-    public static function create_table(): bool
-    {
-        global $wpdb;
+class Icalculations extends BaseDatabaseModel {
+	public static function create_table(): bool {
+		global $wpdb;
 
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-        $table_name = self::_tableName();
-        $primary_key = self::$id;
+		$table_name  = self::_tableName();
+		$primary_key = self::$id;
 
-        $sql = "CREATE TABLE IF NOT EXISTS ".$table_name." (
+		$sql = "CREATE TABLE IF NOT EXISTS " . $table_name . " (
                           id INT AUTO_INCREMENT PRIMARY KEY,
                           calculationId INT,
                           body JSON NOT NULL,
+                          userId VARCHAR(40),
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                         ) {$wpdb->get_charset_collate()};";
 
-        return maybe_create_table($table_name, $sql);
-    }
+		return maybe_create_table( $table_name, $sql );
+	}
+
+	public static function insertNew(
+		$calculationId,
+		$body,
+		$userId
+	) {
+		$data = array(
+			'calculationId' => $calculationId,
+			'body'          => $body,
+			'userId'        => $userId
+		);
+
+		return parent::insert( $data );
+	}
 
 
 }

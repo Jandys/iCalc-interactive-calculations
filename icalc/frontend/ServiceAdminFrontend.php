@@ -26,7 +26,6 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
 			$modalData["price"]        = $item["price"];
 			$modalData["unit"]         = $item["unit"];
 			$modalData["min_quantity"] = $item["min_quantity"];
-			$modalData["tag"]          = $item["tag"];
 			$modalData["display_type"] = $item["display_type"];
 
 
@@ -41,7 +40,6 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
                     <td>' . $item["price"] . '</td>
                     <td>' . $item["unit"] . '</td>
                     <td>' . $item["min_quantity"] . '</td>
-                    <td>' . $item["tag"] . '</td>
                     <td>' . $item["display_type"] . '</td>
                     <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
                     <td class="text-center"><button class="btn btn-danger" onclick="icalc_process_service_deletion(' . $item["id"] . ',\'' . $item["name"] . '\')"><span class="dashicons dashicons-trash"></span></button></td>
@@ -65,7 +63,6 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
                         <th class="p-2 m-2">' . __( "Price per Unit" ) . '</th>
                         <th class="p-2 m-2">' . __( "Unit" ) . '</th>
                         <th class="p-2 m-2">' . __( "Minimal Quantity" ) . '</th>
-                        <th class="p-2 m-2">' . __( "Tag" ) . '</th>
                         <th class="p-2 m-2">' . __( "Display Type" ) . '</th>
                         <th class="col-1"></th>
                         <th class="col-1"></th>
@@ -124,10 +121,6 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
                                   <input id="' . $modalId . '_min_quantity_form" type="text" class="form-control" placeholder="' . __( "Minimal Quantity" ) . '" value="' . $formFields['min_quantity'] . '">
                                 </div>
                                  <div class="col icalc-edit-table-space-between">
-                                  <label for="' . $modalId . '_tag_form">' . __( "Tag" ) . '</label>
-                                  <input id="' . $modalId . '_tag_form" type="text" class="form-control" placeholder="' . __( "Tag" ) . '" value="' . $formFields['tag'] . '">
-                                </div>
-                                 <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_display_type_form">' . __( "Display Type" ) . '</label>
                                     ' .
 		       $displayTypeList->render()
@@ -182,10 +175,6 @@ class ServiceAdminFrontend extends AbstractAdminFrontend {
                                   <label for="' . $modalId . '_min_quantity_form">' . __( "Minimal Quantity" ) . '</label>
                                   <input id="' . $modalId . '_min_quantity_form" type="number" class="form-control" placeholder="' . __( "Service Minimal Quantity" ) . '" >
                                 </div>
-                                 <div class="col icalc-edit-table-space-between">
-                                  <label for="' . $modalId . '_tag_form">' . __( "Tag" ) . '</label>
-                                  <input id="' . $modalId . '_tag_form" type="text" class="form-control" placeholder="' . __( "Service Tag" ) . '" >
-                                </div> 
                                  <div class="col icalc-edit-table-space-between">
                                   <label for="' . $modalId . '_display_type_form">' . __( "Display Type" ) . '</label>
                                                                    ' .

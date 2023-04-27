@@ -58,7 +58,6 @@ function icalc_load_scripts() {
 	}
 }
 
-
 function icalc_load_textdomain() {
 	load_plugin_textdomain( 'icalc', false, plugins_url( '/localization', __DIR__ ) );
 }

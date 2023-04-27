@@ -68,7 +68,7 @@ icalc_calculations.addListener((action, args, calculationId) => {
             console.log(args);
             let prefix = icalc_calculationElementConfigurations[calculationId]['sum-prefix']
             let postfix = icalc_calculationElementConfigurations[calculationId]['sum-postfix']
-            element.value = prefix + icalc_calculate(calculationId).toString() + postfix;
+            element.value = prefix + icalc_calculate(calculationId,element).toString() + postfix;
         }
     }
 });
@@ -200,6 +200,14 @@ function icalc_getDisplayType(component, componentData, calculationId) {
         case "sum":
             return icalc_getSumDisplayType(component, calculationId);
 
+        case "subtract calculation":
+        case "subtract-calculation":
+            return icalc_getSubtractCalculation(component, calculationId);
+
+        case "product calculation":
+        case "product-calculation":
+            return icalc_getProductCalculationDisplayType(component, calculationId);
+
         case "text":
             return icalc_getTextDisplayType(component,componentData,calculationId);
 
@@ -226,7 +234,7 @@ function icalc_getSumDisplayType(component, calculationId) {
     colLabel.classList.add("form-label");
     const label = document.createElement("label");
     label.innerText = component.conf.configuration['custom-label'];
-    label.setAttribute('for', `${component.type}-${component.id}-numberInput`);
+    label.setAttribute('for', `${component.type}-${component.id}-sum-calculation`);
     if (component.conf.configuration["label-class"]) {
         let labelClasses = component.conf.configuration["label-class"].split(";");
         for (const labelClass of labelClasses) {
@@ -241,8 +249,8 @@ function icalc_getSumDisplayType(component, calculationId) {
     colResult.classList.add("col");
     const inputElement = document.createElement('input');
     inputElement.type = 'text';
+    inputElement.id = `${component.type}-${component.id}-sum-calculation`;
     inputElement.disabled = true
-    inputElement.classList.add("form-control");
     if (component.conf.configuration["input-classes"]) {
         let inputClasses = component.conf.configuration["input-classes"].split(";");
         for (const inputClass of inputClasses) {
@@ -262,14 +270,112 @@ function icalc_getSumDisplayType(component, calculationId) {
     return wrapper;
 }
 
+function icalc_getProductCalculationDisplayType(component, calculationId) {
+    const wrapper = document.createElement("div");
+    const colLabel = document.createElement("div");
+    colLabel.classList.add("col");
+    colLabel.classList.add("form-label");
+    const label = document.createElement("label");
+    label.innerText = component.conf.configuration['custom-label'];
+    label.setAttribute('for', `${component.type}-${component.id}-product-calculation`);
+    if (component.conf.configuration["label-class"]) {
+        let labelClasses = component.conf.configuration["label-class"].split(";");
+        for (const labelClass of labelClasses) {
+            label.classList.add(labelClass);
+        }
+    }
+    colLabel.appendChild(label);
+    wrapper.appendChild(colLabel);
 
-function icalc_calculate(idOfCalculation, method = "sum") {
+
+    const colResult = document.createElement("div");
+    colResult.classList.add("col");
+    const inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.id = `${component.type}-${component.id}-product-calculation`;
+    inputElement.disabled = true
+    if (component.conf.configuration["input-classes"]) {
+        let inputClasses = component.conf.configuration["input-classes"].split(";");
+        for (const inputClass of inputClasses) {
+            inputElement.classList.add(inputClass);
+        }
+    }
+
+    icalc_calculationElementConfigurations[calculationId] = component.conf.configuration;
+
+    if (!icalc_calculationElements[calculationId]) {
+        icalc_calculationElements[calculationId] = [];
+    }
+    icalc_calculationElements[calculationId].push(inputElement);
+
+    colResult.appendChild(inputElement);
+    wrapper.appendChild(colResult);
+    return wrapper;
+}
+
+function icalc_getSubtractCalculation(component, calculationId) {
+    const wrapper = document.createElement("div");
+    const colLabel = document.createElement("div");
+    colLabel.classList.add("col");
+    colLabel.classList.add("form-label");
+    const label = document.createElement("label");
+    label.innerText = component.conf.configuration['custom-label'];
+    label.setAttribute('for', `${component.type}-${component.id}-subtract-calculation`);
+    if (component.conf.configuration["label-class"]) {
+        let labelClasses = component.conf.configuration["label-class"].split(";");
+        for (const labelClass of labelClasses) {
+            label.classList.add(labelClass);
+        }
+    }
+    colLabel.appendChild(label);
+    wrapper.appendChild(colLabel);
+
+
+    const colResult = document.createElement("div");
+    colResult.classList.add("col");
+    const inputElement = document.createElement('input');
+    inputElement.id = `${component.type}-${component.id}-subtract-calculation`
+    inputElement.type = 'text';
+    inputElement.disabled = true
+    inputElement.dataset.subtractValue = component.conf.configuration["subtract-value"];
+    if (component.conf.configuration["input-classes"]) {
+        let inputClasses = component.conf.configuration["input-classes"].split(";");
+        for (const inputClass of inputClasses) {
+            inputElement.classList.add(inputClass);
+        }
+    }
+
+    icalc_calculationElementConfigurations[calculationId] = component.conf.configuration;
+
+    if (!icalc_calculationElements[calculationId]) {
+        icalc_calculationElements[calculationId] = [];
+    }
+    icalc_calculationElements[calculationId].push(inputElement);
+
+    colResult.appendChild(inputElement);
+    wrapper.appendChild(colResult);
+    return wrapper;
+}
+
+function icalc_calculate(idOfCalculation, calculationElement) {
     let result = 0;
+    if (calculationElement.id.includes("subtract")){
+        result = calculationElement.dataset.subtractValue;
+    }
+    if (calculationElement.id.includes("product")){
+        result = 1;
+    }
     const calculationObject = icalc_calculations.get(idOfCalculation);
     for (const calcPart in calculationObject) {
-        switch (method) {
-            case "sum":
+        switch (true) {
+            case calculationElement.id.includes("sum"):
                 result += icalc_simpleCalculation(calculationObject[calcPart]);
+                break;
+            case calculationElement.id.includes("product"):
+                result *= icalc_simpleCalculation(calculationObject[calcPart]);
+                break;
+            case calculationElement.id.includes("subtract"):
+                result -= icalc_simpleCalculation(calculationObject[calcPart]);
                 break;
         }
     }
@@ -281,8 +387,8 @@ function icalc_calculate(idOfCalculation, method = "sum") {
  * @param calculationPart {"baseValue":15.4, "times": 5, "negative": false}
  */
 function icalc_simpleCalculation(calculationPart) {
-    let preCalc = calculationPart["baseValue"] * calculationPart["times"];
-    return calculationPart["negative"] ? preCalc * -1 : preCalc;
+    let preCalc = eval(calculationPart["baseValue"] * calculationPart["times"]);
+    return calculationPart["negative"] ? eval(preCalc * -1 ): preCalc;
 }
 
 
