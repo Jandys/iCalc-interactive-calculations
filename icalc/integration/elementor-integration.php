@@ -1,7 +1,14 @@
 <?php
 
+
+/**
+ * Registers an Elementor widget and enqueues a script on the front-end.
+ */
 add_action('elementor/widgets/widgets_registered', 'icalc_register_elementor_widgets');
 
+/**
+ * Register the IcalcElementorWidget with Elementor.
+ */
 function icalc_register_elementor_widgets() {
 	if (defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base')) {
 		require_once(ICALC_PATH . '/integration/IcalcElementorWidget.php');

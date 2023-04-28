@@ -45,7 +45,6 @@ class Unit extends BaseDatabaseModel
             return null;
         }
 
-
         global $wpdb;
         $sql = sprintf('SELECT unit FROM %s WHERE %s LIKE %%s', self::_tableName(), 'unit');
 

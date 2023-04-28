@@ -2,8 +2,15 @@
 
 namespace icalc\fe\displayTypes;
 
+/**
+ * Class CheckBox
+ *
+ * A class that represents a checkbox display type.
+ *
+ * @package icalc\fe\displayTypes
+ * @since 1.0.0
+ */
 class CheckBox extends DisplayType {
-
 
 	private $id;
 	private $name;
@@ -16,6 +23,12 @@ class CheckBox extends DisplayType {
 	public function __construct() {
 	}
 
+    /**
+     * Renders the checkbox.
+     * Wrapped in generic div.
+     *
+     * @return string The rendered HTML for the checkbox.
+     */
 	function render(): string {
 		$wrapper = '<div class="icalc-form-group form-outline form-group row">';
 
@@ -28,6 +41,11 @@ class CheckBox extends DisplayType {
 		return $wrapper;
 	}
 
+    /**
+     * Renders the checkbox.
+     *
+     * @return string The rendered HTML for the checkbox.
+     */
 	public function fillData( $args ): void {
 		$id           = $args["id"];
 		$masterObject = $args['masterObject'];
@@ -47,6 +65,11 @@ class CheckBox extends DisplayType {
 		$this->classes = str_replace( ";", " ", $conf->configuration->{'input-classes'} );
 	}
 
+    /**
+     * Displays the label associated with the checkbox.
+     *
+     * @return string The rendered HTML for the label.
+     */
 	private function showLabel(): string {
 		if ( $this->displayLabel ) {
 			$label = new Label();
@@ -58,7 +81,9 @@ class CheckBox extends DisplayType {
 		return "";
 	}
 
-
+    /**
+     * @return string
+     */
 	private function displayInput(): string {
 		$returnValue = '<input class="icalc-calculation-checkbox-input ' . $this->classes . '" type="checkbox" id="' . $this->id . '" 
 		data-value="' . $this->value . '"';

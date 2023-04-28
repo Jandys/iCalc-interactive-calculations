@@ -3,6 +3,14 @@
 
 use icalc\fe\Calculation as CalculationAlias;
 
+/**
+ * Renders the iCalc calculation shortcode.
+ *
+ * @param array $atts     The attributes of the shortcode.
+ * @param string|null $content    The content of the shortcode (not used).
+ *
+ * @return string   The rendered output of the shortcode.
+ */
 function renderIcalcCalculationShortcode( $atts, $content = null) {
 
 	wp_enqueue_script( 'icalc_pages_scripts', plugins_url( '/scripts/icalc_pages.js', ICALC_FILE ), array(), ICALC_VERSION, false );
@@ -29,6 +37,10 @@ function renderIcalcCalculationShortcode( $atts, $content = null) {
 
 	return $output;
 }
+
+/**
+ * Adds the iCalc calculation shortcode handler.
+ */
 function icalc_calculation_shortcode_handler() {
 	add_shortcode( 'icalc_calculation', 'renderIcalcCalculationShortcode' );
 }

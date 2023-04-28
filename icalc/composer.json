@@ -10,7 +10,6 @@
     }
   ],
   "require": {
-    "php": ">=8.0",
     "firebase/php-jwt": "^v6.4.0",
     "amenadiel/jpgraph": "^4.1.0",
     "ext-json": "*"
@@ -21,6 +20,7 @@
     }
   },
   "require-dev": {
+    "php": "^8.2",
     "phpunit/phpunit": "^10.1"
   }
 }
