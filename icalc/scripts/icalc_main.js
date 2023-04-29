@@ -185,7 +185,7 @@ window.addEventListener('load', () => {
                 if (products.length > 0) {
                     let noneSelected = document.createElement('option');
                     noneSelected.value = "";
-                    noneSelected.innerText = "-- None --";
+                    noneSelected.innerText = icalcMainScriptLocalization.none;
                     productSelectList.appendChild(noneSelected);
                 }
 
@@ -236,7 +236,7 @@ window.addEventListener('load', () => {
                 if (services.length > 0) {
                     let noneSelected = document.createElement('option');
                     noneSelected.value = "";
-                    noneSelected.innerText = "-- None --";
+                    noneSelected.innerText = icalcMainScriptLocalization.none;
                     serviceSelectList.appendChild(noneSelected);
                 }
 
@@ -278,6 +278,19 @@ const genericTypes = new Map(
         [8, "Horizontal Rule"]
     ]);
 
+const genericTypesLocalized = new Map(
+    [[0, icalcMainScriptLocalization.none],
+        [1, icalcMainScriptLocalization.label],
+        [2, icalcMainScriptLocalization.text],
+        [3, icalcMainScriptLocalization.list],
+        [4, icalcMainScriptLocalization.numberInput],
+        [5, icalcMainScriptLocalization.slider],
+        [6, icalcMainScriptLocalization.checkBox],
+        [7, icalcMainScriptLocalization.spacer],
+        [8, icalcMainScriptLocalization.horizontalRule]
+    ]
+);
+
 
 const calculationTypes = new Map(
     [[0, "-- None --"],
@@ -285,6 +298,15 @@ const calculationTypes = new Map(
         [2, "Product Calculation"],
         [3, "Subtract Calculation"],
         [4, "Complex Calculation"]
+    ]);
+
+
+const calculationTypesLocalized = new Map(
+    [[0, icalcMainScriptLocalization.none],
+        [1, icalcMainScriptLocalization.sum],
+        [2, icalcMainScriptLocalization.productCalculation],
+        [3, icalcMainScriptLocalization.subtractCalculation],
+        [4, icalcMainScriptLocalization.complexCalculation]
     ]);
 
 function genericTypesGetKeyForValue(lookupKey) {
@@ -328,7 +350,7 @@ window.addEventListener('load', () => {
     for (const genericType of genericTypes) {
         const option = document.createElement('option');
         option.value = genericType[0].toString();
-        option.innerText = genericType[1];
+        option.innerText = genericTypesLocalized.get(genericType[0]);
 
         componentSelectList.appendChild(option);
     }
@@ -351,10 +373,10 @@ window.addEventListener('load', () => {
     calculationDiv.id = 'calculationDiv';
     calculationDiv.classList.add("icalc-calculation-div");
 
-    for (const genericType of calculationTypes) {
+    for (const calculationType of calculationTypes) {
         const option = document.createElement('option');
-        option.value = genericType[0].toString();
-        option.innerText = genericType[1];
+        option.value = calculationType[0].toString();
+        option.innerText = calculationTypesLocalized.get(calculationType[0]);
 
         calculationSelectList.appendChild(option);
     }
@@ -434,7 +456,7 @@ function setNewServiceComponent(serviceComponent) {
 
     if (select.children.length === 0) {
         dashboard.removeChild(select);
-        dashboard.appendChild(noComponentFoundError("No Service found"));
+        dashboard.appendChild(noComponentFoundError(icalcMainScriptLocalization.errorNoServiceFound));
     } else {
         appendConfigButton(dashboard);
     }
@@ -480,7 +502,7 @@ function setNewCalculationComponent(calculationComponent) {
 
     if (select.children.length === 1) {
         dashboard.removeChild(select);
-        dashboard.appendChild(noComponentFoundError("No Calculation Component found"));
+        dashboard.appendChild(noComponentFoundError(icalcMainScriptLocalization.errorNoCalculationComponentFound));
     } else {
         appendConfigButton(dashboard);
     }
@@ -526,7 +548,7 @@ function setNewGenericComponent(genericComponent) {
 
     if (select.children.length === 1) {
         dashboard.removeChild(select);
-        dashboard.appendChild(noComponentFoundError("No Generic Component found"));
+        dashboard.appendChild(noComponentFoundError(icalcMainScriptLocalization.errorNoCalculationComponentFound));
     } else {
         appendConfigButton(dashboard);
     }
@@ -584,7 +606,7 @@ function setNewProductComponent(productComponent) {
 
     if (select.children.length === 0) {
         dashboard.removeChild(select);
-        dashboard.appendChild(noComponentFoundError("No Product found"));
+        dashboard.appendChild(noComponentFoundError(icalcMainScriptLocalization.errorNoProductFound));
     } else {
         appendConfigButton(dashboard);
     }
@@ -608,7 +630,7 @@ function editUpdateObjectOfNewCalculation() {
     let children = dashboardEdit.children;
 
     let calculationTitleObject = document.getElementById('icalc-calulation-edit-name');
-    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : "New Calculation title";
+    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : icalcMainScriptLocalization.newCalcTitle;
 
     let updateObject = {}
     updateObject.title = calculationTitle;
@@ -632,7 +654,7 @@ async function createUpdateObjectOfNewCalculation() {
     let children = dashboard.children;
 
     let calculationTitleObject = document.getElementById('icalc-calulation-new-name');
-    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : "New Calculation title";
+    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : icalcMainScriptLocalization.newCalcTitle;
 
     let updateObject = {}
     updateObject.title = calculationTitle;
@@ -664,13 +686,13 @@ function getProductInHtml(product) {
     return "<table class='table table-bordered table-striped col-5 m-1'>" +
         "<thead>" +
         "<tr>" +
-        "<th>ID</th>" +
-        "<th>Name</th>" +
-        "<th>Description</th>" +
-        "<th>Price per Unit</th>" +
-        "<th>Unit</th>" +
-        "<th>Min Quantity</th>" +
-        "<th>Display Type</th>" +
+        "<th>icalcMainScriptLocalization.id</th>" +
+        "<th>icalcMainScriptLocalization.name</th>" +
+        "<th>icalcMainScriptLocalization.description</th>" +
+        "<th>icalcMainScriptLocalization.pricePerUnit</th>" +
+        "<th>icalcMainScriptLocalization.unit</th>" +
+        "<th>icalcMainScriptLocalization.minQuantity</th>" +
+        "<th>icalcMainScriptLocalization.displayType</th>" +
         "</tr>" +
         "</thead>" +
         "<tbody>" +
@@ -929,61 +951,61 @@ function getConfigureModal(id, displayType) {
         <div id="modal-${id}" class="icalc-config-modal">
         <div class="modal-content p-3">
         <span>
-          <h2>Personal Customization</h2>
+          <h2>${icalcMainScriptLocalization.personalCustomization}</h2>
            <button class="icalc-config-btn btn-danger mt-2 close-btn icalc-float-right"><i class="dashicons dashicons-no"></i></button>
         </span>
           
         <span id="show-label-configuration" class="row m-0 align-items-center">
-              <label class="col-2" for="show-label">Show label:</label>
+              <label class="col-2" for="show-label">${icalcMainScriptLocalization.showLabel}:</label>
               <input type="checkbox" id="show-label" name="show-label" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
         </span>
         
         <span class="display-none row m-0 align-items-center" id="custom-label-configuration">
-              <label class="col-2" for="custom-label">Custom label:</label>
+              <label class="col-2" for="custom-label">${icalcMainScriptLocalization.customLabel}:</label>
               <input type="text" id="custom-label" name="custom-label" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
         </span>
          
          <span class="display-none row m-0 align-items-center" id="label-configuration" >
-               <label for="label-classes">Label classes:</label>
+               <label for="label-classes">${icalcMainScriptLocalization.labelClasses}:</label>
                <input type="text" id="label-classes" name="label-classes" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
         </span>
         
          <span class="display-none row m-0 align-items-center" id="base-value-configuration" >
-               <label for="base-value" class="col-2">Base Value:</label>
+               <label for="base-value" class="col-2">${icalcMainScriptLocalization.baseValue}:</label>
                <input type="number" id="base-value" name="base-value" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
         </span>        
           
         <span class="display-none row m-0 align-items-center" id="unchecked-value-configuration" >
-               <label for="unchecked-value" class="col-2">Unchecked Value:</label>
+               <label for="unchecked-value" class="col-2">${icalcMainScriptLocalization.uncheckedValue}:</label>
                <input type="number" id="unchecked-value" name="unchecked-value" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
         </span>       
          
          <div class="display-none m-0 align-items-center" id="complex-calculation-configuration" >
-               <label for="complex-calculation" class="col-4">Complex calculation configuration:</label>
+               <label for="complex-calculation" class="col-4">${icalcMainScriptLocalization.complexCalcConf}:</label>
                <textarea class="icalc-custom-input col-10 mt-0 mb-4 ml-4 mr-4"  id="complex-calculation" name="complex-calculation" rows="3" cols="45" data-previous=""></textarea>
                <span class="mb-2 align-items-center">
-                   <label for="complex-calculation-components">Add component reference:</label>
+                   <label for="complex-calculation-components">${icalcMainScriptLocalization.complexCalcAddComp}:</label>
                    <select class="mb-4" id="complex-calculation-components"></select>
                </span>
         </div>
         
          <span class="display-none row m-0 align-items-center" id="subtract-calculation-configuration" >
-               <label for="subtract-value" class="col-2">Original Value to Subtract from:</label>
+               <label for="subtract-value" class="col-2">${icalcMainScriptLocalization.subtractFromValue}:</label>
                <input type="number" id="subtract-value" name="subtract-value" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="0"/> 
         </span>
         
         <span class="display-none row m-0 align-items-center" id="slider-configuration">
-            <label class="col-2" for="slider-max">Slider max:</label>
+            <label class="col-2" for="slider-max">${icalcMainScriptLocalization.sliderMax}:</label>
             <input type="number" id="slider-max" name="slider-max" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/>
-            <label for="slider-show-value">Show Value:</label>
+            <label for="slider-show-value">${icalcMainScriptLocalization.showValue}:</label>
             <input type="checkbox" id="slider-show-value" name="slider-show-value" class="icalc-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/>  
         </span>
         
         <span class="display-none" id="list-configuration" data-option="1">
             <span class="row m-0 align-items-center">
-                <label class="col-2" for="list-option1">Option:</label>
+                <label class="col-2" for="list-option1">${icalcMainScriptLocalization.listOption}:</label>
                 <input type="text" id="list-option1" name="list-option1" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
-                <label class="col-2" for="list-value1">Value:</label>
+                <label class="col-2" for="list-value1">${icalcMainScriptLocalization.listValue}:</label>
                 <input type="text" id="list-value1" name="list-value1" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
             </span>    
             
@@ -992,23 +1014,23 @@ function getConfigureModal(id, displayType) {
         
         <span class="display-none" id="sum-configuration">
             <span class="row m-0 align-items-center">
-                <label class="col-2" for="list-option1">Prefix:</label>
+                <label class="col-2" for="list-option1">${icalcMainScriptLocalization.sumPrefix}:</label>
                 <input type="text" id="sum-prefix" name="sum-prefix" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
-                <label class="col-2" for="sum-postfix">Postfix:</label>
+                <label class="col-2" for="sum-postfix">${icalcMainScriptLocalization.sumSuffix}:</label>
                 <input type="text" id="sum-postfix" name="sum-postfix" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
             </span>    
         </span>
          
           <span id="input-classes-configuration" class="row m-0 align-items-center">
-               <label class="col-2" for="input-classes">Input classes:</label>
+               <label class="col-2" for="input-classes">${icalcMainScriptLocalization.inputClasses}:</label>
                <input type="text" id="input-classes" name="input-classes" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
           </span>
             
            
-          <p class="font-italic font-weight-light text-info">To add multiple classes separate them by using semicolon: ';' </p>
+          <p class="font-italic font-weight-light text-info">${icalcMainScriptLocalization.toAddMultipleClassesText}</p>
                 
           <span id="custom-css-configuration">
-             <label class="col-2"  for="custom-css">Custom CSS:</label>
+             <label class="col-2"  for="custom-css">${icalcMainScriptLocalization.customCss}:</label>
              <textarea class="icalc-custom-input icalc-custom-styler mt-0 mb-4 ml-4 mr-4"  id="custom-css" name="custom-css" rows="8" cols="50" placeholder=".myStyle{color:red}" data-previous=""></textarea>
           </span>
        
@@ -1083,7 +1105,7 @@ function appendConfigButton(div) {
         let elementNodeListOf = addListOptionBtn.previousElementSibling.querySelectorAll(".icalc-custom-input");
         for (const prevInput of elementNodeListOf) {
             if (!prevInput.value) {
-                alert("Please fill previous option and value");
+                alert(icalcMainScriptLocalization.errorFillPreviousOptions);
                 return;
             }
         }
@@ -1261,13 +1283,7 @@ function appendConfigButton(div) {
 
     function processDisplayTypeChanges() {
         const displayType = modal.dataset.type;
-
-
-        console.log("PRocess display type change")
-        console.log(displayType.toLowerCase());
-
         resetState(displayType, modal.dataset.previousType);
-
 
         switch (displayType.toLowerCase()) {
             case "label":
@@ -1293,12 +1309,12 @@ function appendConfigButton(div) {
             case "subtract calculation":
                 modal.querySelector("#subtract-calculation-configuration").classList.remove("display-none");
                 modal.querySelector("#sum-configuration").classList.remove("display-none");
-                break
+                break;
 
             case "complex calculation":
                 modal.querySelector("#complex-calculation-configuration").classList.remove("display-none");
                 modal.querySelector("#sum-configuration").classList.remove("display-none");
-                break
+                break;
 
             case "product calculation":
             case "sum":
@@ -1313,7 +1329,7 @@ function appendConfigButton(div) {
         switch (true) {
             case modal.id.includes("component-component"):
                 modal.querySelector("#custom-label-configuration").classList.remove("display-none");
-                break
+                break;
         }
     }
 
@@ -1508,7 +1524,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             calcCreationXHR.send(updateObjectOfNewCalculationJSON);
         } else {
-            alert("There are no valid components to be saved to calculation");
+            alert(icalcMainScriptLocalization.errorNoValidComponents);
         }
     }
 
@@ -1543,7 +1559,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             calcCreationXHR.send(JSON.stringify(data));
         } else {
-            alert("There are no valid components to be saved to calculation");
+            alert(icalcMainScriptLocalization.errorNoValidComponents);
         }
     }
 
@@ -1620,7 +1636,7 @@ function icalc_getComponentType(idPart) {
 
 let currentCalculationConfiguration = {
     "show-title": true,
-    "calculation-description": "simpleCalculation",
+    "calculation-description": icalcMainScriptLocalization.defaultDescription,
     "wrapper-classes": "",
 }
 
@@ -1767,9 +1783,6 @@ function icalc_fill_components_of_edit_calculation(components) {
 function icalc_insertDataToComponent(insertedComponent, jsonData) {
     insertedComponent.classList.remove("hidden");
 
-    // const id = jsonData.parentComponent.
-
-
     const possibleItem = insertedComponent.querySelector("#" + jsonData["domId"]);
     if (possibleItem !== null) {
         possibleItem.classList.remove("hidden");
@@ -1777,7 +1790,6 @@ function icalc_insertDataToComponent(insertedComponent, jsonData) {
 
     const possibleSelect = insertedComponent.querySelector("select");
     possibleSelect.value = jsonData["id"];
-
 
     icalc_insertDataToComponentModal(insertedComponent, jsonData);
 }
@@ -1861,13 +1873,11 @@ function icalc_clear_edit_calculation_data() {
     icalc_clear_configure_modals();
 }
 
-
 function icalc_clear_create_calculation_data() {
     const dashboard = document.getElementById('icalc-dashboard');
     dashboard.innerHTML = "";
     const preview = document.getElementById('icalc-preview');
     preview.innerHTML = "";
-
     icalc_clear_configure_modals();
 }
 

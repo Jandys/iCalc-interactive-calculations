@@ -18,15 +18,6 @@ class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend {
 		$html  = "";
 
 		foreach ( $data as $item ) {
-			$modalId                  = "product" . $item["id"] . "modal";
-			$modalData                = [];
-			$modalData["name"]        = $item["name"];
-			$modalData["desc"]        = $item["description"];
-			$modalData["body"]        = $item["body"];
-			$modalData["created_at"]  = $item["created_at"];
-			$modalData["modified_at"] = $item["modified_at"];
-
-
 			$tbody = $tbody . '
             <tr>
                     <td>' . $item["id"] . '</td>
