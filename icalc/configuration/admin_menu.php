@@ -157,12 +157,12 @@ function icalc_main_script_localization() {
 	wp_enqueue_script( 'icalc_main-script', plugins_url( '../scripts/icalc_main.js', __FILE__ ), array(), ICALC_VERSION, false );
 	$localization_data = array(
 		'id'                               => __( "ID", "icalc" ),
-		'name'                             => __( "ID", "icalc" ),
-		'description'                      => __( "ID", "icalc" ),
-		'pricePerUnit'                     => __( "ID", "icalc" ),
-		'unit'                             => __( "ID", "icalc" ),
-		'minQuantity'                      => __( "ID", "icalc" ),
-		'displayType'                      => __( "ID", "icalc" ),
+		'name'                             => __( "Name", "icalc" ),
+		'description'                      => __( "Description", "icalc" ),
+		'pricePerUnit'                     => __( "Price per Unit", "icalc" ),
+		'unit'                             => __( "Unit", "icalc" ),
+		'minQuantity'                      => __( "Minimal Quantity", "icalc" ),
+		'displayType'                      => __( "Display Type", "icalc" ),
 		'createNewCalc'                    => __( "Create New Calculation", "icalc" ),
 		'newCalcTitle'                     => __( "New Calculation title", "icalc" ),
 		'editCurrentConfig'                => __( "Edit Current Configuration", "icalc" ),
@@ -213,7 +213,7 @@ function icalc_main_script_localization() {
 		'errorNoProductFound'              => __( "No Product found", "icalc" ),
 		'errorFillPreviousOptions'         => __( "Please fill previous option and value", "icalc" ),
 		'errorNoValidComponents'           => __( "There are no valid components to be saved to calculation", "icalc" ),
-		'defaultDescription'                => __( "Default calculation description", "icalc" ),
+		'defaultDescription'               => __( "Default calculation description", "icalc" ),
 	);
 	wp_localize_script( 'icalc_main-script', 'icalcMainScriptLocalization', $localization_data );
 

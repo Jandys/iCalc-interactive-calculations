@@ -686,13 +686,13 @@ function getProductInHtml(product) {
     return "<table class='table table-bordered table-striped col-5 m-1'>" +
         "<thead>" +
         "<tr>" +
-        "<th>icalcMainScriptLocalization.id</th>" +
-        "<th>icalcMainScriptLocalization.name</th>" +
-        "<th>icalcMainScriptLocalization.description</th>" +
-        "<th>icalcMainScriptLocalization.pricePerUnit</th>" +
-        "<th>icalcMainScriptLocalization.unit</th>" +
-        "<th>icalcMainScriptLocalization.minQuantity</th>" +
-        "<th>icalcMainScriptLocalization.displayType</th>" +
+        "<th>" + icalcMainScriptLocalization.id + "</th>" +
+        "<th>" + icalcMainScriptLocalization.name + "</th>" +
+        "<th>" + icalcMainScriptLocalization.description + "</th>" +
+        "<th>" + icalcMainScriptLocalization.pricePerUnit + "</th>" +
+        "<th>" + icalcMainScriptLocalization.unit + "</th>" +
+        "<th>" + icalcMainScriptLocalization.minQuantity + "</th>" +
+        "<th>" + icalcMainScriptLocalization.displayType + "</th>" +
         "</tr>" +
         "</thead>" +
         "<tbody>" +
