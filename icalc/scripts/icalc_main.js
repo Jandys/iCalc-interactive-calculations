@@ -34,6 +34,13 @@ dashboardEdit.addEventListener('dragover', e => {
     e.preventDefault();
 });
 
+/**
+ * Adds move up and move down buttons to a specified component on a dashboard.
+ *
+ * @param {Element} cloneComponent - The component to which the buttons will be added.
+ * @param {Object} dashboardItem - The item being moved within the dashboard.
+ * @returns {void}
+ */
 function addMovableButtons(cloneComponent, dashboardItem) {
     let configurationBar = cloneComponent.querySelector(".icalc-configuration-bar");
 
@@ -54,14 +61,25 @@ function addMovableButtons(cloneComponent, dashboardItem) {
     configurationBar.appendChild(moveUpButton);
 }
 
+/**
+ * Event listener for when an item is dropped onto the dashboard.
+ *
+ * @param {Event} e - The event triggered by the drop operation.
+ * @returns {void}
+ */
 dashboard.addEventListener('drop', e => {
     e.preventDefault();
+
+    // Get the ID of the dragged component and the ID of the viable component
     const id = e.dataTransfer.getData('text/plain');
     const draggedComponent = document.getElementById(id);
     const viableComponentId = draggedComponent.getAttribute('data-component');
-    const viableComponent = document.getElementById(viableComponentId);
 
+    // Get the ID of the dragged component and the ID of the viable component
+    const viableComponent = document.getElementById(viableComponentId);
     const cloneComponent = viableComponent.cloneNode(true);
+
+    // Update the cloneComponent attributes and add it to the dashboard
     cloneComponent.classList.remove("hidden");
     let nextId = Number(viableComponent.getAttribute("data-next-id"));
     cloneComponent.id = cloneComponent.id + nextId;
@@ -86,6 +104,12 @@ dashboard.addEventListener('drop', e => {
 });
 
 
+/**
+ * Event listener for when an item is dropped onto the edit dashboard.
+ *
+ * @param {Event} e - The event triggered by the drop operation.
+ * @returns {void}
+ */
 dashboardEdit.addEventListener('drop', e => {
     e.preventDefault();
     const id = e.dataTransfer.getData('text/plain');
@@ -135,6 +159,13 @@ body.addEventListener('drop', e => {
     }
 });
 
+/**
+ * Moves a specified dashboard item up or down within the dashboard.
+ *
+ * @param {Element} dashboardItem - The item being moved within the dashboard.
+ * @param {string} direction - The direction in which the item should be moved ('up' or 'down').
+ * @returns {void}
+ */
 function moveComponent(dashboardItem, direction) {
     if (direction === 'up') {
         if (dashboardItem.previousElementSibling) {
@@ -164,24 +195,34 @@ let icalc_products;
 let icalc_services;
 
 // loaders
+/**
+ * Event listener for when the window loads. Loads and displays a list of products in the dashboard.
+ *
+ * @returns {void}
+ */
 window.addEventListener('load', () => {
     const dashboardProducts = document.getElementById('icalc-dashboard-products');
 
+    // Create a select list for the products
     const productSelectList = document.createElement('select');
     productSelectList.type = "text";
     productSelectList.id = "productSelect";
     productSelectList.name = "products";
 
+    // Create a div to display the selected products
     const productDiv = document.createElement('div');
     productDiv.id = 'productDiv';
     productDiv.classList.add("icalc-product-div");
 
+    // Send an XHR request to get all products
     let productsXHR = icalc_getAllProducts();
     productsXHR.onreadystatechange = function () {
         if (productsXHR.readyState === XMLHttpRequest.DONE) {
             if (productsXHR.status === 200) {
                 let products = JSON.parse(productsXHR.responseText);
                 icalc_products = products;
+
+                // Add a "None" option to the select list
                 if (products.length > 0) {
                     let noneSelected = document.createElement('option');
                     noneSelected.value = "";
@@ -189,6 +230,7 @@ window.addEventListener('load', () => {
                     productSelectList.appendChild(noneSelected);
                 }
 
+                // Add a "None" option to the select list
                 products.forEach(product => {
                     let htmlOptionElement = document.createElement('option');
                     htmlOptionElement.value = product.id;
@@ -213,26 +255,37 @@ window.addEventListener('load', () => {
 
     dashboardProducts.appendChild(productSelectList);
     dashboardProducts.appendChild(productDiv);
-})
+});
 
+/**
+ * Event listener for when the window loads. Loads and displays a list of services in the dashboard.
+ *
+ * @returns {void}
+ */
 window.addEventListener('load', () => {
     const dashboardServices = document.getElementById('icalc-dashboard-services');
 
+    // Create a select list for the services
     const serviceSelectList = document.createElement('select');
     serviceSelectList.type = "text";
     serviceSelectList.id = "serviceSelect";
     serviceSelectList.name = "services";
 
+
+    // Create a div to display the selected services
     const serviceDiv = document.createElement('div');
     serviceDiv.id = 'serviceDiv';
     serviceDiv.classList.add("icalc-service-div");
 
+    // Send an XHR request to get all services
     let servicesXHR = icalc_getAllServices();
     servicesXHR.onreadystatechange = function () {
         if (servicesXHR.readyState === XMLHttpRequest.DONE) {
             if (servicesXHR.status === 200) {
                 let services = JSON.parse(servicesXHR.responseText);
                 icalc_services = services;
+
+                // Send an XHR request to get all services
                 if (services.length > 0) {
                     let noneSelected = document.createElement('option');
                     noneSelected.value = "";
@@ -240,6 +293,7 @@ window.addEventListener('load', () => {
                     serviceSelectList.appendChild(noneSelected);
                 }
 
+                // Loop through all services and add them to the select list and service div
                 services.forEach(service => {
                     let htmlOptionElement = document.createElement('option');
                     htmlOptionElement.value = service.id;
@@ -264,7 +318,7 @@ window.addEventListener('load', () => {
 
     dashboardServices.appendChild(serviceSelectList);
     dashboardServices.appendChild(serviceDiv)
-})
+});
 
 const genericTypes = new Map(
     [[0, "-- None --"],
@@ -309,6 +363,12 @@ const calculationTypesLocalized = new Map(
         [4, icalcMainScriptLocalization.complexCalculation]
     ]);
 
+/**
+ * Finds the key of a value in the `genericTypes` map.
+ *
+ * @param {string} lookupKey - The value to search for in the `genericTypes` map.
+ * @returns {number} - The key of the matching value, or 0 if no match is found.
+ */
 function genericTypesGetKeyForValue(lookupKey) {
     let returnValue = 0;
     genericTypes.forEach(
@@ -321,7 +381,12 @@ function genericTypesGetKeyForValue(lookupKey) {
     return returnValue;
 }
 
-
+/**
+ * Finds the key of a value in the `calculationTypes` map.
+ *
+ * @param {string} lookupKey - The value to search for in the `calculationTypes` map.
+ * @returns {number} - The key of the matching value, or 0 if no match is found.
+ */
 function calculationTypesGetKeyForValue(lookupKey) {
     let returnValue = 0;
     calculationTypes.forEach(
@@ -334,19 +399,26 @@ function calculationTypesGetKeyForValue(lookupKey) {
     return returnValue;
 }
 
-
+/**
+ * Event listener for when the window loads. Loads and displays a list of components in the dashboard.
+ *
+ * @returns {void}
+ */
 window.addEventListener('load', () => {
     const dashboardComponents = document.getElementById('icalc-dashboard-components');
 
+    // Create a select list for the components
     const componentSelectList = document.createElement('select');
     componentSelectList.type = "text";
     componentSelectList.id = "componentSelect";
     componentSelectList.name = "components";
 
+    // Create a div to display the selected components
     const componentDiv = document.createElement('div');
     componentDiv.id = 'componentDiv';
     componentDiv.classList.add("icalc-component-div");
 
+    // Loop through all genericTypes and add them to the select list
     for (const genericType of genericTypes) {
         const option = document.createElement('option');
         option.value = genericType[0].toString();
@@ -355,12 +427,15 @@ window.addEventListener('load', () => {
         componentSelectList.appendChild(option);
     }
 
-
     dashboardComponents.appendChild(componentSelectList);
     dashboardComponents.appendChild(componentDiv)
-})
+});
 
-
+/**
+ * Event listener for when the window loads. Loads and displays a list of calculations in the dashboard.
+ *
+ * @returns {void}
+ */
 window.addEventListener('load', () => {
     const dashboardCalculations = document.getElementById('icalc-dashboard-calculations');
 
@@ -386,7 +461,12 @@ window.addEventListener('load', () => {
     dashboardCalculations.appendChild(calculationDiv)
 })
 
-
+/**
+ * Sets a new cloned component based on its ID.
+ *
+ * @param {HTMLElement} component - The cloned component to be set.
+ * @returns {void}
+ */
 function setNewClonedComponent(component) {
     let id = component.id;
 
@@ -403,11 +483,18 @@ function setNewClonedComponent(component) {
     }
 }
 
+/**
+ * Sets a new cloned service component in the dashboard.
+ *
+ * @param {HTMLElement} serviceComponent - The cloned service component to be set.
+ * @returns {HTMLElement} The updated service component.
+ */
 function setNewServiceComponent(serviceComponent) {
     const id = getSuffixIdFromElement(serviceComponent);
     let dashboard;
     let select;
     let serviceDiv;
+
     for (const child of serviceComponent.children) {
         modifyChildIdsWithSuffix(child, id);
         if (child.id.startsWith("icalc-dashboard-services")) {
@@ -429,7 +516,6 @@ function setNewServiceComponent(serviceComponent) {
         modifyChildIdsWithSuffix(child, id);
     }
 
-
     select.onchange = (event) => {
         for (const product of serviceDiv.children) {
             product.classList.add("hidden");
@@ -439,7 +525,6 @@ function setNewServiceComponent(serviceComponent) {
         if (selectedElement) {
             selectedElement.classList.remove("hidden");
         }
-
 
         const modalConfigure = document.getElementById('modal-conf-' + serviceComponent.id);
         const headers = Array.from(selectedElement.querySelector("thead").querySelectorAll("th")).map(th => th.innerText);
@@ -463,6 +548,12 @@ function setNewServiceComponent(serviceComponent) {
     return serviceComponent;
 }
 
+/**
+ * Sets up a new calculation component that is being cloned from an existing one.
+ *
+ * @param {HTMLElement} calculationComponent - The calculation component that is being cloned.
+ * @returns {HTMLElement} The modified calculation component.
+ */
 function setNewCalculationComponent(calculationComponent) {
     const id = getSuffixIdFromElement(calculationComponent);
     let dashboard;
@@ -509,6 +600,12 @@ function setNewCalculationComponent(calculationComponent) {
     return calculationComponent;
 }
 
+/**
+ * Sets up a new generic component by modifying the necessary DOM elements based on its id suffix.
+ *
+ * @param {HTMLElement} genericComponent - The generic component element to modify.
+ * @returns {HTMLElement} - The modified generic component element.
+ */
 function setNewGenericComponent(genericComponent) {
     const id = getSuffixIdFromElement(genericComponent);
     let dashboard;
@@ -555,6 +652,13 @@ function setNewGenericComponent(genericComponent) {
     return genericComponent;
 }
 
+/**
+ * Sets up a new product component with a unique ID suffix, updates the IDs of its child elements accordingly,
+ * and adds functionality to the product select dropdown to display the selected product's details. It also sets
+ * the data type for the configuration modal.
+ * @param {HTMLElement} productComponent - The product component to set up.
+ * @returns {HTMLElement} The updated product component.
+ */
 function setNewProductComponent(productComponent) {
     const id = getSuffixIdFromElement(productComponent);
     let dashboard;
@@ -678,7 +782,19 @@ async function createUpdateObjectOfNewCalculation() {
     return updateObject;
 }
 
-
+/**
+ * Returns an HTML table with information about a given product.
+ *
+ * @param {object} product - The product object containing the following fields:
+ *   - id (number) - The ID of the product.
+ *   - name (string) - The name of the product.
+ *   - description (string) - A brief description of the product.
+ *   - price (number) - The price of the product per unit.
+ *   - unit (string) - The unit of measurement for the product.
+ *   - min_quantity (number) - The minimum quantity of the product that can be ordered.
+ *   - display_type (string) - The type of display for the product.
+ * @returns {string} An HTML table containing the product information.
+ */
 function getProductInHtml(product) {
     if (prod1 == null) {
         prod1 = product;
@@ -709,6 +825,13 @@ function getProductInHtml(product) {
         "</table>";
 }
 
+/**
+ * Asynchronously updates the dashboard content by creating an update object
+ * of a new calculation and using it to update the preview.
+ *
+ * @returns {Promise<void>} A Promise that resolves when the dashboard content
+ * has been updated, or rejects with an error if an error occurs during the update process.
+ */
 async function dashboard_content_change() {
     try {
         let updateObjectJson = await createUpdateObjectOfNewCalculation();
@@ -718,6 +841,13 @@ async function dashboard_content_change() {
     }
 }
 
+/**
+ * Asynchronously updates the dashboard edit content by creating an edit update object
+ * of a new calculation and using it to update the edit preview.
+ *
+ * @returns {Promise<void>} A Promise that resolves when the dashboard edit content
+ * has been updated, or rejects with an error if an error occurs during the update process.
+ */
 async function dashboard_edit_content_change() {
     try {
         let updateObjectJson = editUpdateObjectOfNewCalculation();
@@ -727,6 +857,13 @@ async function dashboard_edit_content_change() {
     }
 }
 
+/**
+ * Returns a JSON object representing the given component.
+ *
+ * @param {object} component - The component to convert to a JSON object.
+ * @returns {object} A JSON object representing the given component.
+ * @throws {Error} If the ID of the component does not start with a known component type prefix.
+ */
 function getComponentToJSONObject(component) {
     const id = component.id
     switch (true) {
@@ -741,6 +878,13 @@ function getComponentToJSONObject(component) {
     }
 }
 
+/**
+ * Converts a product component to a JSON object.
+ *
+ * @param {object} productComponent - The product component to convert.
+ * @returns {object|undefined} A JSON object representing the product component, or undefined
+ * if the productDiv could not be found in the component's children.
+ */
 function getProductToJSONObject(productComponent) {
     const children = productComponent.children;
     let dashboard;
@@ -798,10 +942,15 @@ function getProductToJSONObject(productComponent) {
             "displayType": keyValuePairs['Display Type']
         }
     }
-
 }
 
-
+/**
+ * Converts a service component to a JSON object.
+ *
+ * @param {object} serviceComponent - The service component to convert.
+ * @returns {object|undefined} A JSON object representing the service component, or undefined
+ * if the serviceDiv could not be found in the component's children.
+ */
 function getServiceToJSONObject(serviceComponent) {
     const children = serviceComponent.children;
     let dashboard;
@@ -862,6 +1011,12 @@ function getServiceToJSONObject(serviceComponent) {
     }
 }
 
+/**
+ * Converts a generic component to a JSON object.
+ *
+ * @param {object} genericComponent - The generic component to convert.
+ * @returns {object} A JSON object representing the generic component.
+ */
 function getGenericComponentToJSONObject(genericComponent) {
     const children = genericComponent.children;
     let dashboard;
@@ -903,6 +1058,12 @@ function getGenericComponentToJSONObject(genericComponent) {
     };
 }
 
+/**
+ * Converts a calculation component to a JSON object.
+ *
+ * @param {object} calculationComponent - The calculation component to convert.
+ * @returns {object} A JSON object representing the calculation component.
+ */
 function getCalculationComponentToJSONObject(calculationComponent) {
     const children = calculationComponent.children;
     let dashboard;
@@ -919,7 +1080,6 @@ function getCalculationComponentToJSONObject(calculationComponent) {
             select = dashItem;
         }
     }
-
 
     const modalConfId = "modal-conf-" + calculationComponent.id
     let conf = {};
@@ -944,8 +1104,14 @@ function getCalculationComponentToJSONObject(calculationComponent) {
     };
 }
 
+/**
+ * Returns an HTML string representing the configuration modal for a component.
+ *
+ * @param {string} id - The ID of the component.
+ * @param {string} displayType - The display type of the component.
+ * @returns {string} The HTML string representing the configuration modal.
+ */
 function getConfigureModal(id, displayType) {
-
     return `
     <div class="icalc-modal-wrapper hidden icalc-component-configuration-modal">
         <div id="modal-${id}" class="icalc-config-modal">
@@ -1025,7 +1191,6 @@ function getConfigureModal(id, displayType) {
                <label class="col-2" for="input-classes">${icalcMainScriptLocalization.inputClasses}:</label>
                <input type="text" id="input-classes" name="input-classes" class="icalc-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
           </span>
-            
            
           <p class="font-italic font-weight-light text-info">${icalcMainScriptLocalization.toAddMultipleClassesText}</p>
                 
@@ -1037,12 +1202,14 @@ function getConfigureModal(id, displayType) {
           <button class="icalc-config-btn btn-success mt-2 save-btn icalc-float-right"><i class="dashicons dashicons-saved"></i></button>
         </div>
       </div>
-    </div>
-  
-`;
-
+    </div>`;
 }
 
+/**
+ * Creates a new row of options to configure for the list component.
+ * @param {number} currentId - The current ID of the option row.
+ * @returns {{span: HTMLSpanElement, nextId: number}} - An object containing a new span element and the ID of the next option row.
+ */
 function icalc_getNewRowOfOptionsToConfigure(currentId) {
     const span = document.createElement('span');
     span.classList.add("row");
@@ -1150,7 +1317,6 @@ function appendConfigButton(div) {
         }
     }
 
-
     // Function to open the modal
     function openModal() {
         addOptionsToComplexCalculation();
@@ -1174,7 +1340,6 @@ function appendConfigButton(div) {
         } else {
             dashboard_edit_content_change();
         }
-
     }
 
     // Function to close the modal
@@ -1358,6 +1523,13 @@ function updatePreview(jsonBodyToUpdate) {
     masterUpdatePreview(jsonBodyToUpdate, 'icalc-preview')
 }
 
+/**
+ * Update the preview with the given JSON configuration object.
+ *
+ * @param {Object|string} jsonBodyToUpdate - The JSON object or string to update the preview with.
+ * @param {string} previewId - The ID of the preview element to update.
+ * @returns {undefined}
+ */
 function masterUpdatePreview(jsonBodyToUpdate, previewId) {
     if (jsonBodyToUpdate === undefined) {
         return;
@@ -1422,7 +1594,6 @@ function appendStyles(styles, component) {
 }
 
 // DAHSBOARD LOGIC END /////////
-
 document.addEventListener('DOMContentLoaded', () => {
     const toggleBtn = document.getElementById('toggleBtn');
     const firstDiv = document.getElementById('firstDiv');
@@ -1625,10 +1796,8 @@ function icalc_getComponentType(idPart) {
     switch (true) {
         case idPart.startsWith("product"):
             return "product";
-
         case idPart.startsWith("service"):
             return "service";
-
         case idPart.startsWith("component"):
             return "component"
     }
@@ -1640,6 +1809,10 @@ let currentCalculationConfiguration = {
     "wrapper-classes": "",
 }
 
+/**
+ * Sets the values of the calculation configuration modal based on the provided calculation configuration object.
+ * @param {Object} calculateConfiguration - The calculation configuration object to use to set the modal values.
+ */
 function icalc_set_calculation_configuration_values(calculateConfiguration) {
     const modal = document.getElementById('configure-calculation-modal')
     const showTitleCheckBox = modal.querySelector('#show-title');
@@ -1651,18 +1824,19 @@ function icalc_set_calculation_configuration_values(calculateConfiguration) {
         showTitleCheckBox.dataset.previous = "false";
     }
 
-
     const calcDescription = modal.querySelector('#calculation-description');
     calcDescription.value = currentCalculationConfiguration["calculation-description"]
     calcDescription.dataset.previous = currentCalculationConfiguration["calculation-description"]
 
-
     const wrapperClasses = modal.querySelector('#wrapper-classes');
     wrapperClasses.value = currentCalculationConfiguration["wrapper-classes"];
     wrapperClasses.dataset.previous = currentCalculationConfiguration["wrapper-classes"];
-
 }
 
+/**
+ * Processes changes made in the calculation configuration modal and updates the currentCalculationConfiguration object.
+ * @param {HTMLElement} modal - The HTML element of the calculation configuration modal.
+ */
 function icalc_process_calculation_configuration_change(modal) {
     const showTitleCheckBox = modal.querySelector('#show-title');
     if (showTitleCheckBox.checked) {
@@ -1682,6 +1856,10 @@ function icalc_process_calculation_configuration_change(modal) {
     }
 }
 
+/**
+ * Handles the swap between two div elements and a button, and reveals a third div.
+ * @returns {void}
+ */
 function icalc_handle_button_and_div_swap() {
     const toggleBtn = document.getElementById('toggleBtn');
     const firstDiv = document.getElementById('firstDiv');
@@ -1724,6 +1902,12 @@ function icalc_add_custom_styles_edit_calculation(customStyles) {
     thirdDiv.appendChild(styles);
 }
 
+/**
+ * Populates the edit calculation form with the given components.
+ *
+ * @param {Array} components - An array of components to be added to the edit calculation form.
+ * @return {void}
+ * */
 function icalc_fill_components_of_edit_calculation(components) {
     const nextIds = {
         "product-component": 1,
@@ -1832,7 +2016,13 @@ function icalc_insertDataToComponentModal(insertedComponent, jsonData) {
     }
 }
 
-
+/**
+ * Processes the action of editing a calculation with a specific ID. Retrieves the calculation from the database using the ID,
+ * and fills the form to edit the calculation with the retrieved data. Also handles swapping the display of the create and edit
+ * calculation forms.
+ *
+ * @param {string} id - The ID of the calculation to edit.
+ */
 function icalc_process_calculation_edit_action(id) {
     const calculationXHR = icalc_getCalculationDescriptionById(id);
 
