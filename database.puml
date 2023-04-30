@@ -1,0 +1,57 @@
+@startuml
+!define Table(name,desc) class name as "desc" << (T,#FFAAAA) >>
+!define primaryKey(field) <b>field</b>
+!define foreignKey(field,ref) <i>field</i> --> ref
+
+hide methods
+hide stereotypes
+
+Table(product, "Product") {
+  primaryKey(id) : INT
+  name : VARCHAR
+  description : TEXT
+  price : DECIMAL
+  +unit_id : UUID
+  minimal_quantity : INT
+  display_type : VARCHAR
+  created_at : TIMESTAMP
+  modified_at : TIMESTAMP
+}
+
+Table(service, "Service") {
+  primaryKey(id) : INT
+  name : VARCHAR
+  description : TEXT
+  price : DECIMAL
+  +unit_id : UUID
+  minimal_quantity : INT
+  display_type : VARCHAR
+  created_at : TIMESTAMP
+  modified_at : TIMESTAMP
+}
+
+Table(unit, "Unit") {
+  primaryKey(id) : INT
+  unit_name : VARCHAR
+}
+
+Table(calculation_description, "Calculation Description") {
+  primaryKey(id) : INT
+  name : VARCHAR
+  description : TEXT
+  body : JSON {Contains references to Product and Service IDs}
+  created_at : TIMESTAMP
+  modified_at : TIMESTAMP
+}
+
+Table(calculation, "Calculation") {
+  primaryKey(id) : INT
+  body : JSON {Contains references to Product and Service IDs}
+  created_at : TIMESTAMP
+  +calculation_description_id : UUID
+}
+
+product::unit_id --> unit::id
+service::unit_id --> unit::id
+calculation::calculation_description_id --> calculation_description::id
+@enduml
