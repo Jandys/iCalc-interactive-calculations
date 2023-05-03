@@ -49,10 +49,15 @@ class Component {
 
 
 	public function createComponentRenderer() {
-		$this->masterObjectData  = match ( $this->type ) {
-			'product' => Product::get( "id", $this->id ),
-			'service' => Service::get( "id", $this->id ),
-			default => null,
+		switch ( $this->type ) {
+			case 'product':
+				$this->masterObjectData = Product::get( "id", $this->id );
+				break;
+			case 'service':
+				$this->masterObjectData = Service::get( "id", $this->id );
+				break;
+			default:
+				$this->masterObjectData = null;
 		};
 		$this->componentRenderer = $this->createDisplayType( $this->displayType, $this->domId, $this->configuration, $this->masterObjectData );
 	}
@@ -65,20 +70,20 @@ class Component {
 		return $this->componentRenderer->render();
 	}
 
-    public function __toString(): string {
-        $parentComponentStr = $this->parentComponent ? (string) $this->parentComponent : "null";
-        $masterObjectDataStr = $this->masterObjectData ? json_encode($this->masterObjectData) : "null";
-        $configurationStr = $this->configuration ? json_encode($this->configuration) : "null";
+	public function __toString(): string {
+		$parentComponentStr  = $this->parentComponent ? (string) $this->parentComponent : "null";
+		$masterObjectDataStr = $this->masterObjectData ? json_encode( $this->masterObjectData ) : "null";
+		$configurationStr    = $this->configuration ? json_encode( $this->configuration ) : "null";
 
-        return "Id: " . $this->id . ", " .
-            "Type: " . $this->type . ", " .
-            "domId: " . $this->domId . ", " .
-            "displayType: " . $this->displayType . ", " .
-            "baseValue: " . $this->baseValue . ", " .
-            "parentComponent: " . $parentComponentStr . ", " .
-            "masterObjectData: " . $masterObjectDataStr . ", " .
-            "configuration: " . $configurationStr;
-    }
+		return "Id: " . $this->id . ", " .
+		       "Type: " . $this->type . ", " .
+		       "domId: " . $this->domId . ", " .
+		       "displayType: " . $this->displayType . ", " .
+		       "baseValue: " . $this->baseValue . ", " .
+		       "parentComponent: " . $parentComponentStr . ", " .
+		       "masterObjectData: " . $masterObjectDataStr . ", " .
+		       "configuration: " . $configurationStr;
+	}
 
 
 	public function createDisplayType( $type, $id, $configuration, $masterObject ) {
@@ -96,14 +101,14 @@ class Component {
 	}
 
 	private function setCalculationValues() {
-        if ( strcasecmp($this->type,'genericcomponent') == 0 || strcasecmp($this->type,'generic component') == 0 ) {
+		if ( strcasecmp( $this->type, 'genericcomponent' ) == 0 || strcasecmp( $this->type, 'generic component' ) == 0 ) {
 			$this->baseValue = $this->configuration->configuration->{'base-value'};
 		} else {
-            if(isset($this->masterObjectData) && isset($this->masterObjectData->price)){
-                $this->baseValue = $this->masterObjectData->price;
-            }else{
-                $this->baseValue = floatval($this->configuration->configuration->{'base-value'});
-            }
+			if ( isset( $this->masterObjectData ) && isset( $this->masterObjectData->price ) ) {
+				$this->baseValue = $this->masterObjectData->price;
+			} else {
+				$this->baseValue = floatval( $this->configuration->configuration->{'base-value'} );
+			}
 		}
 		if ( strtolower( trim( $this->displayType ) ) == 'sum'
 		     || strtolower( trim( $this->displayType ) ) == "product calculation"

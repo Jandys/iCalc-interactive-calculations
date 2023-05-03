@@ -7,14 +7,14 @@
     align-items: center;
     justify-content: flex-start;
     border-radius: 20px 0 0 20px;
-    padding: 10px;
+    padding: 30px;
+
 }
 
 .icalc-draggable {
     width: 100px;
     height: 100px;
     background-color: royalblue;
-    border: 1px solid white;
     font-weight: bold;
     color: white;
     cursor: grab;
@@ -24,6 +24,7 @@
     align-items: center;
     text-align: center;
     border-radius: 10px;
+    box-shadow: #00000071 2px 2px 4px;
 }
 
 #icalc-dashboard {

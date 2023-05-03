@@ -2,7 +2,7 @@
   "name": "vendor_name/src",
   "description": "description",
   "minimum-stability": "stable",
-  "license": "GPL-2.0-or-later",
+  "license": "GPL-3.0-or-later",
   "authors": [
     {
       "name": "Jakub Jandak",
@@ -22,7 +22,7 @@
     }
   },
   "require-dev": {
-    "php": "^8.2",
-    "phpunit/phpunit": "^10.1"
+    "php": "^7.4",
+    "phpunit/phpunit": "^9.6"
   }
 }

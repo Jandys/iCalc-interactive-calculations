@@ -263,7 +263,8 @@ function icalc_main_script_localization()
  */
 function ic_menu_products_configuration()
 {
-    if (is_admin()) {
+	session_write_close();
+	if (is_admin()) {
 
         DatabaseInit::init();
 
@@ -289,7 +290,8 @@ function ic_menu_products_configuration()
  */
 function ic_menu_services_configuration()
 {
-    if (is_admin()) {
+	session_write_close();
+	if (is_admin()) {
         DatabaseInit::init();
         echo '<div class="wrap">
         <h2>' . __("Services Menu", "icalc") . '</h2>';
@@ -309,7 +311,8 @@ function ic_menu_services_configuration()
  */
 function ic_menu_statistics()
 {
-    if (is_admin()) {
+	session_write_close();
+	if (is_admin()) {
 
         DatabaseInit::init();
 

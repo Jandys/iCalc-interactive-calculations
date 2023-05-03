@@ -1,12 +1,12 @@
 <?php
 /*
-Plugin Name: Inter Calcus - Calculation Plugin
-Plugin URI: http://temp.uri
-Description: A brief description of the Plugin.
-Version: 0.1
+Plugin Name: iCalc - Interactive Calculations
+Plugin URI: https://php.jandys.eu/icalc
+Description: Plugin for easy creation of custom calculations.
+Version: 1.0.0
 Author: Jakub Jandák
 Author URI: http://github.com/Jandys
-License: GPL2
+License: GPL3
 */
 
 define( 'ICALC_DIR', __DIR__ );

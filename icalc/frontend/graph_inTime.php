@@ -64,4 +64,5 @@ $inTime->xaxis->SetTickLabels($customLabels);
 
 
 $inTime->Stroke();
+session_write_close();
 ?>

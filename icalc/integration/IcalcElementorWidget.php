@@ -115,11 +115,12 @@ class IcalcElementorWidget extends Widget_Base
      */
     protected function render()
     {
-        $settings = $this->get_settings_for_display();
+	    session_write_close();
+	    $settings = $this->get_settings_for_display();
 
         $selectedCalc = $settings['selected_calculation'];
         if ($selectedCalc === 'default_icalc_option0') {
-            echo '<p>No calculation selected</p>';
+            echo '<p>'.__('No calculation selected',"icalc").'</p>';
             return;
         }
 

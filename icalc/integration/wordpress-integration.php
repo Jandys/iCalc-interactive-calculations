@@ -32,57 +32,54 @@ use icalc\fe\Calculation as CalculationAlias;
  * @return string   The rendered HTML output of the shortcode.
  * @since 1.0.0
  */
-function renderIcalcCalculationShortcode($atts, $content = null)
-{
+function renderIcalcCalculationShortcode( $atts, $content = null ) {
+	session_write_close();
 
-    icalc_enqueue_page_dependencies();
+	icalc_enqueue_page_dependencies();
 
 
-    // Default shortcode parameter
-    $default_atts = array(
-        'id' => -1
-    );
+	// Default shortcode parameter
+	$default_atts = array(
+		'id' => - 1
+	);
 
-    //Extract shortcode attributes
-    $atts = shortcode_atts($default_atts, $atts, 'icalc_calculation');
+	//Extract shortcode attributes
+	$atts = shortcode_atts( $default_atts, $atts, 'icalc_calculation' );
 
-    if ($atts["id"] == -1) {
-        $calculation = -1;
-    } else {
-        $calculation = new CalculationAlias(intval($atts["id"]));
-    }
+	if ( $atts["id"] == - 1 ) {
+		$calculation = - 1;
+	} else {
+		$calculation = new CalculationAlias( intval( $atts["id"] ) );
+	}
 
-    if ($calculation == -1) {
-        // Display error if id is not passed inside shortcode or calculation with such id is not found.
-        $output = "<div class='bg-danger ml-3 pl-3'>
-					<p><strong>" . __("ERROR", "icalc") . ": </strong> " . __("id parameter is missing or there is an issue in shortcode declaration") . ".</p>
-					<p class='mb-0'>" . __("Try updating your shortcode to be like") . ":</p>
+
+	if ( !$calculation->hasFoundCalculationDescription() ) {
+		// Display error if id is not passed inside shortcode or calculation with such id is not found.
+		return "<div class='bg-danger ml-3 pl-3'>
+					<p><strong>" . __( "ERROR", "icalc" ) . ": </strong> " . __( "id parameter is missing or there is an issue in shortcode declaration" ) . ".</p>
+					<p class='mb-0'>" . __( "Try updating your shortcode to be like" ) . ":</p>
 					<p class='ml-3 mr-3 mb-0'><strong>[icalc_calculation id=1]</strong></p>
-					<p>" . __("Where 'id' determines what calculation you want to display") . ".</p>
+					<p>" . __( "Where 'id' determines what calculation you want to display" ) . ".</p>
 					</div>";
-    } else {
-        $output = $calculation->render();
-    }
+	}
 
-    return $output;
+	return $calculation->render();
 }
 
-function icalc_enqueue_page_dependencies()
-{
-    wp_enqueue_script('icalc_pages_scripts', plugins_url('/scripts/icalc_pages.js', ICALC_FILE), array(), ICALC_VERSION, false);
-    wp_enqueue_style('icalc_page_style', plugins_url('/styles/icalc-pages-generic.css', ICALC_FILE), array(), ICALC_VERSION, false);
+function icalc_enqueue_page_dependencies() {
+	wp_enqueue_script( 'icalc_pages_scripts', plugins_url( '/scripts/icalc_pages.js', ICALC_FILE ), array(), ICALC_VERSION, false );
+	wp_enqueue_style( 'icalc_page_style', plugins_url( '/styles/icalc-pages-generic.css', ICALC_FILE ), array(), ICALC_VERSION, false );
 }
 
 /**
  * Adds the iCalc calculation shortcode handler.
  */
-function icalc_calculation_shortcode_handler()
-{
-    add_shortcode('icalc_calculation', 'renderIcalcCalculationShortcode');
+function icalc_calculation_shortcode_handler() {
+	add_shortcode( 'icalc_calculation', 'renderIcalcCalculationShortcode' );
 }
 
 icalc_enqueue_page_dependencies();
-add_action('wp_enqueue_scripts', 'icalc_enqueue_page_dependencies');
-add_action('init', 'icalc_calculation_shortcode_handler');
+add_action( 'wp_enqueue_scripts', 'icalc_enqueue_page_dependencies' );
+add_action( 'init', 'icalc_calculation_shortcode_handler' );
 
 ?>
