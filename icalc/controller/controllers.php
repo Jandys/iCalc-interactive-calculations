@@ -1,10 +1,37 @@
 <?php
+/*
+ *
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
+ *
+ *   Copyright (C) 2023, Jakub Jandák
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 
 /**
  * prefix mapping = /wp-json/icalc/v1/
  */
 
 
+use icalc\db\model\Icalculations;
+use icalc\db\model\IcalculationsDescription;
+use icalc\db\model\Product;
+use icalc\db\model\Service;
+use icalc\db\model\Unit;
 use function icalc\util\getPossibleCookieValue;
 
 add_action('rest_api_init', 'icalc_plugin_add_service_endpoints');
@@ -123,7 +150,7 @@ function my_id_validate_callback($value, $request, $param)
 function icalc_getProductById(WP_REST_Request $request)
 {
     $id = $request->get_param('id');
-    $product = \icalc\db\model\Product::get("id", $id);
+    $product = Product::get("id", $id);
 
     return new WP_REST_Response($product);
 }
@@ -138,7 +165,7 @@ function icalc_getProductById(WP_REST_Request $request)
 function icalc_getServiceById(WP_REST_Request $request)
 {
     $id = $request->get_param('id');
-    $service = \icalc\db\model\Service::get("id", $id);
+    $service = Service::get("id", $id);
 
     return new WP_REST_Response($service);
 }
@@ -153,7 +180,7 @@ function icalc_getServiceById(WP_REST_Request $request)
 function icalc_getCalculationDescriptionById(WP_REST_Request $request)
 {
     $id = $request->get_param('id');
-    $icalcDescription = \icalc\db\model\IcalculationsDescription::get("id", $id);
+    $icalcDescription = IcalculationsDescription::get("id", $id);
 
     return new WP_REST_Response($icalcDescription);
 }
@@ -181,7 +208,7 @@ function icalc_registerNewCalculationInteraction(WP_REST_Request $request)
     error_log("userId: " . json_encode($user));
 
 
-    $status = \icalc\db\model\Icalculations::insertNew($calculationId, json_encode($body), $user);
+    $status = Icalculations::insertNew($calculationId, json_encode($body), $user);
 
     return new WP_REST_Response($status);
 }
@@ -355,7 +382,7 @@ function icalc_postIcalculationDescriptions(WP_REST_Request $request)
     $desc = $data['configuration']['calculation-description'];
 
     // Save the iCalculation description to the database.
-    $success = \icalc\db\model\IcalculationsDescription::insertNew($name, $desc, json_encode($data));
+    $success = IcalculationsDescription::insertNew($name, $desc, json_encode($data));
 
     return new WP_REST_Response($success);
 }
@@ -384,7 +411,7 @@ function icalc_putIcalculationDescriptions(WP_REST_Request $request)
     $name = $body->title;
     $desc = $body->configuration->{'calculation-description'};
 
-    $success = \icalc\db\model\IcalculationsDescription::updateById($id, $name, $desc, json_encode($body));
+    $success = IcalculationsDescription::updateById($id, $name, $desc, json_encode($body));
 
     return new WP_REST_Response("success");
 }
@@ -411,7 +438,7 @@ function icalc_getNextIcalculationDescriptionId(WP_REST_Request $request)
         return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
     }
 
-    $lastId = \icalc\db\model\IcalculationsDescription::last_id();
+    $lastId = IcalculationsDescription::last_id();
 
     return new WP_REST_Response($lastId + 1);
 }
@@ -437,7 +464,7 @@ function icalc_deleteIcalculationDescriptions(WP_REST_Request $request)
     $data = $request->get_json_params();
     $id = $data['id'];
 
-    $result = \icalc\db\model\IcalculationsDescription::delete($id);
+    $result = IcalculationsDescription::delete($id);
 
     return new WP_REST_Response($result);
 }
@@ -463,7 +490,7 @@ function icalc_getIcalculationDescriptions(WP_REST_Request $request)
     }
 
     // Retrieve all iCalculation descriptions from the database using the `get_all()` function of the `IcalculationsDescription` model class.
-    $allDescriptions = \icalc\db\model\IcalculationsDescription::get_all();
+    $allDescriptions = IcalculationsDescription::get_all();
 
     return new WP_REST_Response($allDescriptions);
 }
@@ -534,7 +561,7 @@ function icalc_postProduct(WP_REST_Request $request)
     $displayType = $data['displayType'];
 
     // Insert the new product into the database.
-    $succes = \icalc\db\model\Product::insertNew($name, $desc, $price, $unit, $minQuality, $displayType);
+    $succes = Product::insertNew($name, $desc, $price, $unit, $minQuality, $displayType);
 
     return new WP_REST_Response($succes);
 }
@@ -567,7 +594,7 @@ function icalc_putProduct(WP_REST_Request $request)
     $minQuality = $data['minQuality'];
     $displayType = $data['displayType'];
 
-    $succes = \icalc\db\model\Product::updateById($id, $name, $desc, $price, $unit, $minQuality, $displayType);
+    $succes = Product::updateById($id, $name, $desc, $price, $unit, $minQuality, $displayType);
 
     return new WP_REST_Response($succes);
 }
@@ -591,7 +618,7 @@ function icalc_getProducts(WP_REST_Request $request)
         return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
     }
 
-    $allProducts = \icalc\db\model\Product::get_all();
+    $allProducts = Product::get_all();
 
     return new WP_REST_Response($allProducts);
 }
@@ -617,7 +644,7 @@ function icalc_deleteProduct(WP_REST_Request $request)
     $data = $request->get_json_params();
     $id = $data['id'];
 
-    $allProducts = \icalc\db\model\Product::delete($id);
+    $allProducts = Product::delete($id);
 
     return new WP_REST_Response($allProducts);
 }
@@ -677,7 +704,7 @@ function icalc_autocompleteUnit(WP_REST_Request $request)
     $data = $request->get_json_params();
     $value = $data["value"];
 
-    return \icalc\db\model\Unit::autocomplete($value);
+    return Unit::autocomplete($value);
 }
 
 
@@ -707,7 +734,7 @@ function icalc_postService(WP_REST_Request $request)
     $minQuality = $data['minQuality'];
     $displayType = $data['displayType'];
 
-    $succes = \icalc\db\model\Service::insertNew($name, $desc, $price, $unit, $minQuality, $displayType);
+    $succes = Service::insertNew($name, $desc, $price, $unit, $minQuality, $displayType);
 
     return new WP_REST_Response($succes);
 }
@@ -740,7 +767,7 @@ function icalc_putService(WP_REST_Request $request)
     $minQuality = $data['minQuality'];
     $displayType = $data['displayType'];
 
-    $succes = \icalc\db\model\Service::updateById($id, $name, $desc, $price, $unit, $minQuality, $displayType);
+    $succes = Service::updateById($id, $name, $desc, $price, $unit, $minQuality, $displayType);
 
     return new WP_REST_Response($succes);
 }
@@ -763,7 +790,7 @@ function icalc_getServices(WP_REST_Request $request)
         return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
     }
 
-    $allServices = \icalc\db\model\Service::get_all();
+    $allServices = Service::get_all();
 
     return new WP_REST_Response($allServices);
 }
@@ -789,7 +816,7 @@ function icalc_deleteService(WP_REST_Request $request)
     $data = $request->get_json_params();
     $id = $data['id'];
 
-    $allServices = \icalc\db\model\Service::delete($id);
+    $allServices = Service::delete($id);
 
     return new WP_REST_Response($allServices);
 }

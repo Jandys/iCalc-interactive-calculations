@@ -1,43 +1,64 @@
 <?php
+/*
+ *
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
+ *
+ *   Copyright (C) 2023, Jakub Jandák
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
 
 namespace icalc\fe;
 
 
-use icalc\fe\displayTypes\ChooseList;
+class MainMenuFrontend extends AbstractAdminFrontend
+{
 
-class MainMenuFrontend extends AbstractAdminFrontend {
+    public static function configuration()
+    {
+        self::populateIcalcJSData();
+        $calculationsDescriptionsAdminFrontend = new CalculationsDescriptionsAdminFrontend();
 
-	public static function configuration() {
-		self::populateIcalcJSData();
-		$calculationsDescriptionsAdminFrontend = new CalculationsDescriptionsAdminFrontend();
+        echo self::configureCurrentCalculation();
 
-		echo self::configureCurrentCalculation();
+        echo self::draggableConfiguration();
 
-		echo self::draggableConfiguration();
-
-		echo '
+        echo '
             <div class="d-flex flex-column icalc-main-wrapper">
             <span class="mb-2 d-flex row col-11">
-                <button id="toggleBtn" class="m-2 icalc-toggle-creation col-2 icalc-reappear" data-toggled-text="' . __( "Calculations List" ) . '">' . __( "Create New Calculation" ) . '</button>
+                <button id="toggleBtn" class="m-2 icalc-toggle-creation col-2 icalc-reappear" data-toggled-text="' . __("Calculations List") . '">' . __("Create New Calculation") . '</button>
                 <div class="col-5"></div>
-                <button id="editConfiguration" class="m-2 icalc-toggle-creation icalc-button-edit-color btn-info col-2 hidden"><i class="dashicons dashicons-admin-generic w-auto"></i>'. __( "Edit Current Configuration" ) . '</button>
-                <button id="saveCalculation" class="m-2 icalc-toggle-creation col-2 icalc-button-save-color btn-success hidden">' . __( "Save Calculation" ) . '</button>
-                <button id="editCalculation" class="m-2 icalc-toggle-creation col-2 icalc-button-save-color btn-success hidden">' . __( "Edit Calculation" ) . '</button>
+                <button id="editConfiguration" class="m-2 icalc-toggle-creation icalc-button-edit-color btn-info col-2 hidden"><i class="dashicons dashicons-admin-generic w-auto"></i>' . __("Edit Current Configuration") . '</button>
+                <button id="saveCalculation" class="m-2 icalc-toggle-creation col-2 icalc-button-save-color btn-success hidden">' . __("Save Calculation") . '</button>
+                <button id="editCalculation" class="m-2 icalc-toggle-creation col-2 icalc-button-save-color btn-success hidden">' . __("Edit Calculation") . '</button>
 			</span>
                     <div id="firstDiv" class="content-div visible">
-                    <h1>' . __( "Calculations List" ) . '</h1>
+                    <h1>' . __("Calculations List") . '</h1>
                     ' .
-		     $calculationsDescriptionsAdminFrontend::configuration()
-		     . '
+            $calculationsDescriptionsAdminFrontend::configuration()
+            . '
                 </div>
                 <div id="secondDiv" class="content-div icalc-hidden-slow display-none">
-                    <h1>' . __( "Create New Calculation" ) . ' <input type="text" id="icalc-calulation-new-name" class="ml-1 border-0 font-weight-bold w-auto" placeholder="Calculation name" /> </h1>
+                    <h1>' . __("Create New Calculation") . ' <input type="text" id="icalc-calulation-new-name" class="ml-1 border-0 font-weight-bold w-auto" placeholder="Calculation name" /> </h1>
                    
                     <div class="d-flex flex-row">
                       <div id="icalc-left-bar" class="col-3">
                       ' .
-		     self::getAllDraggableComponents()
-		     . '
+            self::getAllDraggableComponents()
+            . '
                       
                       </div>
                       <div id="icalc-dashboard" class="col-6 d-flex flex-column"></div>
@@ -46,13 +67,13 @@ class MainMenuFrontend extends AbstractAdminFrontend {
                       
                 </div>
                  <div id="thirdDiv" class="content-div icalc-hidden-slow display-none">
-                    <h1>' . __( "Edit" ) . ' <input type="text" id="icalc-calulation-edit-name" class="ml-1 border-0 font-weight-bold w-auto" placeholder="Calculation name" /> </h1>
+                    <h1>' . __("Edit") . ' <input type="text" id="icalc-calulation-edit-name" class="ml-1 border-0 font-weight-bold w-auto" placeholder="Calculation name" /> </h1>
                    
                     <div class="d-flex flex-row">
                       <div id="icalc-left-bar" class="col-3">
 		                      ' .
-				     self::getAllDraggableComponents()
-				     . '
+            self::getAllDraggableComponents()
+            . '
                       
                       </div>
                       <div id="icalc-dashboard-edit" class="col-6 d-flex flex-column"></div>
@@ -64,71 +85,80 @@ class MainMenuFrontend extends AbstractAdminFrontend {
            
         ';
 
-	}
+    }
 
 
-	static function getAllDraggableComponents(): string {
-		$dragables = self::getDraggableProduct();
-		$dragables = $dragables . self::getDraggableService();
-		$dragables = $dragables . self::getDraggableComponent();
-		return $dragables . self::getDraggableCalculations();
-	}
+    static function getAllDraggableComponents(): string
+    {
+        $dragables = self::getDraggableProduct();
+        $dragables = $dragables . self::getDraggableService();
+        $dragables = $dragables . self::getDraggableComponent();
+        return $dragables . self::getDraggableCalculations();
+    }
 
 
-	static function getDraggableProduct(): string {
-		return '<div class="icalc-draggable" draggable="true" id="draggableProduct" data-component="product-component" data-next-id="1">' . __( "Product" ) . '</div>';
-	}
+    static function getDraggableProduct(): string
+    {
+        return '<div class="icalc-draggable" draggable="true" id="draggableProduct" data-component="product-component" data-next-id="1">' . __("Product") . '</div>';
+    }
 
-	static function getDraggableService(): string {
-		return '<div class="icalc-draggable" draggable="true" id="draggableService" data-component="service-component" data-next-id="1">' . __( "Service" ) . '</div>';
-	}
-
-
-	static function getDraggableComponent(): string {
-		return '<div class="icalc-draggable" draggable="true" id="draggableComponent" data-component="component-component" data-next-id="1">' . __( "Generic Component" ) . '</div>';
-	}
-	static function getDraggableCalculations(): string {
-		return '<div class="icalc-draggable" draggable="true" id="draggableCalculations" data-component="calculation-component" data-next-id="1">' . __( "Calculation Component" ) . '</div>';
-	}
+    static function getDraggableService(): string
+    {
+        return '<div class="icalc-draggable" draggable="true" id="draggableService" data-component="service-component" data-next-id="1">' . __("Service") . '</div>';
+    }
 
 
-	static function draggableConfiguration() {
+    static function getDraggableComponent(): string
+    {
+        return '<div class="icalc-draggable" draggable="true" id="draggableComponent" data-component="component-component" data-next-id="1">' . __("Generic Component") . '</div>';
+    }
 
-		$returnDiv = '<div id="product-component" class="icalc-draggable-option hidden" draggable="true">
-                                    <h3>' . __( "Product Component" ) . '</h3>
+    static function getDraggableCalculations(): string
+    {
+        return '<div class="icalc-draggable" draggable="true" id="draggableCalculations" data-component="calculation-component" data-next-id="1">' . __("Calculation Component") . '</div>';
+    }
+
+
+    static function draggableConfiguration()
+    {
+
+        $returnDiv = '<div id="product-component" class="icalc-draggable-option hidden" draggable="true">
+                                    <h3>' . __("Product Component") . '</h3>
                                     <span class="icalc-configuration-bar"></span>
                                     <div id="icalc-dashboard-products" class="icalc-choose-list"></div>     
                                   </div>';
 
-		$returnDiv = $returnDiv . '<div id="service-component" class="icalc-draggable-option hidden" draggable="true"> 
-                                <h3>' . __( "Service Component" ) . '</h3>
+        $returnDiv = $returnDiv . '<div id="service-component" class="icalc-draggable-option hidden" draggable="true"> 
+                                <h3>' . __("Service Component") . '</h3>
                                 <span class="icalc-configuration-bar"></span>
                                 <div id="icalc-dashboard-services" class="icalc-choose-list"></div>     
                                 </div>';
 
-		$returnDiv = $returnDiv . '<div id="component-component" class="icalc-draggable-option hidden" draggable="true">
-                                <h3>' . __( "Generic Component" ) . '</h3>
+        $returnDiv = $returnDiv . '<div id="component-component" class="icalc-draggable-option hidden" draggable="true">
+                                <h3>' . __("Generic Component") . '</h3>
                                 <span class="icalc-configuration-bar"></span>
                                 <div id="icalc-dashboard-components" class="icalc-choose-list"></div>     
                                 </div>';
 
-		$returnDiv = $returnDiv . '<div id="calculation-component" class="icalc-draggable-option hidden" draggable="true">
-                                <h3>' . __( "Calculation Component" ) . '</h3>
+        $returnDiv = $returnDiv . '<div id="calculation-component" class="icalc-draggable-option hidden" draggable="true">
+                                <h3>' . __("Calculation Component") . '</h3>
                                 <span class="icalc-configuration-bar"></span>
                                 <div id="icalc-dashboard-calculations" class="icalc-choose-list"></div>     
                                 </div>';
 
 
-		return $returnDiv;
-	}
+        return $returnDiv;
+    }
 
 
-	static function generateIdAndName( $product ): array {
-		return array( 'id' => $product->id, 'name' => $product->name );
-	}
+    static function generateIdAndName($product): array
+    {
+        return array('id' => $product->id, 'name' => $product->name);
+    }
 
-	private static function configureCurrentCalculation() {
-		echo '<div class="icalc-modal-wrapper hidden">
+    private static function configureCurrentCalculation()
+    {
+        echo '<div class="icalc-modal-wrapper hidden">
 		        <div id="configure-calculation-modal" class="icalc-config-modal">
 			        <div class="modal-content p-3">
 			        <span>
@@ -155,7 +185,7 @@ class MainMenuFrontend extends AbstractAdminFrontend {
 	        		</div>
              	</div>
     		</div>';
-}
+    }
 
 
 }

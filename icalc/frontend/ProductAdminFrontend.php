@@ -1,4 +1,25 @@
 <?php
+/*
+ *
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
+ *
+ *   Copyright (C) 2023, Jakub Jandák
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
 
 namespace icalc\fe;
 
@@ -11,11 +32,11 @@ class ProductAdminFrontend extends AbstractAdminFrontend
 
     public static function configuration()
     {
-	    self::populateIcalcJSData();
-	    $data = Product::get_all();
+        self::populateIcalcJSData();
+        $data = Product::get_all();
 
 
-	    if(is_null($data)) {
+        if (is_null($data)) {
             error_log("ERROR Fetching data from API");
         }
 
@@ -85,10 +106,10 @@ class ProductAdminFrontend extends AbstractAdminFrontend
 
     public static function configuredModalEdit($modalId, $id, $formFields): string
     {
-	    $displayTypeList = new ChooseList();
-	    $displayTypeList->directConfiguration( $modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService(), $formFields['display_type'] );
+        $displayTypeList = new ChooseList();
+        $displayTypeList->directConfiguration($modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService(), $formFields['display_type']);
 
-	    return '<div class="modal mt-5 fade w-100 p-3" id="' . $modalId . '" role="dialog">
+        return '<div class="modal mt-5 fade w-100 p-3" id="' . $modalId . '" role="dialog">
                         <div class="modal-dialog modal-lg">
                           <div class="modal-content">
                             <div class="modal-header">
@@ -146,7 +167,7 @@ class ProductAdminFrontend extends AbstractAdminFrontend
     public static function configureCreationModal($modalId): string
     {
         $displayTypeList = new ChooseList();
-	    $displayTypeList->directConfiguration( $modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService() );
+        $displayTypeList->directConfiguration($modalId . "_display_type_form", "display_type", "form-control", DisplayTypeManager::getAllDisplayTypesForProductAndService());
 
 
         return '<div class="modal mt-5 fade w-100 p-3" id="' . $modalId . '"  role="dialog">
@@ -156,34 +177,34 @@ class ProductAdminFrontend extends AbstractAdminFrontend
                               <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body p-5">
-                              <h4 class="modal-title">' . __( "Create New Product" ) . '</h4>
+                              <h4 class="modal-title">' . __("Create New Product") . '</h4>
                               <form id="' . $modalId . '_form">
                               <div class="form-row icalc-product-form-row">
                                 <div class="col icalc-edit-table-space-between">
-                                  <label for="' . $modalId . '_name_form">' . __( "Name" ) . '</label>
-                                  <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="' . __( "Product Name" ) . '">
+                                  <label for="' . $modalId . '_name_form">' . __("Name") . '</label>
+                                  <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="' . __("Product Name") . '">
                                 </div>
                                  <div class="col icalc-edit-table-space-between">
-                                  <label for="' . $modalId . '_desc_form">' . __( "Description" ) . '</label>
-                                  <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __( "Product Description" ) . '" >
+                                  <label for="' . $modalId . '_desc_form">' . __("Description") . '</label>
+                                  <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __("Product Description") . '" >
                                 </div>
                                 <div class="col icalc-edit-table-space-between">
-                                  <label for="' . $modalId . '_price_form">' . __( "Price per Unit" ) . '</label>
-                                  <input id="' . $modalId . '_price_form" type="number" class="form-control" placeholder="' . __( "Product Price" ) . '" >
+                                  <label for="' . $modalId . '_price_form">' . __("Price per Unit") . '</label>
+                                  <input id="' . $modalId . '_price_form" type="number" class="form-control" placeholder="' . __("Product Price") . '" >
                                 </div>
                                 <div class="col icalc-edit-table-space-between">
-                                  <label for="' . $modalId . '_unit_form">' . __( "Unit" ) . '</label>
-                                  <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __( "Product Unit" ) . '" >
+                                  <label for="' . $modalId . '_unit_form">' . __("Unit") . '</label>
+                                  <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __("Product Unit") . '" >
                                 </div>
                                 <div class="col icalc-edit-table-space-between">
-                                  <label for="' . $modalId . '_min_quantity_form">' . __( "Minimal Quantity" ) . '</label>
-                                  <input id="' . $modalId . '_min_quantity_form" type="number" class="form-control" placeholder="' . __( "Product Minimal Quantity" ) . '" >
+                                  <label for="' . $modalId . '_min_quantity_form">' . __("Minimal Quantity") . '</label>
+                                  <input id="' . $modalId . '_min_quantity_form" type="number" class="form-control" placeholder="' . __("Product Minimal Quantity") . '" >
                                 </div>
                                  <div class="col icalc-edit-table-space-between">
-                                  <label for="' . $modalId . '_display_type_form">' . __( "Display Type" ) . '</label>
+                                  <label for="' . $modalId . '_display_type_form">' . __("Display Type") . '</label>
                                                                   ' .
-               $displayTypeList->render()
-               . '
+            $displayTypeList->render()
+            . '
                                 
                                 </div>
                               </div>
@@ -192,8 +213,8 @@ class ProductAdminFrontend extends AbstractAdminFrontend
                             </form>
                             </div>
                             <div class="modal-footer">
-                              <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">' . __( "Close" ) . '</button>
-                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="icalc_process_product_creation(\'' . $modalId . '\')">' . __( "Save" ) . '</button>
+                              <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">' . __("Close") . '</button>
+                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="icalc_process_product_creation(\'' . $modalId . '\')">' . __("Save") . '</button>
                             </div>
                           </div>
                         </div>

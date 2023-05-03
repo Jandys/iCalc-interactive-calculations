@@ -1,11 +1,32 @@
-function icalc_process_service_edition(id, modalId){
+/*
+ *
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
+ *
+ *   Copyright (C) 2023, Jakub Jandák
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
 
-    let nameElement = document.getElementById(modalId+'_name_form');
-    let descriptionElement = document.getElementById(modalId+'_desc_form');
-    let priceElement = document.getElementById(modalId+'_price_form');
-    let unitElement = document.getElementById(modalId+'_unit_form');
-    let minQualityElement = document.getElementById(modalId+'_min_quantity_form');
-    let displayTypeElement = document.getElementById(modalId+'_display_type_form');
+function icalc_process_service_edition(id, modalId) {
+    let nameElement = document.getElementById(modalId + '_name_form');
+    let descriptionElement = document.getElementById(modalId + '_desc_form');
+    let priceElement = document.getElementById(modalId + '_price_form');
+    let unitElement = document.getElementById(modalId + '_unit_form');
+    let minQualityElement = document.getElementById(modalId + '_min_quantity_form');
+    let displayTypeElement = document.getElementById(modalId + '_display_type_form');
 
     const xhr = new XMLHttpRequest();
     const url = '/wp-json/icalc/v1/services';
@@ -39,14 +60,15 @@ function icalc_process_service_edition(id, modalId){
 
     xhr.send(data);
 }
-function icalc_process_service_creation(modalId){
 
-    let nameElement = document.getElementById(modalId+'_name_form');
-    let descriptionElement = document.getElementById(modalId+'_desc_form');
-    let priceElement = document.getElementById(modalId+'_price_form');
-    let unitElement = document.getElementById(modalId+'_unit_form');
-    let minQualityElement = document.getElementById(modalId+'_min_quantity_form');
-    let displayTypeElement = document.getElementById(modalId+'_display_type_form');
+function icalc_process_service_creation(modalId) {
+
+    let nameElement = document.getElementById(modalId + '_name_form');
+    let descriptionElement = document.getElementById(modalId + '_desc_form');
+    let priceElement = document.getElementById(modalId + '_price_form');
+    let unitElement = document.getElementById(modalId + '_unit_form');
+    let minQualityElement = document.getElementById(modalId + '_min_quantity_form');
+    let displayTypeElement = document.getElementById(modalId + '_display_type_form');
 
     const xhr = new XMLHttpRequest();
     const url = '/wp-json/icalc/v1/services';
@@ -79,9 +101,10 @@ function icalc_process_service_creation(modalId){
 
     xhr.send(data);
 }
-function icalc_process_service_deletion(id,name){
 
-    const result = confirm("Opravdu chcete odstranit Službu: " + name + "?" );
+function icalc_process_service_deletion(id, name) {
+
+    const result = confirm("Opravdu chcete odstranit Službu: " + name + "?");
 
     if (result) {
         const xhr = new XMLHttpRequest();
@@ -94,7 +117,7 @@ function icalc_process_service_deletion(id,name){
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('user', icalcApiSettings.user);
         xhr.setRequestHeader('session', icalcApiSettings.session);
-    
+
         xhr.withCredentials = true;
 
         xhr.onreadystatechange = function () {
@@ -118,14 +141,14 @@ function icalc_process_service_deletion(id,name){
 }
 
 
-function icalc_process_product_edition(id, modalId){
+function icalc_process_product_edition(id, modalId) {
 
-    let nameElement = document.getElementById(modalId+'_name_form');
-    let descriptionElement = document.getElementById(modalId+'_desc_form');
-    let priceElement = document.getElementById(modalId+'_price_form');
-    let unitElement = document.getElementById(modalId+'_unit_form');
-    let minQualityElement = document.getElementById(modalId+'_min_quantity_form');
-    let displayTypeElement = document.getElementById(modalId+'_display_type_form');
+    let nameElement = document.getElementById(modalId + '_name_form');
+    let descriptionElement = document.getElementById(modalId + '_desc_form');
+    let priceElement = document.getElementById(modalId + '_price_form');
+    let unitElement = document.getElementById(modalId + '_unit_form');
+    let minQualityElement = document.getElementById(modalId + '_min_quantity_form');
+    let displayTypeElement = document.getElementById(modalId + '_display_type_form');
 
     const xhr = new XMLHttpRequest();
     const url = '/wp-json/icalc/v1/products';
@@ -159,14 +182,15 @@ function icalc_process_product_edition(id, modalId){
 
     xhr.send(data);
 }
-function icalc_process_product_creation(modalId){
 
-    let nameElement = document.getElementById(modalId+'_name_form');
-    let descriptionElement = document.getElementById(modalId+'_desc_form');
-    let priceElement = document.getElementById(modalId+'_price_form');
-    let unitElement = document.getElementById(modalId+'_unit_form');
-    let minQualityElement = document.getElementById(modalId+'_min_quantity_form');
-    let displayTypeElement = document.getElementById(modalId+'_display_type_form');
+function icalc_process_product_creation(modalId) {
+
+    let nameElement = document.getElementById(modalId + '_name_form');
+    let descriptionElement = document.getElementById(modalId + '_desc_form');
+    let priceElement = document.getElementById(modalId + '_price_form');
+    let unitElement = document.getElementById(modalId + '_unit_form');
+    let minQualityElement = document.getElementById(modalId + '_min_quantity_form');
+    let displayTypeElement = document.getElementById(modalId + '_display_type_form');
 
     const xhr = new XMLHttpRequest();
     const url = '/wp-json/icalc/v1/products';
@@ -199,9 +223,10 @@ function icalc_process_product_creation(modalId){
 
     xhr.send(data);
 }
-function icalc_process_product_deletion(id,name){
 
-    const result = confirm("Opravdu chcete odstranit Službu: " + name + "?" );
+function icalc_process_product_deletion(id, name) {
+
+    const result = confirm("Opravdu chcete odstranit Službu: " + name + "?");
 
     if (result) {
         const xhr = new XMLHttpRequest();
@@ -214,7 +239,7 @@ function icalc_process_product_deletion(id,name){
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('user', icalcApiSettings.user);
         xhr.setRequestHeader('session', icalcApiSettings.session);
-    
+
         xhr.withCredentials = true;
 
         xhr.onreadystatechange = function () {
@@ -246,11 +271,7 @@ function populateIcalcSettings(user, session) {
 }
 
 
-
-
-
-
-function icalc_getAllProducts(){
+function icalc_getAllProducts() {
     const xhr = new XMLHttpRequest();
     const url = '/wp-json/icalc/v1/products';
 
@@ -308,7 +329,7 @@ function icalc_getAllServices() {
     return xhr;
 }
 
-function icalc_process_calculation_description_creation(){
+function icalc_process_calculation_description_creation() {
     const xhr = new XMLHttpRequest();
     const url = '/wp-json/icalc/v1/icalculation-descriptions';
 
@@ -322,7 +343,7 @@ function icalc_process_calculation_description_creation(){
     return xhr;
 }
 
-function icalc_process_calculation_description_edit(){
+function icalc_process_calculation_description_edit() {
     const xhr = new XMLHttpRequest();
     const url = '/wp-json/icalc/v1/icalculation-descriptions';
 
@@ -336,9 +357,9 @@ function icalc_process_calculation_description_edit(){
     return xhr;
 }
 
-function icalc_process_calculation_delete_action(id, name){
+function icalc_process_calculation_delete_action(id, name) {
 
-    const result = confirm("Opravdu chcete odstranit Kalkulaci: " + name + "?" );
+    const result = confirm("Opravdu chcete odstranit Kalkulaci: " + name + "?");
 
     if (result) {
         const xhr = new XMLHttpRequest();

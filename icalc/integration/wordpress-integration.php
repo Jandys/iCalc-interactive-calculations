@@ -1,5 +1,25 @@
 <?php
-
+/*
+ *
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
+ *
+ *   Copyright (C) 2023, Jakub Jandák
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
 
 use icalc\fe\Calculation as CalculationAlias;
 
@@ -15,8 +35,8 @@ use icalc\fe\Calculation as CalculationAlias;
 function renderIcalcCalculationShortcode($atts, $content = null)
 {
 
-    wp_enqueue_script('icalc_pages_scripts', plugins_url('/scripts/icalc_pages.js', ICALC_FILE), array(), ICALC_VERSION, false);
-    add_action('wp_enqueue_scripts', 'icalc_pages_scripts');
+    icalc_enqueue_page_dependencies();
+
 
     // Default shortcode parameter
     $default_atts = array(
@@ -47,6 +67,12 @@ function renderIcalcCalculationShortcode($atts, $content = null)
     return $output;
 }
 
+function icalc_enqueue_page_dependencies()
+{
+    wp_enqueue_script('icalc_pages_scripts', plugins_url('/scripts/icalc_pages.js', ICALC_FILE), array(), ICALC_VERSION, false);
+    wp_enqueue_style('icalc_page_style', plugins_url('/styles/icalc-pages-generic.css', ICALC_FILE), array(), ICALC_VERSION, false);
+}
+
 /**
  * Adds the iCalc calculation shortcode handler.
  */
@@ -55,6 +81,8 @@ function icalc_calculation_shortcode_handler()
     add_shortcode('icalc_calculation', 'renderIcalcCalculationShortcode');
 }
 
+icalc_enqueue_page_dependencies();
+add_action('wp_enqueue_scripts', 'icalc_enqueue_page_dependencies');
 add_action('init', 'icalc_calculation_shortcode_handler');
 
 ?>

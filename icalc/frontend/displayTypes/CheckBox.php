@@ -1,4 +1,25 @@
 <?php
+/*
+ *
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
+ *
+ *   Copyright (C) 2023, Jakub Jandák
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
 
 namespace icalc\fe\displayTypes;
 
@@ -10,18 +31,20 @@ namespace icalc\fe\displayTypes;
  * @package icalc\fe\displayTypes
  * @since 1.0.0
  */
-class CheckBox extends DisplayType {
+class CheckBox extends DisplayType
+{
 
-	private $id;
-	private $name;
-	private float $value;
-	private $classes;
-	private $displayLabel = false;
-	private $label;
-	private $labelClasses;
+    private $id;
+    private $name;
+    private float $value;
+    private $classes;
+    private $displayLabel = false;
+    private $label;
+    private $labelClasses;
 
-	public function __construct() {
-	}
+    public function __construct()
+    {
+    }
 
     /**
      * Renders the checkbox.
@@ -29,70 +52,74 @@ class CheckBox extends DisplayType {
      *
      * @return string The rendered HTML for the checkbox.
      */
-	function render(): string {
-		$wrapper = '<div class="icalc-form-group form-outline form-group row">';
+    function render(): string
+    {
+        $wrapper = '<div class="icalc-form-group form-outline form-group row">';
 
-		$wrapper = $wrapper . $this->showLabel();
+        $wrapper = $wrapper . $this->showLabel();
 
-		$wrapper = $wrapper . $this->displayInput();
+        $wrapper = $wrapper . $this->displayInput();
 
-		$wrapper = $wrapper . '</div>';
+        $wrapper = $wrapper . '</div>';
 
-		return $wrapper;
-	}
+        return $wrapper;
+    }
 
     /**
      * Renders the checkbox.
      *
      * @return string The rendered HTML for the checkbox.
      */
-	public function fillData( $args ): void {
-		$id           = $args["id"];
-		$masterObject = $args['masterObject'];
-		$conf         = $args['conf'];
+    public function fillData($args): void
+    {
+        $id = $args["id"];
+        $masterObject = $args['masterObject'];
+        $conf = $args['conf'];
 
-		$this->id           = $id;
-		$this->displayLabel = boolval( $conf->configuration->{'show-label'} );
-		$this->labelClasses = $conf->configuration->{'label-classes'};
-		if ( $masterObject == null ) {
-			$this->label = $conf->configuration->{'custom-label'};
-			$this->value = floatval( $conf->configuration->{'base-value'} );
-		} else {
-			$this->label = $masterObject->name;
-			$this->value = floatval( $masterObject->price );
-		}
+        $this->id = $id;
+        $this->displayLabel = boolval($conf->configuration->{'show-label'});
+        $this->labelClasses = $conf->configuration->{'label-classes'};
+        if ($masterObject == null) {
+            $this->label = $conf->configuration->{'custom-label'};
+            $this->value = floatval($conf->configuration->{'base-value'});
+        } else {
+            $this->label = $masterObject->name;
+            $this->value = floatval($masterObject->price);
+        }
 
-		$this->classes = str_replace( ";", " ", $conf->configuration->{'input-classes'} );
-	}
+        $this->classes = str_replace(";", " ", $conf->configuration->{'input-classes'});
+    }
 
     /**
      * Displays the label associated with the checkbox.
      *
      * @return string The rendered HTML for the label.
      */
-	private function showLabel(): string {
-		if ( $this->displayLabel ) {
-			$label = new Label();
-			$label->showLabel( $this->id, $this->labelClasses, $this->label );
+    private function showLabel(): string
+    {
+        if ($this->displayLabel) {
+            $label = new Label();
+            $label->showLabel($this->id, $this->labelClasses, $this->label);
 
-			return $label->render();
-		}
+            return $label->render();
+        }
 
-		return "";
-	}
+        return "";
+    }
 
     /**
      * @return string
      */
-	private function displayInput(): string {
-		$returnValue = '<input class="icalc-calculation-checkbox-input ' . $this->classes . '" type="checkbox" id="' . $this->id . '" 
+    private function displayInput(): string
+    {
+        $returnValue = '<input class="icalc-calculation-checkbox-input ' . $this->classes . '" type="checkbox" id="' . $this->id . '" 
 		data-value="' . $this->value . '"';
 
-		if ( ! is_null( $this->name ) ) {
-			$returnValue = $returnValue . 'name="' . $this->name . '"';
-		}
+        if (!is_null($this->name)) {
+            $returnValue = $returnValue . 'name="' . $this->name . '"';
+        }
 
-		return $returnValue . '/>';
-	}
+        return $returnValue . '/>';
+    }
 
 }

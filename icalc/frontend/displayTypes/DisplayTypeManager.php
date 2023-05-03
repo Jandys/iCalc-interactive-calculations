@@ -56,7 +56,11 @@ class DisplayTypeManager
      */
     public static function getAllDisplayTypesForProductAndService(): array
     {
-        return array_keys(DisplayTypeManager::$dislpayTypesProductAndService);
+        $displayTypes = [];
+        foreach (DisplayTypeManager::$dislpayTypesProductAndService as $key => $value) {
+            $displayTypes[] = ["name" => $key, "value" => $key];
+        }
+        return $displayTypes;
     }
 
     /**

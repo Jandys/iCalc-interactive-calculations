@@ -16,7 +16,9 @@
   },
   "autoload": {
     "psr-4": {
-      "CustomJwtAuth\\": "src/"
+      "CustomJwtAuth\\": "vendor/firebase/php-jwt",
+      "icalc\\fe\\": "frontend/",
+      "icalc\\fe\\displayTypes\\": "frontend/displayTypes"
     }
   },
   "require-dev": {

@@ -37,7 +37,6 @@ function prefix_enqueue(): void {
 
 	icalc_load_scripts();
 
-
 	// CSS
 	wp_register_style( 'prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css' );
 	wp_enqueue_style( 'prefix_bootstrap' );

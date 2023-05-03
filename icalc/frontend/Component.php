@@ -42,6 +42,7 @@ class Component {
 		$this->parentComponent = $parentComponent;
 		$this->configuration   = $configuration;
 
+
 		$this->createComponentRenderer();
 		$this->setCalculationValues();
 	}
@@ -64,19 +65,23 @@ class Component {
 		return $this->componentRenderer->render();
 	}
 
-	public function __toString(): string {
-		return "Id: " . $this->id . ", " .
-		       "Type: " . $this->type . ", " .
-		       "domId: " . $this->domId . ", " .
-		       "displayType: " . $this->displayType . ", " .
-		       "parentComponent" . $this->parentComponent . ", " .
-		       "masterObject" . json_encode( $this->masterObjectData ) . ", " .
-		       "conf: " . json_encode( $this->configuration );
-	}
+    public function __toString(): string {
+        $parentComponentStr = $this->parentComponent ? (string) $this->parentComponent : "null";
+        $masterObjectDataStr = $this->masterObjectData ? json_encode($this->masterObjectData) : "null";
+        $configurationStr = $this->configuration ? json_encode($this->configuration) : "null";
+
+        return "Id: " . $this->id . ", " .
+            "Type: " . $this->type . ", " .
+            "domId: " . $this->domId . ", " .
+            "displayType: " . $this->displayType . ", " .
+            "baseValue: " . $this->baseValue . ", " .
+            "parentComponent: " . $parentComponentStr . ", " .
+            "masterObjectData: " . $masterObjectDataStr . ", " .
+            "configuration: " . $configurationStr;
+    }
 
 
 	public function createDisplayType( $type, $id, $configuration, $masterObject ) {
-		error_log( "ASKING FOR OBJECT TYPE: $type" );
 		$classToCreate = DisplayTypeManager::fromNameToClass( $type );
 		if ( ! $classToCreate ) {
 			return null;
@@ -91,10 +96,14 @@ class Component {
 	}
 
 	private function setCalculationValues() {
-		if ( strtolower( trim( $this->type ) ) == 'genericcomponent' ) {
+        if ( strcasecmp($this->type,'genericcomponent') == 0 || strcasecmp($this->type,'generic component') == 0 ) {
 			$this->baseValue = $this->configuration->configuration->{'base-value'};
 		} else {
-			$this->baseValue = $this->masterObjectData->price;
+            if(isset($this->masterObjectData) && isset($this->masterObjectData->price)){
+                $this->baseValue = $this->masterObjectData->price;
+            }else{
+                $this->baseValue = floatval($this->configuration->configuration->{'base-value'});
+            }
 		}
 		if ( strtolower( trim( $this->displayType ) ) == 'sum'
 		     || strtolower( trim( $this->displayType ) ) == "product calculation"

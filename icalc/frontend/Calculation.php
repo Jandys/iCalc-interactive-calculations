@@ -70,7 +70,6 @@ class Calculation
 
     private function displayTitle(): string
     {
-        error_log("configuration");
         $show_title = $this->calculationConfiguration->{'show-title'};
 
         if (!$show_title) {

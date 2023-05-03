@@ -1,12 +1,9 @@
-<phpunit bootstrap="tests/bootstrap.php">
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit bootstrap="vendor/autoload.php"
+    colors="true">
     <testsuites>
-        <testsuite name="Your Plugin Test Suite">
-            <directory prefix="test-" suffix=".php">./tests</directory>
+        <testsuite name="CheckBox">
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./your-plugin-directory</directory>
-        </whitelist>
-    </filter>
 </phpunit>

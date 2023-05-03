@@ -1,3 +1,25 @@
+/*
+ *
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
+ *
+ *   Copyright (C) 2023, Jakub Jandák
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 let icalc_pages_calculations = [[]];
 let icalc_pages_preCalculations = [];
 
@@ -15,7 +37,6 @@ function icalc_update_pre_and_calculation(domId, calculationId, calculation, met
     if (!icalc_pages_preCalculations[calculationId]) {
         icalc_pages_preCalculations[calculationId] = [];
     }
-
 
     icalc_pages_preCalculations[calculationId][domId] = calculation;
 
@@ -58,7 +79,7 @@ function icalc_update_complex_calculation(complexCalcId, component, value) {
             calculation = calculation.replaceAll(match.toString(), lastValue);
         }
     }
-    resultInput.value = resultInput.dataset.prefix + eval(icalc_make_string_viable_for_eval(calculation)) + resultInput.dataset.sufix;
+    resultInput.value = resultInput.dataset.prefix + eval(icalc_make_string_viable_for_eval(calculation)).toString() + resultInput.dataset.sufix;
 }
 
 function icalc_parse_toValid(number, method) {
