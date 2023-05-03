@@ -42,7 +42,7 @@ class FormTest extends TestCase
             'domId' => 'component-1',
             'displayType' => 'label',
             'parentComponent' => null,
-            'conf' => $configuration
+            'conf' => json_encode($configuration)
         ];
         return $componentData;
     }
