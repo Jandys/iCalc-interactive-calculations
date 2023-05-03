@@ -37,6 +37,7 @@ class FormTest extends TestCase
         $configuration->{'custom-label'} = '';
         $configuration->{'base-value'} = 1;
         $configuration->{'input-classes'} = '';
+        $configuration->{'unchecked-value'} = 0;
         $stdClass->configuration = $configuration;
 
         $componentData = [
