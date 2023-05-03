@@ -76,8 +76,6 @@ class Number extends DisplayType
         $this->name = $id;
         $this->min = 0;
         $this->value = $this->min;
-
-
     }
 
     private function showLabel(): string

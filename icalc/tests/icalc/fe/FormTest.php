@@ -1,7 +1,28 @@
 <?php
+/*
+ *
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
+ *
+ *   Copyright (C) 2023, Jakub Jandák
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
 
-use icalc\fe\Form;
 use icalc\fe\Component;
+use icalc\fe\Form;
 use PHPUnit\Framework\TestCase;
 
 class FormTest extends TestCase
@@ -15,7 +36,13 @@ class FormTest extends TestCase
             'domId' => 'component-1',
             'displayType' => 'text',
             'parentComponent' => null,
-            'conf' => []
+            'conf' => json_decode("{
+                                    'show-label': true,
+                                    'label-classes': '',
+                                    'custom-label': '',
+                                    'base-value': '1',
+                                    'input-classes': '',
+                                }")
         ];
 
         $form->addComponent((object)$componentData);
@@ -40,8 +67,8 @@ class FormTest extends TestCase
         $form->addComponent((object)$componentData);
 
         $output = $form->render();
-        $this->assertStringContainsString("<form>",$output);
-        $this->assertStringContainsString("</form>",$output);
+        $this->assertStringContainsString("<form>", $output);
+        $this->assertStringContainsString("</form>", $output);
     }
 
     public function testHas()
