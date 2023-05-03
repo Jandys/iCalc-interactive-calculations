@@ -27,34 +27,9 @@ use PHPUnit\Framework\TestCase;
 
 class FormTest extends TestCase
 {
-    public function testAddComponent()
+
+    private function getComponentData()
     {
-        $form = new Form();
-        $componentData = [
-            'id' => 1,
-            'type' => 'genericComponent',
-            'domId' => 'component-1',
-            'displayType' => 'text',
-            'parentComponent' => null,
-            'conf' => json_decode("{
-                                    'show-label': true,
-                                    'label-classes': '',
-                                    'custom-label': '',
-                                    'base-value': '1',
-                                    'input-classes': '',
-                                }")
-        ];
-
-        $form->addComponent((object)$componentData);
-        $components = $form->get_components();
-
-        $this->assertCount(1, $components);
-        $this->assertInstanceOf(Component::class, $components['component-1']);
-    }
-
-    public function testRender()
-    {
-        $form = new Form();
         $configuration = new stdClass();
         $configuration->{'show-label'} = true;
         $configuration->{'label-classes'} = '';
@@ -69,8 +44,25 @@ class FormTest extends TestCase
             'parentComponent' => null,
             'conf' => $configuration
         ];
+        return $componentData;
+    }
 
-        $form->addComponent((object)$componentData);
+    public function testAddComponent()
+    {
+        $form = new Form();
+
+        $form->addComponent((object)$this->getComponentData());
+        $components = $form->get_components();
+
+        $this->assertCount(1, $components);
+        $this->assertInstanceOf(Component::class, $components['component-1']);
+    }
+
+    public function testRender()
+    {
+        $form = new Form();
+
+        $form->addComponent((object)$this->getComponentData());
 
         $output = $form->render();
         $this->assertStringContainsString("<form>", $output);
@@ -80,14 +72,8 @@ class FormTest extends TestCase
     public function testHas()
     {
         $form = new Form();
-        $componentData = [
-            'id' => 1,
-            'type' => 'genericComponent',
-            'domId' => 'component-1',
-            'displayType' => 'checkbox',
-            'parentComponent' => null,
-            'conf' => []
-        ];
+        $componentData = $this->getComponentData();
+        $componentData["displayType"] = "checkbox";
 
         $form->addComponent((object)$componentData);
 
@@ -98,23 +84,12 @@ class FormTest extends TestCase
     public function testGetComponents()
     {
         $form = new Form();
-        $componentData1 = [
-            'id' => 1,
-            'type' => 'genericComponent',
-            'domId' => 'component-1',
-            'displayType' => 'number',
-            'parentComponent' => null,
-            'conf' => []
-        ];
 
-        $componentData2 = [
-            'id' => 2,
-            'type' => 'genericComponent',
-            'domId' => 'component-2',
-            'displayType' => 'textarea',
-            'parentComponent' => null,
-            'conf' => []
-        ];
+
+        $componentData1 = $this->getComponentData();
+        $componentData1["domId"] = 'component-1';
+        $componentData2 = $this->getComponentData();
+        $componentData2["domId"] = 'component-2';
 
         $form->addComponent((object)$componentData1);
         $form->addComponent((object)$componentData2);
