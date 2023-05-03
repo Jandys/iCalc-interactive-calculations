@@ -18,7 +18,8 @@
     "psr-4": {
       "CustomJwtAuth\\": "vendor/firebase/php-jwt",
       "icalc\\fe\\": "frontend/",
-      "icalc\\fe\\displayTypes\\": "frontend/displayTypes"
+      "icalc\\fe\\displayTypes\\": "frontend/displayTypes",
+      "icalc\\db\\model\\": "database/model"
     }
   },
   "require-dev": {
