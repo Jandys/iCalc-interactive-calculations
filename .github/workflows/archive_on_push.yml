@@ -58,7 +58,7 @@ jobs:
           git fetch
           git checkout release-archives || git checkout -b release-archives
           
-          git rm -rf.
+          git rm -rf .
           git commit --allow-empty -m "Empty Branch"
           git push origin release-archives
 
