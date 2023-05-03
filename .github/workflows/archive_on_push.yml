@@ -2,8 +2,9 @@ name: Create Zip on Push to Master
 
 on:
   push:
-    branches:
-      - master
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
