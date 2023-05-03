@@ -19,8 +19,8 @@ Docker containers, making deployment a breeze!
 ## Features
 
 - Easy-to-use calculator builder with a drag-and-drop interface
-- Wide range of mathematical functions and operators
-- Responsive design for mobile and desktop devices
+- Reuse your defined components.
+- Get data from users interactions.
 - Customizable styling to match your website's theme
 - Seamless integration with WordPress and popular page builders
 - Support for running in a Docker container
