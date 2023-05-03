@@ -56,15 +56,13 @@ function issue_jwt_token($user_id, $session): string
     $issued_at = time();
     $expiration_time = $issued_at + (60 * 60); // Token valid for 1 hour
 
-    $randomCharacters = wp_generate_password();
 
     // Create a payload array with the issued and expiration times, user ID, session, and random string as the secret.
     $payload = [
         'iat' => $issued_at,
         'exp' => $expiration_time,
         'uid' => $user_id,
-        'session' => $session,
-        'secret' => $randomCharacters
+        'ses' => $session,
     ];
 
     // Encode the payload into a JWT token using the site-specific secret key.
@@ -72,6 +70,7 @@ function issue_jwt_token($user_id, $session): string
 
     // Store the random string in a site transient with a unique key for the user ID and session.
     delete_site_transient('icalc-secret-' . $user_id . $session);
+    $randomCharacters = wp_generate_password();
     set_site_transient('icalc-secret-' . $user_id . $session, $randomCharacters, 60 * 60);
     return $token;
 }
@@ -95,12 +94,12 @@ function validate_jwt_token($token, $userid, $session)
 
         // Check if the user ID and session in the decoded token match the provided user ID and session.
         $uid = $decoded->uid;
-        $sessionId = $decoded->session;
+        $sessionId = $decoded->ses;
         if ($userid == $uid && $sessionId == $session) {
 
-            // Retrieve the random string from the site transient and check if it matches the secret in the decoded token.
+            // Retrieve secret and check if is not empty
             $secret = get_site_transient('icalc-secret-' . $userid . $sessionId);
-            if ($secret != $decoded->secret) {
+            if (empty($secret)) {
                 return false;
             }
 
