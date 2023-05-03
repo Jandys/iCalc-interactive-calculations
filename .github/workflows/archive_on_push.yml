@@ -49,6 +49,8 @@ jobs:
           # Check out the target branch or create it if it doesn't exist
           git fetch
           git checkout release-archives || git checkout -b release-archives
+          
+          git checkout --orphan temp_branch
 
           # Add the artifact to the staging area
           git add release.zip
@@ -57,6 +59,6 @@ jobs:
           git commit -m "Add release.zip artifact"
 
           # Push the commit to the target branch
-          git push origin target_branch
+          git push -f origin temp_branch:release-archives
 
         
