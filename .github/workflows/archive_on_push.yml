@@ -40,3 +40,23 @@ jobs:
           filename: 'release.zip'
           path: './icalc/'
           exclusions: '*.git* /*node_modules/* .editorconfig /*tests*/ '
+          
+      - name: Commit and push artifact to another branch
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@users.noreply.github.com"
+
+          # Check out the target branch or create it if it doesn't exist
+          git fetch
+          git checkout release-archives || git checkout -b release-archives
+
+          # Add the artifact to the staging area
+          git add release.zip
+
+          # Commit the changes
+          git commit -m "Add release.zip artifact"
+
+          # Push the commit to the target branch
+          git push origin target_branch
+
+        
