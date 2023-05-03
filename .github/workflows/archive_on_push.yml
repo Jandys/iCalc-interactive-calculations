@@ -41,17 +41,18 @@ jobs:
           if-no-files-found: warn
 
   push_to_branch:
-    needs: [build]
+    needs: [ build ]
     runs-on: ubuntu-latest
 
+    steps:
       - name: Download build artifact
         uses: actions/download-artifact@v2
         with:
           name: icalc
           path: .
-          
+
       - name: List all
-        run: ls -la   
+        run: ls -la
 
       - name: Commit and push artifact to another branch
         run: |
@@ -61,7 +62,7 @@ jobs:
           # Check out the target branch or create it if it doesn't exist
           git fetch
           git checkout release-archives || git checkout -b release-archives
-    
+          
           git rm -rf.
           git commit --allow-empty -m "Empty Branch"
 
