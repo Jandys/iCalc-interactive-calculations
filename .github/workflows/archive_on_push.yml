@@ -45,6 +45,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Change and clean branch
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@users.noreply.github.com"
+
+          # Check out the target branch or create it if it doesn't exist
+          git fetch
+          git checkout release-archives || git checkout -b release-archives
+          
+          git rm -rf.
+          git commit --allow-empty -m "Empty Branch"
+          git push origin release-archives
+
+        
+    
+    
       - name: Download build artifact
         uses: actions/download-artifact@v2
         with:
@@ -62,9 +82,6 @@ jobs:
           # Check out the target branch or create it if it doesn't exist
           git fetch
           git checkout release-archives || git checkout -b release-archives
-          
-          git rm -rf.
-          git commit --allow-empty -m "Empty Branch"
 
           # Add the artifact to the staging area
           git add --all
