@@ -53,6 +53,9 @@ jobs:
         with:
           name: icalc
           path: .
+          
+      - name: List all
+        run: ls -la   
 
       - name: Commit and push artifact to another branch
         run: |
