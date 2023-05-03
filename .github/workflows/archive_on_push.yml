@@ -65,10 +65,14 @@ jobs:
           excluded_folders = ['./tests']
           zip_dir(".", "archive.zip", excluded_folders)
         shell: python
+        
+        
+      - name: Relocate Archive
+        run: mv ./icalc/archive.zip ./icalc.zip
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: archive.zip
-          path: ./icalc/archive.zip
+          name: icalc.zip
+          path: .
           if-no-files-found: warn
