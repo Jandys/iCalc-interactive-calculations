@@ -21,7 +21,6 @@
  *
  */
 
-use icalc\db\DatabaseInit;
 use icalc\fe\MainMenuFrontend;
 use icalc\fe\ProductAdminFrontend;
 use icalc\fe\ServiceAdminFrontend;
@@ -170,8 +169,6 @@ function inter_calc_main_configuration()
         wp_enqueue_style('icalc_main-styles', plugins_url('../styles/icalc-main-sheetstyle.css', __FILE__), array(), ICALC_VERSION, false);
         add_action('wp_enqueue_style', 'icalc_main-styles');
 
-        DatabaseInit::init();
-
         echo '<div class="wrap">
         <h2>' . __("Inter Calcus Menu", "icalc") . '</h2>';
         MainMenuFrontend::configuration();
@@ -263,10 +260,8 @@ function icalc_main_script_localization()
  */
 function ic_menu_products_configuration()
 {
-	session_write_close();
-	if (is_admin()) {
-
-        DatabaseInit::init();
+    session_write_close();
+    if (is_admin()) {
 
         echo '<div class="wrap">
         <h2>' . __("Product Menu", "icalc") . '</h2>';
@@ -290,9 +285,8 @@ function ic_menu_products_configuration()
  */
 function ic_menu_services_configuration()
 {
-	session_write_close();
-	if (is_admin()) {
-        DatabaseInit::init();
+    session_write_close();
+    if (is_admin()) {
         echo '<div class="wrap">
         <h2>' . __("Services Menu", "icalc") . '</h2>';
         ServiceAdminFrontend::configuration();
@@ -311,10 +305,8 @@ function ic_menu_services_configuration()
  */
 function ic_menu_statistics()
 {
-	session_write_close();
-	if (is_admin()) {
-
-        DatabaseInit::init();
+    session_write_close();
+    if (is_admin()) {
 
         echo '<div class="wrap">
         <h2>' . __("Statistics Menu", "icalc") . '</h2>';

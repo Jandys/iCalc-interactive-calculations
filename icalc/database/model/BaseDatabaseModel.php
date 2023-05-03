@@ -22,6 +22,7 @@
  */
 
 namespace icalc\db\model;
+
 class BaseDatabaseModel
 {
     public static $id = 'id';
@@ -152,5 +153,13 @@ class BaseDatabaseModel
         $sql = sprintf('DELETE FROM %s WHERE %s = %%s', self::_tableName(), static::$id);
 
         return $wpdb->query($wpdb->prepare($sql, $value)); //phpcs:ignore
+    }
+
+    public static function clearAll()
+    {
+        global $wpdb;
+        $table_name = self::_tableName();
+
+        $wpdb->query("DROP TABLE IF EXISTS `{$table_name}`");
     }
 }

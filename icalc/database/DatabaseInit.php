@@ -54,4 +54,14 @@ class DatabaseInit
         // Returns true if all table creation queries executed successfully, false otherwise.
         return $product && $service && $unit && $icalcDesc && $icalcs;
     }
+
+    public static function clearAll()
+    {
+        Product::clearAll();
+        Service::clearAll();
+        Unit::clearAll();
+        IcalculationsDescription::clearAll();
+        Icalculations::clearAll();
+    }
+
 }
