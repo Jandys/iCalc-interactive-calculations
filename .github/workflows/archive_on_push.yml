@@ -49,21 +49,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         
-      - name: Change and clean branch
+      - name: Checkout and orphan branch 
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@users.noreply.github.com"
 
           # Check out the target branch or create it if it doesn't exist
           git fetch
-          git checkout release-archives || git checkout -b release-archives
-          
-          git rm -rf .
-          git commit --allow-empty -m "Empty Branch"
-          git push origin release-archives
+          git checkout --orphan temp_branch
 
-        
-    
     
       - name: Download build artifact
         uses: actions/download-artifact@v2
@@ -74,21 +68,14 @@ jobs:
       - name: List all
         run: ls -la
 
-      - name: Commit and push artifact to another branch
+      - name: Commit and push artifact to release-archive
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "actions@users.noreply.github.com"
-
-          # Check out the target branch or create it if it doesn't exist
-          git fetch
-          git checkout release-archives || git checkout -b release-archives
-
           # Add the artifact to the staging area
           git add --all
-
+          
           # Commit the changes
           git commit -m "Add artifact"
 
           # Push the commit to the target branch
-          git push origin release-archives
+          git push -f origin temp_branch:release-archives
 
