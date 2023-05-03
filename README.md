@@ -1,7 +1,3 @@
-# iCalc - Interactive Calculation Wordpress plugin
-
-Is a WordPress plugin that is used for interactive calculations for free use.
-
 # iCalc - Interactive Calculation WordPress Plugin
 
 ![iCalc - Interactive Calculation WordPress Plugin](https://php.jandys.eu/wp-content/uploads/2023/05/iCalc-Small.png)
