@@ -30,19 +30,22 @@ class FormTest extends TestCase
 
     private function getComponentData()
     {
+        $stdClass = new stdClass();
         $configuration = new stdClass();
         $configuration->{'show-label'} = true;
         $configuration->{'label-classes'} = '';
         $configuration->{'custom-label'} = '';
         $configuration->{'base-value'} = 1;
         $configuration->{'input-classes'} = '';
+        $stdClass->configuration = $configuration;
+
         $componentData = [
             'id' => 1,
             'type' => 'genericComponent',
             'domId' => 'component-1',
             'displayType' => 'label',
             'parentComponent' => null,
-            'conf' => json_encode($configuration)
+            'conf' => $stdClass
         ];
         return $componentData;
     }
