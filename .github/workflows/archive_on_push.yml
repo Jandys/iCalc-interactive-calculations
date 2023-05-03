@@ -1,0 +1,73 @@
+name: Create Zip on Push to Master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, intl
+          coverage: xdebug
+
+      - name: Validate composer.json and composer.lock
+        working-directory: ./icalc
+        run: composer validate
+
+      - name: Install dependencies
+        working-directory: ./icalc
+        run: composer install --prefer-dist --no-progress --no-dev
+
+      - name: Update dependencies
+        working-directory: ./icalc
+        run: composer update
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install zipfile36
+      - name: Create Zip excluding tests folder
+        working-directory: ./icalc
+        run: |
+          import os
+          import zipfile
+          import sys
+          
+          def zip_dir(path, zip_filename, excluded_paths=None):
+            if excluded_paths is None:
+              excluded_paths = []
+          
+            with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
+              for root, dirs, files in os.walk(path):
+                if any([root.startswith(excluded) for excluded in excluded_paths]):
+                  continue
+          
+                for file in files:
+                  zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), path))
+          
+          excluded_folders = ['./tests']
+          zip_dir(".", "archive.zip", excluded_folders)
+        shell: python
+
+      - name: Upload Artifact
+        working-directory: ./icalc
+        uses: actions/upload-artifact@v2
+        with:
+          name: archive
+          path: archive.zip
