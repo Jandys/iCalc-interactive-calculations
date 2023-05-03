@@ -51,7 +51,7 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v2
         with:
-          name: icalc.zip
+          name: icalc
           path: .
 
       - name: Commit and push artifact to another branch
@@ -64,7 +64,7 @@ jobs:
           git checkout release-archives || git checkout -b release-archives
 
           # Add the artifact to the staging area
-          git add ./icalc.zip
+          git add ./icalc
 
           # Commit the changes
           git commit -m "Add icalc.zip artifact"
