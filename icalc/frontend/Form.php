@@ -45,7 +45,7 @@ class Form
      *
      * @return void
      */
-    public function addComponent(mixed $component)
+    public function addComponent($component)
     {
         $id = $component->id;
         $type = $component->type;
