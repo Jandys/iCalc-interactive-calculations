@@ -33,49 +33,10 @@ jobs:
       - name: Relocate Archive
         run: rm -rf ./icalc/tests/ -R && rm -rf ./icalc/phpunit.xml
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.2
+      - name: Archive Release
+        uses: thedoctor0/zip-release@0.7.1
         with:
-          name: icalc
-          path: ./icalc/
-          if-no-files-found: warn
-
-  push_to_branch:
-    needs: [ build ]
-    runs-on: ubuntu-latest
-
-    steps:
-    
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        
-      - name: Checkout and orphan branch 
-        run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "actions@users.noreply.github.com"
-
-          # Check out the target branch or create it if it doesn't exist
-          git fetch
-          git checkout --orphan temp_branch
-
-    
-      - name: Download build artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: icalc
-          path: .
-
-      - name: List all
-        run: ls -la
-
-      - name: Commit and push artifact to release-archive
-        run: |
-          # Add the artifact to the staging area
-          git add --all
-          
-          # Commit the changes
-          git commit -m "Add artifact"
-
-          # Push the commit to the target branch
-          git push -f origin temp_branch:release-archives
-
+          type: 'zip'
+          filename: 'release.zip'
+          path: './icalc/'
+          exclusions: '*.git* /*node_modules/* .editorconfig /*tests*/ '
