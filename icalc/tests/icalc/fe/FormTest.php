@@ -55,13 +55,19 @@ class FormTest extends TestCase
     public function testRender()
     {
         $form = new Form();
+        $configuration = new stdClass();
+        $configuration->{'show-label'} = true;
+        $configuration->{'label-classes'} = '';
+        $configuration->{'custom-label'} = '';
+        $configuration->{'base-value'} = 1;
+        $configuration->{'input-classes'} = '';
         $componentData = [
             'id' => 1,
             'type' => 'genericComponent',
             'domId' => 'component-1',
             'displayType' => 'label',
             'parentComponent' => null,
-            'conf' => []
+            'conf' => $configuration
         ];
 
         $form->addComponent((object)$componentData);

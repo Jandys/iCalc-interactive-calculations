@@ -29,13 +29,16 @@ class ComponentTest extends TestCase
 
     private function getConfiguration()
     {
-        return json_decode("{
-            'show-label': true,
-            'label-classes': '',
-            'custom-label': '',
-            'base-value': '1',
-            'input-classes': '',
-        }");
+
+        $stdClass = new stdClass();
+        $configuration = new stdClass();
+        $configuration->{'show-label'} = true;
+        $configuration->{'label-classes'} = '';
+        $configuration->{'custom-label'} = '';
+        $configuration->{'base-value'} = 1;
+        $configuration->{'input-classes'} = '';
+        $stdClass->configuration = $configuration;
+        return $stdClass;
 
     }
 
@@ -74,7 +77,8 @@ class ComponentTest extends TestCase
         // Assuming the necessary dependencies are mocked or autoloaded
 
         $configuration = $this->getConfiguration();
-        $configuration->{'base-value'} = 10;
+        $configuration->configuration->{'base-value'} = 10;
+
 
         $component = new Component(1, 'genericComponent', 'component-1', 'number', null, (object)$configuration);
 
