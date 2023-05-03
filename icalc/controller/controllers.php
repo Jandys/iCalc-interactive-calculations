@@ -195,18 +195,10 @@ function icalc_getCalculationDescriptionById(WP_REST_Request $request)
 function icalc_registerNewCalculationInteraction(WP_REST_Request $request)
 {
     $data = $request->get_json_params();
-    error_log("JSON BODY: " . json_encode($data));
-
 
     $calculationId = $data['calculationId'];
     $body = $data['body'];
     $user = $data['userId'];
-
-
-    error_log("calculationId: " . json_encode($calculationId));
-    error_log("body: " . json_encode($body));
-    error_log("userId: " . json_encode($user));
-
 
     $status = Icalculations::insertNew($calculationId, json_encode($body), $user);
 
@@ -232,7 +224,6 @@ function icalc_plugin_add_jwt_endpoints()
         'methods' => 'POST',
         'callback' => 'issue_jwt_token_callback',
         'permission_callback' => 'icalc_user_can_manage'
-
     ));
 
     /**
