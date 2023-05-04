@@ -54,7 +54,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git remote set-url origin https://${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          git remote set-url origin https://github.com/${{ github.repository }}
+          echo 'https://${GITHUB_TOKEN}:x-oauth-basic@github.com' > /tmp/auth_header
+          git config --global http.extraheader "$(cat /tmp/auth_header)"
+
           
       - name: Commit and push artifact to another branch
         run: |
