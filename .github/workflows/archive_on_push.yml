@@ -44,29 +44,26 @@ jobs:
           path: './icalc/'
           exclusions: '*.git* /*node_modules/* .editorconfig /*tests*/ '
         
-          
       - name: Configure git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "noreply@github.com"
-          
+
       - name: Set up authentication
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git remote set-url origin https://github.com/${{ github.repository }}
-          echo "https://github.com" > /tmp/git-credentials
-          echo "https://${GITHUB_TOKEN}:x-oauth-basic" >> /tmp/git-credentials
-          git config --global credential.helper "store --file=/tmp/git-credentials"
+          echo 'echo "${GITHUB_TOKEN}"' > askpass.sh
+          chmod +x askpass.sh
+          export GIT_ASKPASS=$(pwd)/askpass.sh
 
-
-          
       - name: Commit and push artifact to another branch
         run: |
           # Check out the target branch or create it if it doesn't exist
           git fetch
           git checkout release-archives || git checkout -b release-archives
-          
+
           git checkout --orphan temp_branch
 
           # Add the artifact to the staging area
@@ -78,4 +75,3 @@ jobs:
           # Push the commit to the target branch
           git push -f origin temp_branch:release-archives
 
-        
