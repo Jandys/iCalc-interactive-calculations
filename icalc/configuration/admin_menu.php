@@ -105,7 +105,7 @@ function icalc_admin_menu()
         'inter-calc-configuration',
         'inter_calc_main_configuration',
         'data:image/svg+xml;base64,' . base64_encode($menuIcon),
-        8);
+        26);
     add_submenu_page('inter-calc-configuration',
         __('Products - Inter Calcus'),
         __('iCalc - Products'),
