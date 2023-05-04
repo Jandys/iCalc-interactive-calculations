@@ -32,7 +32,6 @@ class Service extends BaseDatabaseModel
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
         $table_name = self::_tableName();
-        $primary_key = self::$id;
 
         $sql = "CREATE TABLE IF NOT EXISTS " . $table_name . " (
                   id INT AUTO_INCREMENT PRIMARY KEY,
