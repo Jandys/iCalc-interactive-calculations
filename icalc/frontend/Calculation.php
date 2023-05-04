@@ -33,7 +33,7 @@ class Calculation {
 		return $options;
 	}
 
-	private function parseCalculationData() {
+	public function parseCalculationData() {
 		$chosenCalculation = \icalc\db\model\IcalculationsDescription::get( "id", $this->calculationId );
 
 		if ( ! isset( $chosenCalculation ) || ! isset( $chosenCalculation->body ) || ! isset( $chosenCalculation->description ) || empty( json_decode( $chosenCalculation->body )->components ) ) {
@@ -46,8 +46,6 @@ class Calculation {
 		$this->calculationConfiguration = $this->body->configuration;
 		$this->customStyles             = $this->body->customStyles;
 
-		error_log( "THIS BODY:" );
-		error_log( json_encode( $this->body ) );
 
 
 		return 1;
