@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -42,22 +44,14 @@ jobs:
           exclusions: '*.git* /*node_modules/* .editorconfig /*tests*/ '
           
           
-      - name: Get GitHub Actor Email
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure git
         run: |
-          echo "GITHUB_ACTOR: $GITHUB_ACTOR"
-          GITHUB_ACTOR_EMAIL=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/users/$GITHUB_ACTOR" | jq -r '.email')
-          if [ "$GITHUB_ACTOR_EMAIL" == "null" ]; then
-            GITHUB_ACTOR_EMAIL="$GITHUB_ACTOR@users.noreply.github.com"
-          fi
-          echo "GITHUB_ACTOR_EMAIL: $GITHUB_ACTOR_EMAIL"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "noreply@github.com"
+
           
       - name: Commit and push artifact to another branch
         run: |
-          git config --global user.name $GITHUB_ACTOR
-          git config --global user.email $GITHUB_ACTOR_EMAIL
-
           # Check out the target branch or create it if it doesn't exist
           git fetch
           git checkout release-archives || git checkout -b release-archives
