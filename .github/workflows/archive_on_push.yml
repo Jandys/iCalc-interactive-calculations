@@ -56,10 +56,14 @@ jobs:
           git remote set-url origin https://github.com/${{ github.repository }}
           echo 'echo "${GITHUB_TOKEN}"' > askpass.sh
           chmod +x askpass.sh
-          export GIT_ASKPASS=$(pwd)/askpass.sh
 
       - name: Commit and push artifact to another branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Set GIT_ASKPASS in the current step
+          export GIT_ASKPASS=$(pwd)/askpass.sh
+
           # Check out the target branch or create it if it doesn't exist
           git fetch
           git checkout release-archives || git checkout -b release-archives
