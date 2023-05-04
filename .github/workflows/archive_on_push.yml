@@ -59,7 +59,7 @@ jobs:
 
       - name: Commit and push artifact to another branch
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}
         run: |
           # Set GIT_ASKPASS in the current step
           export GIT_ASKPASS=$(pwd)/askpass.sh
