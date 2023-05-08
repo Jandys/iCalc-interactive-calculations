@@ -27,9 +27,13 @@ Docker containers, making deployment a breeze!
 
 ## Installation
 
-1. Download the iCalc plugin from the [GitHub repository](https://github.com/Jandys/iCalc-interactive-calculations/blob/release-archives/release.zip ).
+1. Download the archive of iCalc plugin from
+   one of those sources:
+    1. From
+       the [latest main commit ](https://github.com/Jandys/iCalc-interactive-calculations/blob/release-archives/release.zip ).
+    2. Choose from one of the [stable releases](https://github.com/Jandys/iCalc-interactive-calculations/releases).
 2. Log in to your WordPress dashboard and navigate to **Plugins** > **Add New**.
-3. Click **Upload Plugin** and select the downloaded iCalc zip file.
+3. Click **Upload Plugin** and select the downloaded iCalc zip file (release.zip).
 4. Click **Install Now** and wait for the installation to complete.
 5. Activate the iCalc plugin by clicking **Activate Plugin**.
 

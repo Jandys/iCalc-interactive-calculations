@@ -47,6 +47,7 @@ Table(calculation_description, "Calculation Description") {
 Table(calculation, "Calculation") {
   primaryKey(id) : INT
   body : JSON {Contains references to Product and Service IDs}
+  userId : VARCHAR
   created_at : TIMESTAMP
   +calculation_description_id : UUID
 }

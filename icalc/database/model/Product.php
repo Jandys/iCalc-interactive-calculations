@@ -38,7 +38,7 @@ class Product extends BaseDatabaseModel
                   name VARCHAR(255) NOT NULL,
                   description VARCHAR(255) NOT NULL,
                   price DECIMAL(10,2) NOT NULL,
-                  unit VARCHAR(50) NOT NULL,
+                  unitId INT NOT NULL,
                   min_quantity INT NOT NULL,
                   display_type VARCHAR(50) NOT NULL,
                   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
