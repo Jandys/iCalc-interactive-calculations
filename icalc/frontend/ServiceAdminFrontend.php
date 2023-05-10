@@ -34,7 +34,8 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
     {
         self::populateIcalcJSData();
 
-        $data = Service::get_all();
+        $data = Service::get_all_with_unit();
+
 
         if (is_null($data)) {
             error_log("ERROR Fetching data from API");

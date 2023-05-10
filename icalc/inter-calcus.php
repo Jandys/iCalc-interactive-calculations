@@ -89,9 +89,29 @@ function icalc_load_textdomain()
 }
 
 
-function icalc_plugin_activation()
+function icalc_plugin_activation($iteration)
 {
-    icalc\db\DatabaseInit::init();
+	if($iteration==null){
+		$iteration = 1;
+	}else{
+		$iteration++;
+	}
+
+	if(icalc\db\DatabaseInit::init()){
+		error_log("iCalc plugin database tables successfully initialized");
+	}else{
+		error_log("There was an error while trying to initialized iCalc plugin database tables");
+
+		error_log("Try to initialize again in 1 second");
+		sleep(1);
+
+		if($iteration<6){
+			icalc_plugin_activation($iteration);
+		}else{
+			error_log("Number of iteration exceeded limit. Database initialization for plugin iCalc Failed");
+		}
+	}
+
 }
 
 function icalc_plugin_deactivation()

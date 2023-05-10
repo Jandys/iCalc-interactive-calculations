@@ -609,7 +609,8 @@ function icalc_getProducts(WP_REST_Request $request)
         return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
     }
 
-    $allProducts = Product::get_all();
+    $allProducts = Product::get_all_with_unit();
+
 
     return new WP_REST_Response($allProducts);
 }
@@ -781,7 +782,8 @@ function icalc_getServices(WP_REST_Request $request)
         return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
     }
 
-    $allServices = Service::get_all();
+    $allServices = Service::get_all_with_unit();
+
 
     return new WP_REST_Response($allServices);
 }

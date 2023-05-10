@@ -43,12 +43,15 @@ class Unit extends BaseDatabaseModel
 
     public static function insertNew($unit)
     {
-        if (parent::get('unit', $unit) != null) {
-            return null;
-        }
+	    if (parent::get('unit', $unit) != null) {
+		    return parent::get('unit', $unit)->id;
+	    }
 
-        $data = array('unit' => $unit);
-        return parent::insert($data);
+	    $data = array('unit' => $unit);
+	    parent::insert($data);
+
+	    global $wpdb;
+	    return $wpdb->insert_id;
     }
 
     public static function deleteByName($value)

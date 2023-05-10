@@ -54,13 +54,6 @@ class ChooseList extends DisplayType
 
     function render(): string
     {
-
-        error_log("RENDER");
-        foreach ($this->options as $option) {
-            error_log("OPTION-> || OPTION NAME = " . $option["name"] . " || OPTION VALUE = " . $option["value"]);
-        }
-
-
         $multiple = $this->is_multiple ? ' multiple ' : ' ';
         $select = '<select name="' . $this->name . '" id="' . $this->id . '"  class="' . $this->classes . '" ' . $multiple . '>';
 

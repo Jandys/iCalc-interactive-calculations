@@ -33,7 +33,8 @@ class ProductAdminFrontend extends AbstractAdminFrontend
     public static function configuration()
     {
         self::populateIcalcJSData();
-        $data = Product::get_all();
+        $data = Product::get_all_with_unit();
+
 
 
         if (is_null($data)) {
