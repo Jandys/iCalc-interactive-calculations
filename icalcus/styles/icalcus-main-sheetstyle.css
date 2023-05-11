@@ -1,0 +1,321 @@
+#icalcus-left-bar {
+    height: auto;
+    background-color: lightgray;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 20px 0 0 20px;
+    padding: 30px;
+
+}
+
+.icalcus-draggable {
+    width: 100px;
+    height: 100px;
+    background-color: royalblue;
+    font-weight: bold;
+    color: white;
+    cursor: grab;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: #00000071 2px 2px 4px;
+}
+
+#icalcus-dashboard {
+    height: 100vh;
+    background-color: whitesmoke;
+    overflow: auto;
+}
+
+#icalcus-preview {
+    background-color: whitesmoke;
+
+    border-left: #0b0b0b 1px solid;
+}
+
+.icalcus-configuration-bar {
+    display: flex;
+    gap: 5px;
+    flex-direction: row-reverse;
+    margin-right: 10px;
+    margin-bottom: 6px;
+}
+
+.icalcus-configurable-draggable-option > h3 {
+    margin: 5px 20px 0 5px;
+}
+
+.icalcus-choose-list {
+    margin-left: 5px;
+}
+
+.icalcus-btn-gray {
+    color: #5e5b5b !important;
+    border-color: #5e5b5b !important;
+}
+
+.icalcus-dashboard-item {
+    position: relative;
+    margin-bottom: 14px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.icalcus-float-right {
+    position: relative !important;
+    left: 100% !important;
+    transform: translateX(-80%);
+}
+
+.icalcus-translate-middle {
+    transform: translate(-50%, -50%) !important;
+}
+
+.icalcus-button-save-color {
+    background-color: #1ab163 !important;
+    border-color: #1e7e34 !important;
+}
+
+.icalcus-button-save-color:hover {
+    color: whitesmoke;
+    background-color: #1c7430 !important;
+    border-color: #0b2e13 !important;
+}
+
+.icalcus-button-edit-color {
+    background-color: #005cbf !important;
+    border-color: #0d7fad !important;
+}
+
+.icalcus-button-edit-color:hover {
+    color: whitesmoke;
+    background-color: #024c9c !important;
+    border-color: #0069d9 !important;
+}
+
+.icalcus-dashboard-item:hover .icalcus-move-controls {
+    display: flex;
+    padding: 8px;
+    background-color: #0d7fad;
+    border-radius: 8px;
+    margin-left: 10px;
+}
+
+.icalcus-move-controls {
+    display: none;
+}
+
+.icalcus-config-btn {
+    width: fit-content;
+    display: flex !important;
+    align-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.icalcus-move-controls button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin: 5px;
+    font-weight: bold;
+    font-size: 150%;
+    border-radius: 1px;
+}
+
+.icalcus-configurable-draggable-option {
+    display: flex;
+    flex-direction: column;
+}
+
+.icalcus-display-slider-value {
+    text-align: center;
+    font-weight: bold;
+}
+
+.icalcus-config-modal {
+    display: flex;
+    position: fixed;
+    top: 50%;
+    left: calc(50% + 80px);
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 80%;
+}
+
+.modal-content {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+
+.icalcus-tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+.icalcus-tooltip {
+    visibility: hidden;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    position: absolute;
+    padding-inline: 5px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+
+.icalcus-tooltip-container:hover .icalcus-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.icalcus-modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    z-index: 150;
+}
+
+.icalcus-draggable-option {
+    border: 1px solid #0b0b0b;
+    border-radius: 5px;
+    box-shadow: #0d7fad 5px 3px 5px;
+    overflow-block: auto;
+}
+
+.icalcus-product-div, .icalcus-service-div {
+    overflow-block: auto;
+}
+
+.icalcus-preview-box:before {
+    content: "Preview:";
+}
+
+
+/* /////////////// dashboard styles end*/
+
+.icalcus-main-wrapper {
+    position: relative;
+}
+
+.content-div {
+    float: left;
+    width: 90%;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    transition: all 1s ease-in-out;
+}
+
+.visible {
+    opacity: 0;
+    visibility: visible;
+    z-index: 2;
+    animation: comeout 1s 0.5s ease-in-out forwards;
+}
+
+.display-none {
+    display: none;
+}
+
+@keyframes comeout {
+    0% {
+        scale: 0;
+        opacity: 0;
+
+    }
+    100% {
+        scale: 100%;
+        opacity: 1;
+    }
+}
+
+.icalcus-hidden-slow {
+    z-index: 1;
+    animation: hideout 1s ease-in-out forwards;
+}
+
+@keyframes hideout {
+    0% {
+        scale: 100%;
+        opacity: 1;
+    }
+    100% {
+        scale: 0;
+        opacity: 1;
+    }
+}
+
+button.icalcus-toggle-creation {
+    position: static;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    width: fit-content;
+    height: auto;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.icalcus-toggle-creation:hover {
+    background-color: #0056b3;
+}
+
+.icalcus-reappear {
+    animation: reappearButton 1s forwards ease-in-out;
+}
+
+@keyframes reapperButton {
+    0% {
+        opacity: 100;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100;
+    }
+}
+
+.icalcus-long-text-clipping {
+    max-width: 150px; /* Adjust this value to your desired width */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.icalcus-shortcode-reminder {
+    right: 0;
+    position: relative;
+    left: 40%;
+    width: 60%;
+    display: block;
+    text-align: right;
+    font-size: 8px;
+    color: gray;
+    margin-bottom: 3px;
+}
+
+.icalcus-shortcode {
+    color: #494949;
+}
