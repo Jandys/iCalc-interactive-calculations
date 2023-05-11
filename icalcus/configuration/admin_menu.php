@@ -99,8 +99,8 @@ function icalcus_admin_menu()
 
 
     add_menu_page(
-        __('icalcus'),
-        __('icalcus'),
+        __('iCalcus'),
+        __('iCalcus'),
         'manage_options',
         'inter-calc-configuration',
         'inter_calc_main_configuration',
@@ -108,19 +108,19 @@ function icalcus_admin_menu()
         26);
     add_submenu_page('inter-calc-configuration',
         __('Products - Inter Calcus'),
-        __('icalcus - Products'),
+        __('iCalcus - Products'),
         'manage_options',
         'ic-products-configuration',
         'ic_menu_products_configuration');
     add_submenu_page('inter-calc-configuration',
         __('Services - Inter Calcus'),
-        __('icalcus - Services'),
+        __('iCalcus - Services'),
         'manage_options',
         'ic-services-configuration',
         'ic_menu_services_configuration');
     add_submenu_page('inter-calc-configuration',
         __('Statistics - Inter Calcus'),
-        __('icalcus - Statistics'),
+        __('iCalcus - Statistics'),
         'manage_options',
         'ic-menu-statistics',
         'ic_menu_statistics');

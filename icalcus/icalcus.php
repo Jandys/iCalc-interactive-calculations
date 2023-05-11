@@ -22,7 +22,7 @@
  */
 
 /*
-Plugin Name: icalcus - Interactive Calculations
+Plugin Name: iCalcus - Interactive Calculations
 Plugin URI: https://php.jandys.eu/
 Description: Plugin for easy creation of custom calculations.
 Version: 1.0.0
