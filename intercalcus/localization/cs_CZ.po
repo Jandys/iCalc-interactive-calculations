@@ -331,8 +331,8 @@ msgid "-- NONE --"
 msgstr "-- ŽÁDNÝ --"
 
 #: frontend/CalculationsDescriptionsAdminFrontend.php:59
-msgid "To insert calculation use shortcode in form: <span class='InterCalcus-shortcode'>[InterCalcus_calculation id=3]</span> or if you are using Elementor plugin you can just drag and drop widget"
-msgstr "Pro vložení kalkulace na stránku použijete shortcode ve formě: <span class='InterCalcus-shortcode'>[InterCalcus_calculation id=3]</span> nebo pokud používáte Elementor přetáhněte InterCalcus widget na stránku."
+msgid "To insert calculation use shortcode in form: <span class='intercalcus-shortcode'>[intercalcus_calculation id=3]</span> or if you are using Elementor plugin you can just drag and drop widget"
+msgstr "Pro vložení kalkulace na stránku použijete shortcode ve formě: <span class='intercalcus-shortcode'>[intercalcus_calculation id=3]</span> nebo pokud používáte Elementor přetáhněte InterCalcus widget na stránku."
 
 #: frontend/CalculationsDescriptionsAdminFrontend.php:73
 msgid "Body"
