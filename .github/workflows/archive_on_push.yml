@@ -25,23 +25,23 @@ jobs:
           coverage: xdebug
 
       - name: Validate composer.json and composer.lock
-        working-directory: ./icalcus
+        working-directory: ./intercalcus
         run: composer validate
 
       - name: Install dependencies
-        working-directory: ./icalcus
+        working-directory: ./intercalcus
         run: composer install --prefer-dist --no-progress --no-dev
 
 
       - name: Relocate Archive
-        run: rm -rf ./icalcus/tests/ -R && rm -rf ./icalcus/phpunit.xml
+        run: rm -rf ./intercalcus/tests/ -R && rm -rf ./intercalcus/phpunit.xml
 
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.1
         with:
           type: 'zip'
           filename: 'release.zip'
-          path: './icalcus/'
+          path: './intercalcus/'
           exclusions: '*.git* /*node_modules/* .editorconfig /*tests*/ '
         
       - name: Configure git

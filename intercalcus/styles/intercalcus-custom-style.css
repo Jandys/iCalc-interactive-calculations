@@ -1,0 +1,17 @@
+.intercalcus-service-form-row{
+    padding-top: 5px;
+}
+
+
+.intercalcus-service-form-row > .col{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+.intercalcus-edit-table-space-between{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

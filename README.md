@@ -1,10 +1,10 @@
-# iCalcus - Interactive Calculation WordPress Plugin
+# Inter-Calcus - Interactive Calculation WordPress Plugin
 
-![iCalcus - Interactive Calculation WordPress Plugin](https://php.jandys.eu/wp-content/uploads/2023/05/iCalc-Small.png)
+![Inter-Calcus - Interactive Calculation WordPress Plugin](https://php.jandys.eu/wp-content/uploads/2023/05/iCalc-Small.png)
 
-iCalcus is a powerful and easy-to-use interactive calculation plugin for WordPress websites. It allows you to create
+Inter-Calcus is a powerful and easy-to-use interactive calculation plugin for WordPress websites. It allows you to create
 beautiful and responsive calculators, giving your users the power to make instant calculations on your site. From simple
-arithmetic to complex formulas, iCalcus can handle it all. Additionally, it comes with built-in support for running inside
+arithmetic to complex formulas, Inter-Calcus can handle it all. Additionally, it comes with built-in support for running inside
 Docker containers, making deployment a breeze!
 
 ## Table of Contents
@@ -27,19 +27,19 @@ Docker containers, making deployment a breeze!
 
 ## Installation
 
-1. Download the archive of iCalcus plugin from
+1. Download the archive of Inter-Calcus plugin from
    one of those sources:
     1. From
-       the [latest main commit ](https://github.com/Jandys/iCalcus-interactive-calculations/blob/release-archives/release.zip ).
-    2. Choose from one of the [stable releases](https://github.com/Jandys/iCalcus-interactive-calculations/releases).
+       the [latest main commit ](https://github.com/Jandys/Inter-Calcus-interactive-calculations/blob/release-archives/release.zip ).
+    2. Choose from one of the [stable releases](https://github.com/Jandys/Inter-Calcus-interactive-calculations/releases).
 2. Log in to your WordPress dashboard and navigate to **Plugins** > **Add New**.
-3. Click **Upload Plugin** and select the downloaded iCalcus zip file (release.zip).
+3. Click **Upload Plugin** and select the downloaded Inter-Calcus zip file (release.zip).
 4. Click **Install Now** and wait for the installation to complete.
-5. Activate the iCalcus plugin by clicking **Activate Plugin**.
+5. Activate the Inter-Calcus plugin by clicking **Activate Plugin**.
 
 ## How to Use
 
-1. Navigate to your WordPress dashboard and click **iCalcus** in the left-hand menu.
+1. Navigate to your WordPress dashboard and click **Inter-Calcus** in the left-hand menu.
 2. Create a new calculator by clicking **Add New Calculator**.
 3. Use the drag-and-drop interface to design your calculator layout and configure its functions.
 4. Save your calculator and copy the generated shortcode.
@@ -65,10 +65,10 @@ you need to adjust the script to your port.
 ## Support and Contributions
 
 If you encounter any issues or would like to contribute to the project, please file an issue on
-the [GitHub repository](https://github.com/Jandys/iCalcus-interactive-calculations/issues) or submit a pull request.
+the [GitHub repository](https://github.com/Jandys/Inter-Calcus-interactive-calculations/issues) or submit a pull request.
 
 ## License
 
-iCalcus is released under the [GNU GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.en.html). See [LICENSE](LICENSE)
+Inter-Calcus is released under the [GNU GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.en.html). See [LICENSE](LICENSE)
 for more
 information.

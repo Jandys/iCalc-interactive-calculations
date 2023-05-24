@@ -1,0 +1,18 @@
+.intercalcus-calculation-number-input{
+    margin-left: 5px !important;
+
+}
+.intercalcus-form-group{
+    display: flex;
+    margin: 5px !important;
+    flex-direction: row;
+    align-items: center;
+}
+
+.intercalcus-form-group .row{
+}
+
+.intercalcus-calculation-label{
+    font-family: var(--wp--preset--font-family--source-serif-pro);
+    margin-bottom: 0;
+}
