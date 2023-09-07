@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -140,7 +140,7 @@ function intercalcus_admin_menu()
 function inter_calc_main_configuration()
 {
     if (is_admin()) {
-        wp_enqueue_style('intercalcus_main-styles', plugins_url('../styles/intercalcus-main-sheetstyle.css', __FILE__), array(), INTERCALCUS_VERSION, false);
+        wp_enqueue_style('intercalcus_main-styles', plugins_url('../styles/intercalcus-main-sheetstyle.css', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
         add_action('wp_enqueue_style', 'intercalcus_main-styles');
 
         echo '<div class="wrap">
@@ -155,7 +155,7 @@ function inter_calc_main_configuration()
 
 function intercalcus_main_script_localization()
 {
-    wp_enqueue_script('intercalcus_main-script', plugins_url('../scripts/intercalcus_main.js', __FILE__), array(), INTERCALCUS_VERSION, false);
+    wp_enqueue_script('intercalcus_main-script', plugins_url('../scripts/intercalcus_main.js', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
     $localization_data = array(
         'id' => __("ID", "intercalcus"),
         'name' => __("Name", "intercalcus"),

@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -22,7 +22,7 @@
  */
 
 /*
-Plugin Name: Inter-Calcus
+Plugin Name: Interactive Calculations
 Plugin URI: https://php.jandys.eu/
 Description: Plugin for easy creation of custom calculations.
 Version: 1.0.0
@@ -32,15 +32,15 @@ License: GPL3
 */
 
 
-define('INTERCALCUS_DIR', __DIR__);
-define('INTERCALCUS_FILE', __FILE__);
-define('INTERCALCUS_VERSION', '0.1');
-define('INTERCALCUS_PATH', dirname(INTERCALCUS_FILE));
-define('INTERCALCUS_URL', plugins_url('', INTERCALCUS_FILE));
-define('INTERCALCUS_EP_PREFIX', 'intercalcus/v1');
+define('INTERACTIVECALCULATIONS_DIR', __DIR__);
+define('INTERACTIVECALCULATIONS_FILE', __FILE__);
+define('INTERACTIVECALCULATIONS_VERSION', '0.1');
+define('INTERACTIVECALCULATIONS_PATH', dirname(INTERACTIVECALCULATIONS_FILE));
+define('INTERACTIVECALCULATIONS_URL', plugins_url('', INTERACTIVECALCULATIONS_FILE));
+define('INTERACTIVECALCULATIONS_EP_PREFIX', 'intercalcus/v1');
 
 
-require INTERCALCUS_PATH . '/loader.php';
+require INTERACTIVECALCULATIONS_PATH . '/loader.php';
 
 
 add_action('plugins_loaded', 'intercalcus_load_textdomain');
@@ -66,19 +66,19 @@ function prefix_enqueue(): void
     wp_register_style('prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css');
     wp_enqueue_style('prefix_bootstrap');
 
-    wp_enqueue_style('intercalcus_custom_style', plugins_url('/styles/intercalcus-custom-style.css', __FILE__), array(), INTERCALCUS_VERSION, false);
+    wp_enqueue_style('intercalcus_custom_style', plugins_url('/styles/intercalcus-custom-style.css', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
     add_action('wp_enqueue_style', 'intercalcus_custom_style');
 
-    wp_enqueue_style('intercalcus_page_style', plugins_url('/styles/intercalcus-pages-generic.css', __FILE__), array(), INTERCALCUS_VERSION, false);
+    wp_enqueue_style('intercalcus_page_style', plugins_url('/styles/intercalcus-pages-generic.css', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
     add_action('wp_enqueue_style', 'intercalcus_page_style');
 }
 
 function intercalcus_load_scripts()
 {
     if (is_admin()) {
-        wp_enqueue_script('intercalcus_common_scripts', plugins_url('/scripts/intercalcus_common.js', INTERCALCUS_FILE), array(), INTERCALCUS_VERSION, false);
+        wp_enqueue_script('intercalcus_common_scripts', plugins_url('/scripts/intercalcus_common.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
         add_action('wp_enqueue_scripts', 'intercalcus_common_scripts');
-        wp_enqueue_script('intercalcus_admin_scripts', plugins_url('/scripts/intercalcus_admin.js', INTERCALCUS_FILE), array(), INTERCALCUS_VERSION, false);
+        wp_enqueue_script('intercalcus_admin_scripts', plugins_url('/scripts/intercalcus_admin.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
         add_action('wp_enqueue_scripts', 'intercalcus_admin_scripts');
     }
 }
@@ -91,26 +91,26 @@ function intercalcus_load_textdomain()
 
 function intercalcus_plugin_activation($iteration)
 {
-	if($iteration==null){
-		$iteration = 1;
-	}else{
-		$iteration++;
-	}
+    if ($iteration == null) {
+        $iteration = 1;
+    } else {
+        $iteration++;
+    }
 
-	if(intercalcus\db\DatabaseInit::init()){
-		error_log("intercalcus plugin database tables successfully initialized");
-	}else{
-		error_log("There was an error while trying to initialized intercalcus plugin database tables");
+    if (intercalcus\db\DatabaseInit::init()) {
+        error_log("intercalcus plugin database tables successfully initialized");
+    } else {
+        error_log("There was an error while trying to initialized intercalcus plugin database tables");
 
-		error_log("Try to initialize again in 1 second");
-		sleep(1);
+        error_log("Try to initialize again in 1 second");
+        sleep(1);
 
-		if($iteration<6){
-			intercalcus_plugin_activation($iteration);
-		}else{
-			error_log("Number of iteration exceeded limit. Database initialization for plugin intercalcus Failed");
-		}
-	}
+        if ($iteration < 6) {
+            intercalcus_plugin_activation($iteration);
+        } else {
+            error_log("Number of iteration exceeded limit. Database initialization for plugin intercalcus Failed");
+        }
+    }
 
 }
 
@@ -119,5 +119,5 @@ function intercalcus_plugin_deactivation()
     intercalcus\db\DatabaseInit::clearAll();
 }
 
-register_activation_hook(INTERCALCUS_FILE, 'intercalcus_plugin_activation');
-register_deactivation_hook(INTERCALCUS_FILE, 'intercalcus_plugin_deactivation');
+register_activation_hook(INTERACTIVECALCULATIONS_FILE, 'intercalcus_plugin_activation');
+register_deactivation_hook(INTERACTIVECALCULATIONS_FILE, 'intercalcus_plugin_deactivation');

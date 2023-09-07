@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -35,11 +35,11 @@ add_action('elementor/widgets/widgets_registered', 'intercalcus_register_element
 function intercalcus_register_elementor_widgets()
 {
     if (defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base')) {
-        require_once(INTERCALCUS_PATH . '/integration/IntercalcusElementorWidget.php');
+        require_once(INTERACTIVECALCULATIONS_PATH . '/integration/IntercalcusElementorWidget.php');
         $widget_manager = Plugin::$instance->widgets_manager;
         $widget_manager->register(new IntercalcusElementorWidget());
 
-        wp_enqueue_script('intercalcus_pages_scripts_el', plugins_url('/scripts/intercalcus_pages.js', INTERCALCUS_FILE), array(), INTERCALCUS_VERSION, false);
+        wp_enqueue_script('intercalcus_pages_scripts_el', plugins_url('/scripts/intercalcus_pages.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
         add_action('wp_enqueue_scripts', 'intercalcus_pages_scripts_el');
     }
 }

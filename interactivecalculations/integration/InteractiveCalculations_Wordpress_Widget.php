@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,26 +21,26 @@
  *
  */
 
-use intercalcus\fe\Calculation;
+use interactivecalculations\fe\Calculation;
 
-function intercalcus_register_custom_widget()
+function interactivecalculations_register_custom_widget()
 {
-    register_widget('Intercalcus_Wordpress_Widget');
+    register_widget('interactivecalculations_Wordpress_Widget');
 }
 
 add_theme_support('widgets-block-editor');
-add_action('widgets_init', 'intercalcus_register_custom_widget');
+add_action('widgets_init', 'interactivecalculations_register_custom_widget');
 
-class Intercalcus_Wordpress_Widget extends WP_Widget
+class interactivecalculations_Wordpress_Widget extends WP_Widget
 {
 
     public function __construct()
     {
         $widget_ops = array(
-            'classname' => 'intercalcus_widget',
-            'description' => __("Intercalcus Widget for interactive calculations"),
+            'classname' => 'interactivecalculations_widget',
+            'description' => __("interactivecalculations Widget for interactive calculations"),
         );
-        parent::__construct('intercalcus_widget', 'Intercalcus Calculations Widget', $widget_ops);
+        parent::__construct('interactivecalculations_widget', 'interactivecalculations Calculations Widget', $widget_ops);
     }
 
 
@@ -57,7 +57,7 @@ class Intercalcus_Wordpress_Widget extends WP_Widget
 
     public function form($instance)
     {
-        $title = !empty($instance['title']) ? $instance['title'] : __('Intercalcus Custom Widget', 'intercalcus');
+        $title = !empty($instance['title']) ? $instance['title'] : __('interactivecalculations Custom Widget', 'interactivecalculations');
         ?>
         <p>
             <label

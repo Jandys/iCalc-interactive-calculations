@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,11 +21,9 @@
  *
  */
 
-require_once INTERCALCUS_PATH . '/database/model/BaseDatabaseModel.php';
-require_once INTERCALCUS_PATH . '/database/model/Product.php';
-require_once INTERCALCUS_PATH . '/database/model/Service.php';
-require_once INTERCALCUS_PATH . '/database/model/Unit.php';
-require_once INTERCALCUS_PATH . '/database/model/IcalculationsDescription.php';
-require_once INTERCALCUS_PATH . '/database/model/Icalculations.php';
-require_once INTERCALCUS_PATH . '/database/DatabaseInit.php';
-
+require_once INTERACTIVECALCULATIONS_PATH . '/frontend/AbstractAdminFrontend.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/frontend/ServiceAdminFrontend.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/frontend/ProductAdminFrontend.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/frontend/MainMenuFrontend.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/frontend/StatisticsAdminFrontend.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/frontend/CalculationsDescriptionsAdminFrontend.php';

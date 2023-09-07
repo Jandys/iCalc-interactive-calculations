@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -62,7 +62,7 @@ function intercalcus_plugin_add_public_endpoints()
      * @return WP_REST_Response|WP_Error The product data on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/products/(?P<id>\d+)', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/products/(?P<id>\d+)', array(
         'methods' => 'GET',
         'callback' => 'intercalcus_getProductById',
         'args' => array( // Argument validation and sanitization.
@@ -80,7 +80,7 @@ function intercalcus_plugin_add_public_endpoints()
      * @return WP_REST_Response|WP_Error The service data on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/services/(?P<id>\d+)', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/services/(?P<id>\d+)', array(
         'methods' => 'GET',
         'callback' => 'intercalcus_getServiceById',
         'args' => array( // Argument validation and sanitization.
@@ -99,7 +99,7 @@ function intercalcus_plugin_add_public_endpoints()
      * @return WP_REST_Response|WP_Error The calculation description data on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/intercalcusulation-descriptions/(?P<id>\d+)', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions/(?P<id>\d+)', array(
         'methods' => 'GET',
         'callback' => 'intercalcus_getCalculationDescriptionById',
         'args' => array( // Argument validation and sanitization.
@@ -117,7 +117,7 @@ function intercalcus_plugin_add_public_endpoints()
      * @return WP_REST_Response|WP_Error The interaction data on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/intercalcusulations/interactions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulations/interactions', array(
         'methods' => 'POST',
         'callback' => 'intercalcus_registerNewCalculationInteraction',
         'permission_callback' => '__return_true'
@@ -220,7 +220,7 @@ function intercalcus_plugin_add_jwt_endpoints()
      * @return WP_REST_Response|WP_Error The JWT token on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/token', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/token', array(
         'methods' => 'POST',
         'callback' => 'issue_jwt_token_callback',
         'permission_callback' => 'intercalcus_user_can_manage'
@@ -232,7 +232,7 @@ function intercalcus_plugin_add_jwt_endpoints()
      * @return WP_REST_Response|WP_Error The verification status of the JWT token on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/token-verify', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/token-verify', array(
         'methods' => 'POST',
         'callback' => 'verify_jwt_token_callback',
         'permission_callback' => '__return_true'
@@ -293,7 +293,7 @@ function intercalcus_plugin_add_intercalcusulation_descriptions_endpoints()
      * @return WP_REST_Response|WP_Error The new intercalcusulation description on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/intercalcusulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions', array(
         'methods' => 'POST',
         'callback' => 'intercalcus_postIcalculationsDescriptions',
         'permission_callback' => '__return_true'
@@ -304,7 +304,7 @@ function intercalcus_plugin_add_intercalcusulation_descriptions_endpoints()
      * @return WP_REST_Response|WP_Error The intercalcusulation descriptions on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/intercalcusulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions', array(
         'methods' => 'GET',
         'callback' => 'intercalcus_getIcalculationsDescriptions',
         'permission_callback' => '__return_true'
@@ -316,7 +316,7 @@ function intercalcus_plugin_add_intercalcusulation_descriptions_endpoints()
      * @return WP_REST_Response|WP_Error The updated intercalcusulation description on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/intercalcusulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions', array(
         'methods' => 'PUT',
         'callback' => 'intercalcus_putIcalculationsDescriptions',
         'permission_callback' => '__return_true'
@@ -329,7 +329,7 @@ function intercalcus_plugin_add_intercalcusulation_descriptions_endpoints()
      * @return WP_REST_Response|WP_Error The deleted intercalcusulation description on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/intercalcusulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions', array(
         'methods' => 'DELETE',
         'callback' => 'intercalcus_deleteIcalculationsDescriptions',
         'permission_callback' => '__return_true'
@@ -341,7 +341,7 @@ function intercalcus_plugin_add_intercalcusulation_descriptions_endpoints()
      * @return WP_REST_Response|WP_Error The next intercalcusulation description ID on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/intercalcusulation-descriptions/next', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions/next', array(
         'methods' => 'GET',
         'callback' => 'intercalcus_getNextIcalculationsDescriptionId',
         'permission_callback' => '__return_true'
@@ -492,28 +492,28 @@ function intercalcus_getIcalculationsDescriptions(WP_REST_Request $request)
 function intercalcus_plugin_add_product_endpoints()
 {
     // Register the 'products' endpoint for creating a new product.
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/products', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/products', array(
         'methods' => 'POST',
         'callback' => 'intercalcus_postProduct',
         'permission_callback' => '__return_true'
     ));
 
     // Register the 'products' endpoint for retrieving all products.
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/products', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/products', array(
         'methods' => 'GET',
         'callback' => 'intercalcus_getProducts',
         'permission_callback' => '__return_true'
     ));
 
     // Register the 'products' endpoint for updating an existing product.
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/products', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/products', array(
         'methods' => 'PUT',
         'callback' => 'intercalcus_putProduct',
         'permission_callback' => '__return_true'
     ));
 
     // Register the 'products' endpoint for deleting an existing product.
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/products', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/products', array(
         'methods' => 'DELETE',
         'callback' => 'intercalcus_deleteProduct',
         'permission_callback' => '__return_true'
@@ -645,28 +645,28 @@ function intercalcus_deleteProduct(WP_REST_Request $request)
 function intercalcus_plugin_add_service_endpoints()
 {
     // Registers a POST endpoint for creating a new service.
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/services', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/services', array(
         'methods' => 'POST',
         'callback' => 'intercalcus_postService',
         'permission_callback' => '__return_true'
     ));
 
     // Registers a GET endpoint for retrieving all services.
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/services', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/services', array(
         'methods' => 'GET',
         'callback' => 'intercalcus_getServices',
         'permission_callback' => '__return_true'
     ));
 
     // Registers a PUT endpoint for updating an existing service.
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/services', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/services', array(
         'methods' => 'PUT',
         'callback' => 'intercalcus_putService',
         'permission_callback' => '__return_true'
     ));
 
     // Registers a DELETE endpoint for deleting a service.
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/services', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/services', array(
         'methods' => 'DELETE',
         'callback' => 'intercalcus_deleteService',
         'permission_callback' => '__return_true'
@@ -676,7 +676,7 @@ function intercalcus_plugin_add_service_endpoints()
 
 function intercalcus_autocomplete_endpoints()
 {
-    register_rest_route(INTERCALCUS_EP_PREFIX, '/autocomplete/unit', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/autocomplete/unit', array(
         'methods' => 'POST',
         'callback' => 'intercalcus_autocompleteUnit',
         'permission_callback' => '__return_true'

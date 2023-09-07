@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -23,11 +23,12 @@
 
 use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
+use interactivecalculations\fe\Calculation;
 
 /**
- * IntercalcusElementorWidget class - defines an Elementor widget called Intercalcus Custom Widget
+ * InteractiveCalculationsElementorWidget class - defines an Elementor widget called InteractiveCalculations Custom Widget
  */
-class IntercalcusElementorWidget extends Widget_Base
+class InteractiveCalculationsElementorWidget extends Widget_Base
 {
 
     /**
@@ -37,7 +38,7 @@ class IntercalcusElementorWidget extends Widget_Base
      */
     public function get_name()
     {
-        return 'intercalcus-elementor-widget';
+        return 'interactivecalculations-elementor-widget';
     }
 
     /**
@@ -47,7 +48,7 @@ class IntercalcusElementorWidget extends Widget_Base
      */
     public function get_title()
     {
-        return __('Intercalcus Custom Widget', 'intercalcus');
+        return __('Interactive Calculations Custom Widget', 'interactivecalculations');
     }
 
     /**
@@ -67,7 +68,7 @@ class IntercalcusElementorWidget extends Widget_Base
      */
     public function get_keywords()
     {
-        return ['calculation', 'intercalcus', 'i-calc', 'calcus'];
+        return ['calculation', 'interactivecalculations', 'i-calc', 'calcus'];
     }
 
     /**
@@ -90,7 +91,7 @@ class IntercalcusElementorWidget extends Widget_Base
         $this->start_controls_section(
             'configuration',
             [
-                'label' => __('Configuration', 'intercalcus'),
+                'label' => __('Configuration', 'interactivecalculations'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -98,10 +99,10 @@ class IntercalcusElementorWidget extends Widget_Base
         $this->add_control(
             'selected_calculation',
             [
-                'label' => __('Select Calculation', 'intercalcus'),
+                'label' => __('Select Calculation', 'interactivecalculations'),
                 'type' => Controls_Manager::SELECT,
-                'options' => \intercalcus\fe\Calculation::getConfiguredCalculationAsOptions(),
-                'default' => 'default_intercalcus_option0',
+                'options' => Calculation::getConfiguredCalculationAsOptions(),
+                'default' => 'default_interactivecalculations_option0',
             ]
         );
 
@@ -115,16 +116,16 @@ class IntercalcusElementorWidget extends Widget_Base
      */
     protected function render()
     {
-	    session_write_close();
-	    $settings = $this->get_settings_for_display();
+        session_write_close();
+        $settings = $this->get_settings_for_display();
 
         $selectedCalc = $settings['selected_calculation'];
-        if ($selectedCalc === 'default_intercalcus_option0') {
-            echo '<p>'.__('No calculation selected',"intercalcus").'</p>';
+        if ($selectedCalc === 'default_interactivecalculations_option0') {
+            echo '<p>' . __('No calculation selected', "interactivecalculations") . '</p>';
             return;
         }
 
-        $calculation = new \intercalcus\fe\Calculation($selectedCalc);
+        $calculation = new Calculation($selectedCalc);
         echo $calculation->render();
     }
 }

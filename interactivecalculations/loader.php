@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -24,18 +24,18 @@
 //require dependencies
 require __DIR__ . '/vendor/autoload.php';
 
-require_once INTERCALCUS_PATH . '/frontend/autoload.php';
-require_once INTERCALCUS_PATH . '/util/utilities.php';
-require_once INTERCALCUS_PATH . '/database/autoload.php';
-require_once INTERCALCUS_PATH . '/controller/controllers.php';
-require_once INTERCALCUS_PATH . '/frontend/displayTypes/autoload.php';
-require_once INTERCALCUS_PATH . '/controller/intercalcusJWT.php';
-require_once INTERCALCUS_PATH . '/integration/wordpress-integration.php';
-require_once INTERCALCUS_PATH . '/integration/elementor-integration.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/frontend/autoload.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/util/utilities.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/database/autoload.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/controller/controllers.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/frontend/displayTypes/autoload.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/controller/intercalcusJWT.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/integration/wordpress-integration.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/integration/elementor-integration.php';
 
 if (is_admin()) {
-    require_once INTERCALCUS_PATH . '/configuration/admin_menu.php';
-    require_once INTERCALCUS_PATH . '/frontend/admin-autoload.php';
+    require_once INTERACTIVECALCULATIONS_PATH . '/configuration/admin_menu.php';
+    require_once INTERACTIVECALCULATIONS_PATH . '/frontend/admin-autoload.php';
 }
 
 

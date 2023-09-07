@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -91,7 +91,7 @@ abstract class AbstractAdminFrontend
      */
     protected static function callGetOnEPWithAuthCookie($endpoint)
     {
-        $endpointWithPrefix = INTERCALCUS_EP_PREFIX . $endpoint;
+        $endpointWithPrefix = INTERACTIVECALCULATIONS_EP_PREFIX . $endpoint;
         $url = get_rest_url(null, $endpointWithPrefix);
         self::setIntercalcusTokenCookie();
         $headers = array(
