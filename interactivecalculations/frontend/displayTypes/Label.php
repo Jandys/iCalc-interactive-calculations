@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,7 +21,7 @@
  *
  */
 
-namespace intercalcus\fe\displayTypes;
+namespace interactivecalculations\fe\displayTypes;
 
 class Label extends DisplayType
 {
@@ -49,7 +49,7 @@ class Label extends DisplayType
             $for = 'for="' . $this->forId . '"';
         }
 
-        return '<label class="intercalcus-calculation-label ' . $this->class . '" ' . $for . '>' . $this->label . '</label>';
+        return '<label class="interactivecalculations-calculation-label ' . $this->class . '" ' . $for . '>' . $this->label . '</label>';
     }
 
     //$args=array('id'=>$id,'conf'=>$configuration,'masterObject'=>$masterObject);

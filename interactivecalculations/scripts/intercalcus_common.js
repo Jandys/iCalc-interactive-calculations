@@ -1,6 +1,6 @@
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -20,7 +20,7 @@
  *
  */
 
-class Intercalcus_ObservableArray {
+class interactivecalculations_ObservableArray {
     constructor(array) {
         this.array = array;
         this.listeners = new Set();
@@ -78,75 +78,75 @@ class Intercalcus_ObservableArray {
 }
 
 
-let intercalcus_calculations = new Intercalcus_ObservableArray([]);
-let intercalcus_calculationElements = [];
-let intercalcus_calculationElementConfigurations = [];
-intercalcus_calculations.addListener((action, args, calculationId) => {
-    if (intercalcus_calculationElements[calculationId]) {
-        for (const element of intercalcus_calculationElements[calculationId]) {
-            let prefix = intercalcus_calculationElementConfigurations[calculationId]['sum-prefix']
-            let postfix = intercalcus_calculationElementConfigurations[calculationId]['sum-postfix']
-            element.value = prefix + intercalcus_calculate(calculationId, element).toString() + postfix;
+let interactivecalculations_calculations = new interactivecalculations_ObservableArray([]);
+let interactivecalculations_calculationElements = [];
+let interactivecalculations_calculationElementConfigurations = [];
+interactivecalculations_calculations.addListener((action, args, calculationId) => {
+    if (interactivecalculations_calculationElements[calculationId]) {
+        for (const element of interactivecalculations_calculationElements[calculationId]) {
+            let prefix = interactivecalculations_calculationElementConfigurations[calculationId]['sum-prefix']
+            let postfix = interactivecalculations_calculationElementConfigurations[calculationId]['sum-postfix']
+            element.value = prefix + interactivecalculations_calculate(calculationId, element).toString() + postfix;
         }
     }
 });
 
 
-function intercalcus_getProductById(id) {
+function interactivecalculations_getProductById(id) {
     const xhr = new XMLHttpRequest();
-    const url = `/wp-json/intercalcus/v1/products/${id}`;
+    const url = `/wp-json/interactivecalculations/v1/products/${id}`;
     xhr.open('GET', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     return xhr;
 }
 
 
-function intercalcus_getServiceById(id) {
+function interactivecalculations_getServiceById(id) {
     const xhr = new XMLHttpRequest();
-    const url = `/wp-json/intercalcus/v1/services/${id}`;
+    const url = `/wp-json/interactivecalculations/v1/services/${id}`;
     xhr.open('GET', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     return xhr;
 }
 
 
-function intercalcus_getCalculationDescriptionById(id) {
+function interactivecalculations_getCalculationDescriptionById(id) {
     const xhr = new XMLHttpRequest();
-    const url = `/wp-json/intercalcus/v1/intercalcusulation-descriptions/${id}`;
+    const url = `/wp-json/interactivecalculations/v1/interactivecalculationsulation-descriptions/${id}`;
     xhr.open('GET', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     return xhr;
 }
 
 
-function intercalcus_displayComponent(component, calculationId, components) {
+function interactivecalculations_displayComponent(component, calculationId, components) {
     switch (component.type) {
         case "product":
-            return intercalcus_displayProduct(component, calculationId);
+            return interactivecalculations_displayProduct(component, calculationId);
         case "service":
-            return intercalcus_displayService(component, calculationId);
+            return interactivecalculations_displayService(component, calculationId);
         case "genericComponent":
         case "calculationComponent":
-            return intercalcus_displayGenericComponent(component, calculationId, components);
+            return interactivecalculations_displayGenericComponent(component, calculationId, components);
         default:
             return document.createElement("div");
     }
 
 }
 
-function intercalcus_displayProduct(product, calculationId) {
+function interactivecalculations_displayProduct(product, calculationId) {
     const productDiv = document.createElement("div");
     productDiv.classList.add("form-group");
     productDiv.classList.add("row");
 
-    let productXHR = intercalcus_getProductById(product.id);
+    let productXHR = interactivecalculations_getProductById(product.id);
 
     productXHR.onreadystatechange = function () {
         if (productXHR.readyState === XMLHttpRequest.DONE) {
             if (productXHR.status === 200) {
                 let productData = JSON.parse(productXHR.responseText);
 
-                productDiv.appendChild(intercalcus_getDisplayType(product, productData, calculationId));
+                productDiv.appendChild(interactivecalculations_getDisplayType(product, productData, calculationId));
 
             } else {
                 console.log('Error fetching prodcut data');
@@ -158,19 +158,19 @@ function intercalcus_displayProduct(product, calculationId) {
     return productDiv;
 }
 
-function intercalcus_displayService(service, calculationId) {
+function interactivecalculations_displayService(service, calculationId) {
     const serviceDiv = document.createElement("div");
     serviceDiv.classList.add("form-group");
     serviceDiv.classList.add("row");
 
-    let serviceXHR = intercalcus_getServiceById(service.id);
+    let serviceXHR = interactivecalculations_getServiceById(service.id);
 
     serviceXHR.onreadystatechange = function () {
         if (serviceXHR.readyState === XMLHttpRequest.DONE) {
             if (serviceXHR.status === 200) {
                 let productData = JSON.parse(serviceXHR.responseText);
 
-                serviceDiv.appendChild(intercalcus_getDisplayType(service, productData, calculationId));
+                serviceDiv.appendChild(interactivecalculations_getDisplayType(service, productData, calculationId));
 
             } else {
                 console.log('Error fetching prodcut data');
@@ -182,13 +182,13 @@ function intercalcus_displayService(service, calculationId) {
     return serviceDiv;
 }
 
-function intercalcus_displayGenericComponent(genericComponent, calculationId, components) {
-    return intercalcus_getDisplayType(genericComponent, {}, calculationId, components);
+function interactivecalculations_displayGenericComponent(genericComponent, calculationId, components) {
+    return interactivecalculations_getDisplayType(genericComponent, {}, calculationId, components);
 
 }
 
 
-function intercalcus_createCustomStyle(customStyles) {
+function interactivecalculations_createCustomStyle(customStyles) {
     if (customStyles.trim().length !== 0) {
         const styles = document.createElement("style");
         styles.innerText = customStyles;
@@ -198,48 +198,48 @@ function intercalcus_createCustomStyle(customStyles) {
 }
 
 
-function intercalcus_getDisplayType(component, componentData, calculationId, components) {
+function interactivecalculations_getDisplayType(component, componentData, calculationId, components) {
     switch (component.displayType.toLowerCase()) {
         case "number":
         case "number input":
-            return intercalcus_getNumberDisplayType(component, componentData, calculationId);
+            return interactivecalculations_getNumberDisplayType(component, componentData, calculationId);
 
         case "slider":
         case "range":
-            return intercalcus_getSliderDisplayType(component, componentData, calculationId);
+            return interactivecalculations_getSliderDisplayType(component, componentData, calculationId);
 
         case "label":
-            return intercalcus_getLabelDisplayType(component, componentData, calculationId);
+            return interactivecalculations_getLabelDisplayType(component, componentData, calculationId);
 
         case "horizontal rule":
         case "hr":
-            return intercalcus_getHorizontalRule(component);
+            return interactivecalculations_getHorizontalRule(component);
 
         case "sum":
-            return intercalcus_getSumDisplayType(component, calculationId);
+            return interactivecalculations_getSumDisplayType(component, calculationId);
 
         case "subtract calculation":
         case "subtract-calculation":
-            return intercalcus_getSubtractCalculation(component, calculationId);
+            return interactivecalculations_getSubtractCalculation(component, calculationId);
 
         case "product calculation":
         case "product-calculation":
-            return intercalcus_getProductCalculationDisplayType(component, calculationId);
+            return interactivecalculations_getProductCalculationDisplayType(component, calculationId);
 
         case "text":
-            return intercalcus_getTextDisplayType(component, componentData, calculationId);
+            return interactivecalculations_getTextDisplayType(component, componentData, calculationId);
 
         case "checkbox":
-            return intercalcus_getCheckboxDisplayType(component, componentData, calculationId);
+            return interactivecalculations_getCheckboxDisplayType(component, componentData, calculationId);
 
         case "list":
-            return intercalcus_getListDisplayType(component, componentData, calculationId);
+            return interactivecalculations_getListDisplayType(component, componentData, calculationId);
 
         case "spacer":
-            return intercalcus_getSpacerDisplayType(component);
+            return interactivecalculations_getSpacerDisplayType(component);
 
         case "complex calculation":
-            return intercalcus_getComplexCalculationDisplayType(component, componentData, components);
+            return interactivecalculations_getComplexCalculationDisplayType(component, componentData, components);
 
         default:
             return document.createElement("div");
@@ -248,7 +248,7 @@ function intercalcus_getDisplayType(component, componentData, calculationId, com
     }
 }
 
-function intercalcus_getSumDisplayType(component, calculationId) {
+function interactivecalculations_getSumDisplayType(component, calculationId) {
     const wrapper = document.createElement("div");
     const colLabel = document.createElement("div");
     colLabel.classList.add("col");
@@ -279,19 +279,19 @@ function intercalcus_getSumDisplayType(component, calculationId) {
         }
     }
 
-    intercalcus_calculationElementConfigurations[calculationId] = component.conf.configuration;
+    interactivecalculations_calculationElementConfigurations[calculationId] = component.conf.configuration;
 
-    if (!intercalcus_calculationElements[calculationId]) {
-        intercalcus_calculationElements[calculationId] = [];
+    if (!interactivecalculations_calculationElements[calculationId]) {
+        interactivecalculations_calculationElements[calculationId] = [];
     }
-    intercalcus_calculationElements[calculationId].push(inputElement);
+    interactivecalculations_calculationElements[calculationId].push(inputElement);
 
     colResult.appendChild(inputElement);
     wrapper.appendChild(colResult);
     return wrapper;
 }
 
-function intercalcus_getProductCalculationDisplayType(component, calculationId) {
+function interactivecalculations_getProductCalculationDisplayType(component, calculationId) {
     const wrapper = document.createElement("div");
     const colLabel = document.createElement("div");
     colLabel.classList.add("col");
@@ -322,19 +322,19 @@ function intercalcus_getProductCalculationDisplayType(component, calculationId) 
         }
     }
 
-    intercalcus_calculationElementConfigurations[calculationId] = component.conf.configuration;
+    interactivecalculations_calculationElementConfigurations[calculationId] = component.conf.configuration;
 
-    if (!intercalcus_calculationElements[calculationId]) {
-        intercalcus_calculationElements[calculationId] = [];
+    if (!interactivecalculations_calculationElements[calculationId]) {
+        interactivecalculations_calculationElements[calculationId] = [];
     }
-    intercalcus_calculationElements[calculationId].push(inputElement);
+    interactivecalculations_calculationElements[calculationId].push(inputElement);
 
     colResult.appendChild(inputElement);
     wrapper.appendChild(colResult);
     return wrapper;
 }
 
-function intercalcus_getSubtractCalculation(component, calculationId) {
+function interactivecalculations_getSubtractCalculation(component, calculationId) {
     const wrapper = document.createElement("div");
     const colLabel = document.createElement("div");
     colLabel.classList.add("col");
@@ -366,12 +366,12 @@ function intercalcus_getSubtractCalculation(component, calculationId) {
         }
     }
 
-    intercalcus_calculationElementConfigurations[calculationId] = component.conf.configuration;
+    interactivecalculations_calculationElementConfigurations[calculationId] = component.conf.configuration;
 
-    if (!intercalcus_calculationElements[calculationId]) {
-        intercalcus_calculationElements[calculationId] = [];
+    if (!interactivecalculations_calculationElements[calculationId]) {
+        interactivecalculations_calculationElements[calculationId] = [];
     }
-    intercalcus_calculationElements[calculationId].push(inputElement);
+    interactivecalculations_calculationElements[calculationId].push(inputElement);
 
     colResult.appendChild(inputElement);
     wrapper.appendChild(colResult);
@@ -379,7 +379,7 @@ function intercalcus_getSubtractCalculation(component, calculationId) {
 }
 
 
-function intercalcus_getComplexCalculationDisplayType(component, componentData, components) {
+function interactivecalculations_getComplexCalculationDisplayType(component, componentData, components) {
     const wrapper = document.createElement("div");
     const colLabel = document.createElement("div");
     colLabel.classList.add("col");
@@ -434,7 +434,7 @@ function intercalcus_getComplexCalculationDisplayType(component, componentData, 
                             value = inputElement.value;
                         }
 
-                        intercalcus_update_complex_calculation(`${component.type}-${component.id}-complex-calculation`, replaceableComponent.parentComponent, value);
+                        interactivecalculations_update_complex_calculation(`${component.type}-${component.id}-complex-calculation`, replaceableComponent.parentComponent, value);
 
                     });
                 }
@@ -449,7 +449,7 @@ function intercalcus_getComplexCalculationDisplayType(component, componentData, 
 }
 
 
-function intercalcus_update_complex_calculation(complexCalcId, component, value) {
+function interactivecalculations_update_complex_calculation(complexCalcId, component, value) {
     let resultInput = document.getElementById(complexCalcId);
     complexCalculations[complexCalcId + "-" + component] = value;
 
@@ -464,13 +464,13 @@ function intercalcus_update_complex_calculation(complexCalcId, component, value)
             calculation = calculation.replaceAll(match.toString(), lastValue);
         }
     }
-    resultInput.value = resultInput.dataset.prefix + eval(intercalcus_make_string_viable_for_eval(calculation)) + resultInput.dataset.sufix;
+    resultInput.value = resultInput.dataset.prefix + eval(interactivecalculations_make_string_viable_for_eval(calculation)) + resultInput.dataset.sufix;
 }
 
 let complexCalculations = {};
 let listenableDisplayTypes = ['list', "number", "number input", "slider", "checkbox"]
 
-function intercalcus_calculate(idOfCalculation, calculationElement) {
+function interactivecalculations_calculate(idOfCalculation, calculationElement) {
     let result = 0;
     if (calculationElement.id.includes("subtract")) {
         result = calculationElement.dataset.subtractValue;
@@ -478,17 +478,17 @@ function intercalcus_calculate(idOfCalculation, calculationElement) {
     if (calculationElement.id.includes("product")) {
         result = 1;
     }
-    const calculationObject = intercalcus_calculations.get(idOfCalculation);
+    const calculationObject = interactivecalculations_calculations.get(idOfCalculation);
     for (const calcPart in calculationObject) {
         switch (true) {
             case calculationElement.id.includes("sum"):
-                result += intercalcus_simpleCalculation(calculationObject[calcPart]);
+                result += interactivecalculations_simpleCalculation(calculationObject[calcPart]);
                 break;
             case calculationElement.id.includes("product"):
-                result *= intercalcus_simpleCalculation(calculationObject[calcPart]);
+                result *= interactivecalculations_simpleCalculation(calculationObject[calcPart]);
                 break;
             case calculationElement.id.includes("subtract"):
-                result -= intercalcus_simpleCalculation(calculationObject[calcPart]);
+                result -= interactivecalculations_simpleCalculation(calculationObject[calcPart]);
                 break;
         }
     }
@@ -496,7 +496,7 @@ function intercalcus_calculate(idOfCalculation, calculationElement) {
 }
 
 
-function intercalcus_make_string_viable_for_eval(evalString) {
+function interactivecalculations_make_string_viable_for_eval(evalString) {
     while (["+", "-", "*", "/", "\s", " "].includes(evalString.slice(-1))) {
         evalString = evalString.slice(0, -1);
     }
@@ -509,13 +509,13 @@ function intercalcus_make_string_viable_for_eval(evalString) {
  *
  * @param calculationPart {"baseValue":15.4, "times": 5, "negative": false}
  */
-function intercalcus_simpleCalculation(calculationPart) {
+function interactivecalculations_simpleCalculation(calculationPart) {
     let preCalc = eval(calculationPart["baseValue"] * calculationPart["times"]);
     return calculationPart["negative"] ? eval(preCalc * -1) : preCalc;
 }
 
 
-function intercalcus_getNumberDisplayType(component, componentData, calculationId) {
+function interactivecalculations_getNumberDisplayType(component, componentData, calculationId) {
     const showLabel = component.conf.configuration["show-label"];
     const wrapper = document.createElement("div");
     if (showLabel === "true") {
@@ -567,7 +567,7 @@ function intercalcus_getNumberDisplayType(component, componentData, calculationI
         const inputCalculation = {
             "baseValue": Number(baseValue), "times": Number(inputElement.value), "negative": false
         }
-        intercalcus_calculations.setFrom(calculationId, `${component.domId}-number`, inputCalculation);
+        interactivecalculations_calculations.setFrom(calculationId, `${component.domId}-number`, inputCalculation);
     }
 
     colInput.appendChild(inputElement);
@@ -576,7 +576,7 @@ function intercalcus_getNumberDisplayType(component, componentData, calculationI
 }
 
 
-function intercalcus_getSliderDisplayType(component, componentData, calculationId) {
+function interactivecalculations_getSliderDisplayType(component, componentData, calculationId) {
     const showLabel = component.conf.configuration["show-label"];
     const wrapper = document.createElement("div");
     if (showLabel === "true") {
@@ -629,7 +629,7 @@ function intercalcus_getSliderDisplayType(component, componentData, calculationI
     }
 
     const displayValue = document.createElement("div");
-    displayValue.classList.add("intercalcus-display-slider-value");
+    displayValue.classList.add("interactivecalculations-display-slider-value");
 
     colInput.onchange = () => {
         const inputCalculation = {
@@ -647,7 +647,7 @@ function intercalcus_getSliderDisplayType(component, componentData, calculationI
             displayValue.innerHTML = ""
         }
 
-        intercalcus_calculations.setFrom(calculationId, `${component.domId}-slider`, inputCalculation);
+        interactivecalculations_calculations.setFrom(calculationId, `${component.domId}-slider`, inputCalculation);
     }
 
     colInput.appendChild(inputElement);
@@ -656,7 +656,7 @@ function intercalcus_getSliderDisplayType(component, componentData, calculationI
     return wrapper;
 }
 
-function intercalcus_getCheckboxDisplayType(component, componentData, calculationId) {
+function interactivecalculations_getCheckboxDisplayType(component, componentData, calculationId) {
     const showLabel = component.conf.configuration["show-label"];
     const wrapper = document.createElement("div");
     if (showLabel === "true") {
@@ -705,7 +705,7 @@ function intercalcus_getCheckboxDisplayType(component, componentData, calculatio
             "baseValue": Number(value), "times": Number(times), "negative": false
         }
 
-        intercalcus_calculations.setFrom(calculationId, `${component.domId}-checkbox`, inputCalculation);
+        interactivecalculations_calculations.setFrom(calculationId, `${component.domId}-checkbox`, inputCalculation);
     }
 
 
@@ -717,7 +717,7 @@ function intercalcus_getCheckboxDisplayType(component, componentData, calculatio
     return wrapper;
 }
 
-function intercalcus_getTextDisplayType(component, componentData, calculationId) {
+function interactivecalculations_getTextDisplayType(component, componentData, calculationId) {
     const showLabel = component.conf.configuration["show-label"];
     const wrapper = document.createElement("div");
     if (showLabel === "true") {
@@ -764,13 +764,13 @@ function intercalcus_getTextDisplayType(component, componentData, calculationId)
 }
 
 
-function intercalcus_getLabelDisplayType(component) {
+function interactivecalculations_getLabelDisplayType(component) {
     const label = document.createElement("label")
     label.textContent = component.conf.configuration["custom-label"];
     return label;
 }
 
-function intercalcus_getHorizontalRule(component) {
+function interactivecalculations_getHorizontalRule(component) {
     const hr = document.createElement("hr");
     if (component.conf.configuration["input-classes"]) {
         let inputClasses = component.conf.configuration["input-classes"].split(";");
@@ -782,7 +782,7 @@ function intercalcus_getHorizontalRule(component) {
 
 }
 
-function intercalcus_getSpacerDisplayType(component) {
+function interactivecalculations_getSpacerDisplayType(component) {
     const spacer = document.createElement("div");
     if (component.conf.configuration["input-classes"]) {
         let inputClasses = component.conf.configuration["input-classes"].split(";");
@@ -794,7 +794,7 @@ function intercalcus_getSpacerDisplayType(component) {
 }
 
 
-function intercalcus_getListDisplayType(component, componentData, calculationId) {
+function interactivecalculations_getListDisplayType(component, componentData, calculationId) {
     const showLabel = component.conf.configuration["show-label"];
     const wrapper = document.createElement("div");
     if (showLabel === "true") {

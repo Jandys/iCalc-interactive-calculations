@@ -21,10 +21,10 @@
  *
  */
 
-use intercalcus\fe\Calculation as CalculationAlias;
+use interactivecalculations\fe\Calculation as CalculationAlias;
 
 /**
- * Renders the intercalcus calculation shortcode.
+ * Renders the Interactive Calculations calculation shortcode.
  *
  * @param array $atts The attributes of the shortcode.
  * @param string|null $content The content of the shortcode (not used).
@@ -32,11 +32,11 @@ use intercalcus\fe\Calculation as CalculationAlias;
  * @return string   The rendered HTML output of the shortcode.
  * @since 1.0.0
  */
-function renderIntercalcusCalculationShortcode($atts, $content = null)
+function renderInteractiveCalculationsCalculationShortcode($atts, $content = null)
 {
     session_write_close();
 
-    intercalcus_enqueue_page_dependencies();
+    interactivecalculations_enqueue_page_dependencies();
 
 
     // Default shortcode parameter
@@ -45,7 +45,7 @@ function renderIntercalcusCalculationShortcode($atts, $content = null)
     );
 
     //Extract shortcode attributes
-    $atts = shortcode_atts($default_atts, $atts, 'intercalcus_calculation');
+    $atts = shortcode_atts($default_atts, $atts, 'interactivecalculations_calculation');
 
     if ($atts["id"] == -1) {
         $calculation = -1;
@@ -57,9 +57,9 @@ function renderIntercalcusCalculationShortcode($atts, $content = null)
     if (!$calculation->hasFoundCalculationDescription()) {
         // Display error if id is not passed inside shortcode or calculation with such id is not found.
         return "<div class='bg-danger ml-3 pl-3'>
-					<p><strong>" . __("ERROR", "intercalcus") . ": </strong> " . __("id parameter is missing or there is an issue in shortcode declaration") . ".</p>
+					<p><strong>" . __("ERROR", "interactivecalculations") . ": </strong> " . __("id parameter is missing or there is an issue in shortcode declaration") . ".</p>
 					<p class='mb-0'>" . __("Try updating your shortcode to be like") . ":</p>
-					<p class='ml-3 mr-3 mb-0'><strong>[intercalcus_calculation id=1]</strong></p>
+					<p class='ml-3 mr-3 mb-0'><strong>[interactivecalculations_calculation id=1]</strong></p>
 					<p>" . __("Where 'id' determines what calculation you want to display") . ".</p>
 					</div>";
     }
@@ -67,22 +67,22 @@ function renderIntercalcusCalculationShortcode($atts, $content = null)
     return $calculation->render();
 }
 
-function intercalcus_enqueue_page_dependencies()
+function interactivecalculations_enqueue_page_dependencies()
 {
-    wp_enqueue_script('intercalcus_pages_scripts', plugins_url('/scripts/intercalcus_pages.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
-    wp_enqueue_style('intercalcus_page_style', plugins_url('/styles/intercalcus-pages-generic.css', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
+    wp_enqueue_script('interactivecalculations_pages_scripts', plugins_url('/scripts/interactivecalculations_pages.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
+    wp_enqueue_style('interactivecalculations_page_style', plugins_url('/styles/interactivecalculations-pages-generic.css', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
 }
 
 /**
- * Adds the intercalcus calculation shortcode handler.
+ * Adds the interactivecalculations calculation shortcode handler.
  */
-function intercalcus_calculation_shortcode_handler()
+function interactivecalculations_calculation_shortcode_handler()
 {
-    add_shortcode('intercalcus_calculation', 'renderIntercalcusCalculationShortcode');
+    add_shortcode('interactivecalculations_calculation', 'renderinteractivecalculationsCalculationShortcode');
 }
 
-intercalcus_enqueue_page_dependencies();
-add_action('wp_enqueue_scripts', 'intercalcus_enqueue_page_dependencies');
-add_action('init', 'intercalcus_calculation_shortcode_handler');
+interactivecalculations_enqueue_page_dependencies();
+add_action('wp_enqueue_scripts', 'interactivecalculations_enqueue_page_dependencies');
+add_action('init', 'interactivecalculations_calculation_shortcode_handler');
 
 ?>

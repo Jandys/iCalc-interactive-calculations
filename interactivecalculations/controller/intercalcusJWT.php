@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -69,9 +69,9 @@ function issue_jwt_token($user_id, $session): string
     $token = JWT::encode($payload, JWT_SECRET_KEY, 'HS256');
 
     // Store the random string in a site transient with a unique key for the user ID and session.
-    delete_site_transient('intercalcus-secret-' . $user_id . $session);
+    delete_site_transient('interactivecalculations-secret-' . $user_id . $session);
     $randomCharacters = wp_generate_password();
-    set_site_transient('intercalcus-secret-' . $user_id . $session, $randomCharacters, 60 * 60);
+    set_site_transient('interactivecalculations-secret-' . $user_id . $session, $randomCharacters, 60 * 60);
     return $token;
 }
 
@@ -98,7 +98,7 @@ function validate_jwt_token($token, $userid, $session)
         if ($userid == $uid && $sessionId == $session) {
 
             // Retrieve secret and check if is not empty
-            $secret = get_site_transient('intercalcus-secret-' . $userid . $sessionId);
+            $secret = get_site_transient('interactivecalculations-secret-' . $userid . $sessionId);
             if (empty($secret)) {
                 return false;
             }

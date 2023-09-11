@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,13 +21,13 @@
  *
  */
 
-namespace intercalcus\fe\displayTypes;
+namespace interactivecalculations\fe\displayTypes;
 
 class ProductCalculation extends Sum
 {
     protected function displayInput()
     {
-        return '<input id="' . $this->id . '" type="text" disabled class="form-control intercalcus-calculation-product-calculation">';
+        return '<input id="' . $this->id . '" type="text" disabled class="form-control interactivecalculations-calculation-product-calculation">';
     }
 
 }

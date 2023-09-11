@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,12 +21,12 @@
  *
  */
 
-namespace intercalcus\db\model;
+namespace interactivecalculations\db\model;
 
 class BaseDatabaseModel
 {
     public static $id = 'id';
-    protected static $prefix = 'intercalcus_';
+    protected static $prefix = 'interactivecalculations_';
 
 
     /**

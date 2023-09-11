@@ -1,5 +1,25 @@
 <?php
-
+/*
+ *
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
+ *
+ *   Copyright (C) 2023, Jakub Jandák
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
 
 use PHPUnit\Framework\TestCase;
 
@@ -9,14 +29,14 @@ class CheckBoxTest extends TestCase
 
     public function testFillDataEmptyFill()
     {
-        $check_box = new intercalcus\fe\displayTypes\CheckBox();
+        $check_box = new interactivecalculations\fe\displayTypes\CheckBox();
         $this->expectException(TypeError::class);
         $check_box->fillData("");
     }
 
     public function testIsTypeCheckbox()
     {
-        $checkBox = new intercalcus\fe\displayTypes\CheckBox();
+        $checkBox = new interactivecalculations\fe\displayTypes\CheckBox();
         $checkBox->fillData([
             'id' => 'test_checkbox',
             'masterObject' => null,
@@ -38,7 +58,7 @@ class CheckBoxTest extends TestCase
 
     public function testRenderWithLabel()
     {
-        $checkBox = new intercalcus\fe\displayTypes\CheckBox();
+        $checkBox = new interactivecalculations\fe\displayTypes\CheckBox();
         $checkBox->fillData([
             'id' => 'test_checkbox',
             'masterObject' => null,
@@ -61,7 +81,7 @@ class CheckBoxTest extends TestCase
 
     public function testRenderWithoutLabel()
     {
-        $checkBox = new intercalcus\fe\displayTypes\CheckBox();
+        $checkBox = new interactivecalculations\fe\displayTypes\CheckBox();
         $checkBox->fillData([
             'id' => 'test_checkbox',
             'masterObject' => null,
@@ -88,7 +108,7 @@ class CheckBoxTest extends TestCase
             'price' => 20.0
         ];
 
-        $checkBox = new intercalcus\fe\displayTypes\CheckBox();
+        $checkBox = new interactivecalculations\fe\displayTypes\CheckBox();
         $checkBox->fillData([
             'id' => 'test_checkbox',
             'masterObject' => $masterObject,
@@ -110,7 +130,7 @@ class CheckBoxTest extends TestCase
 
     public function testFillDataWithCustomConfiguration()
     {
-        $checkBox = new intercalcus\fe\displayTypes\CheckBox();
+        $checkBox = new interactivecalculations\fe\displayTypes\CheckBox();
         $checkBox->fillData([
             'id' => 'test_checkbox',
             'masterObject' => null,

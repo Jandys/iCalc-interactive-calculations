@@ -17,9 +17,9 @@
   "autoload": {
     "psr-4": {
       "CustomJwtAuth\\": "vendor/firebase/php-jwt",
-      "intercalcus\\fe\\": "frontend/",
-      "intercalcus\\fe\\displayTypes\\": "frontend/displayTypes",
-      "intercalcus\\db\\model\\": "database/model"
+      "interactivecalculations\\fe\\": "frontend/",
+      "interactivecalculations\\fe\\displayTypes\\": "frontend/displayTypes",
+      "interactivecalculations\\db\\model\\": "database/model"
     }
   },
   "require-dev": {

@@ -29,7 +29,7 @@ require_once INTERACTIVECALCULATIONS_PATH . '/util/utilities.php';
 require_once INTERACTIVECALCULATIONS_PATH . '/database/autoload.php';
 require_once INTERACTIVECALCULATIONS_PATH . '/controller/controllers.php';
 require_once INTERACTIVECALCULATIONS_PATH . '/frontend/displayTypes/autoload.php';
-require_once INTERACTIVECALCULATIONS_PATH . '/controller/intercalcusJWT.php';
+require_once INTERACTIVECALCULATIONS_PATH . '/controller/interactivecalculationsJWT.php';
 require_once INTERACTIVECALCULATIONS_PATH . '/integration/wordpress-integration.php';
 require_once INTERACTIVECALCULATIONS_PATH . '/integration/elementor-integration.php';
 

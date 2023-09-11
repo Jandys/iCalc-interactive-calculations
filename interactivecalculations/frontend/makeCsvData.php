@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -28,7 +28,7 @@ $data = $_SESSION["interactionsData"];
 if (!empty($data)) {
 
     header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="intercalcus_statistics_export.csv"');
+    header('Content-Disposition: attachment; filename="interactivecalculations_statistics_export.csv"');
     header('Pragma: no-cache');
     header('Expires: 0');
 

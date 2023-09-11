@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,17 +21,19 @@
  *
  */
 
-namespace intercalcus\db\model;
+namespace interactivecalculations\db\model;
 
-class Service extends BaseDatabaseModel {
-	public static function create_table(): bool {
-		global $wpdb;
+class Service extends BaseDatabaseModel
+{
+    public static function create_table(): bool
+    {
+        global $wpdb;
 
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-		$table_name = self::_tableName();
+        $table_name = self::_tableName();
 
-		$sql = "CREATE TABLE IF NOT EXISTS " . $table_name . " (
+        $sql = "CREATE TABLE IF NOT EXISTS " . $table_name . " (
                   id INT AUTO_INCREMENT PRIMARY KEY,
                   name VARCHAR(255) NOT NULL,
                   description VARCHAR(255) NOT NULL,
@@ -43,59 +45,62 @@ class Service extends BaseDatabaseModel {
                   modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 ) {$wpdb->get_charset_collate()};";
 
-		return maybe_create_table( $table_name, $sql );
-	}
+        return maybe_create_table($table_name, $sql);
+    }
 
-	public static function insertNew(
-		$name,
-		$description,
-		$price,
-		$unit,
-		$min_quantity,
-		$display_type
-	) {
-		$unitId = Unit::insertNew( $unit );
-		$data   = array(
-			'name'         => $name,
-			'description'  => $description,
-			'price'        => $price,
-			'unitId'       => $unitId,
-			'min_quantity' => $min_quantity,
-			'display_type' => $display_type
-		);
+    public static function insertNew(
+        $name,
+        $description,
+        $price,
+        $unit,
+        $min_quantity,
+        $display_type
+    )
+    {
+        $unitId = Unit::insertNew($unit);
+        $data = array(
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'unitId' => $unitId,
+            'min_quantity' => $min_quantity,
+            'display_type' => $display_type
+        );
 
-		return parent::insert( $data );
-	}
+        return parent::insert($data);
+    }
 
-	public static function updateById(
-		$id,
-		$name,
-		$description,
-		$price,
-		$unit,
-		$min_quantity,
-		$display_type
-	) {
-		$unitId = Unit::insertNew( $unit );
-		$data   = array(
-			'name'         => $name,
-			'description'  => $description,
-			'price'        => $price,
-			'unitId'       => $unitId,
-			'min_quantity' => $min_quantity,
-			'display_type' => $display_type
-		);
+    public static function updateById(
+        $id,
+        $name,
+        $description,
+        $price,
+        $unit,
+        $min_quantity,
+        $display_type
+    )
+    {
+        $unitId = Unit::insertNew($unit);
+        $data = array(
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'unitId' => $unitId,
+            'min_quantity' => $min_quantity,
+            'display_type' => $display_type
+        );
 
-		return parent::update( $data, $id );
-	}
+        return parent::update($data, $id);
+    }
 
-	public static function get_all_with_unit() {
-		global $wpdb;
-		$unitTable = Unit::_tableName();
+    public static function get_all_with_unit()
+    {
+        global $wpdb;
+        $unitTable = Unit::_tableName();
 
-		return $wpdb->get_results(
-			sprintf( 'SELECT * FROM %s JOIN %s ON %s.unitId = %s.id ORDER BY %s ASC', self::_tableName(), $unitTable, self::_tableName(), $unitTable, self::_tableName() . "." . static::$id ), //phpcs:ignore
-			ARRAY_A
-		);
-	}
+        return $wpdb->get_results(
+            sprintf('SELECT * FROM %s JOIN %s ON %s.unitId = %s.id ORDER BY %s ASC', self::_tableName(), $unitTable, self::_tableName(), $unitTable, self::_tableName() . "." . static::$id), //phpcs:ignore
+            ARRAY_A
+        );
+    }
 }

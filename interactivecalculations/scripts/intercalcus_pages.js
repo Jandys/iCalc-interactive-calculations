@@ -1,6 +1,6 @@
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -20,11 +20,11 @@
  *
  */
 
-let intercalcus_pages_calculations = [[]];
-let intercalcus_pages_preCalculations = [];
+let interactivecalculations_pages_calculations = [[]];
+let interactivecalculations_pages_preCalculations = [];
 
-function intercalcus_evaluate_calculation(calculationId, method) {
-    let result = eval(intercalcus_make_string_viable_for_eval(intercalcus_pages_calculations[calculationId][method]));
+function interactivecalculations_evaluate_calculation(calculationId, method) {
+    let result = eval(interactivecalculations_make_string_viable_for_eval(interactivecalculations_pages_calculations[calculationId][method]));
     if (typeof result === 'number' || typeof result === 'string') {
         return result.toFixed(2);
     } else if (typeof result === 'object') {
@@ -32,12 +32,12 @@ function intercalcus_evaluate_calculation(calculationId, method) {
     }
 }
 
-function intercalcus_update_pre_and_calculation(domId, calculationId, calculation, method = 'sum') {
-    if (!intercalcus_pages_preCalculations[calculationId]) {
-        intercalcus_pages_preCalculations[calculationId] = [];
+function interactivecalculations_update_pre_and_calculation(domId, calculationId, calculation, method = 'sum') {
+    if (!interactivecalculations_pages_preCalculations[calculationId]) {
+        interactivecalculations_pages_preCalculations[calculationId] = [];
     }
 
-    intercalcus_pages_preCalculations[calculationId][domId] = calculation;
+    interactivecalculations_pages_preCalculations[calculationId][domId] = calculation;
 
     let updatedCalculation;
     if (method === 'product') {
@@ -45,43 +45,43 @@ function intercalcus_update_pre_and_calculation(domId, calculationId, calculatio
     } else {
         updatedCalculation = "";
     }
-    for (const domCalculation in intercalcus_pages_preCalculations[calculationId]) {
+    for (const domCalculation in interactivecalculations_pages_preCalculations[calculationId]) {
 
 
         if (updatedCalculation) {
-            updatedCalculation = updatedCalculation + intercalcus_get_calculation_type(method) + intercalcus_parse_toValid(intercalcus_pages_preCalculations[calculationId][domCalculation], method);
+            updatedCalculation = updatedCalculation + interactivecalculations_get_calculation_type(method) + interactivecalculations_parse_toValid(interactivecalculations_pages_preCalculations[calculationId][domCalculation], method);
         } else {
-            updatedCalculation = intercalcus_get_calculation_type(method) + intercalcus_parse_toValid(intercalcus_pages_preCalculations[calculationId][domCalculation], method);
+            updatedCalculation = interactivecalculations_get_calculation_type(method) + interactivecalculations_parse_toValid(interactivecalculations_pages_preCalculations[calculationId][domCalculation], method);
         }
 
     }
 
 
-    intercalcus_pages_calculations[calculationId] ||= {};
-    intercalcus_pages_calculations[calculationId][method] = updatedCalculation;
+    interactivecalculations_pages_calculations[calculationId] ||= {};
+    interactivecalculations_pages_calculations[calculationId][method] = updatedCalculation;
 }
 
-let intercalcus_complexCalculations = {};
+let interactivecalculations_complexCalculations = {};
 
-function intercalcus_update_complex_calculation(complexCalcId, component, value) {
+function interactivecalculations_update_complex_calculation(complexCalcId, component, value) {
     let resultInput = document.getElementById(complexCalcId);
-    intercalcus_complexCalculations[complexCalcId + "-" + component] = value;
+    interactivecalculations_complexCalculations[complexCalcId + "-" + component] = value;
 
-    let calculation = intercalcus_complexCalculations[complexCalcId];
+    let calculation = interactivecalculations_complexCalculations[complexCalcId];
     let matches = calculation.match(/\[(.*?)\]/g);
     for (const match of matches) {
         const componentId = match.replaceAll(/[\[\]]/g, "");
-        let lastValue = intercalcus_complexCalculations[complexCalcId + '-' + componentId];
+        let lastValue = interactivecalculations_complexCalculations[complexCalcId + '-' + componentId];
         if (typeof lastValue === "undefined") {
             calculation = calculation.replaceAll(match.toString(), "");
         } else {
             calculation = calculation.replaceAll(match.toString(), lastValue);
         }
     }
-    resultInput.value = resultInput.dataset.prefix + eval(intercalcus_make_string_viable_for_eval(calculation)).toString() + resultInput.dataset.sufix;
+    resultInput.value = resultInput.dataset.prefix + eval(interactivecalculations_make_string_viable_for_eval(calculation)).toString() + resultInput.dataset.sufix;
 }
 
-function intercalcus_parse_toValid(number, method) {
+function interactivecalculations_parse_toValid(number, method) {
     if (parseFloat(number) < 0 && method === "subtract") {
         return '(' + number + ')';
     }
@@ -89,7 +89,7 @@ function intercalcus_parse_toValid(number, method) {
 }
 
 
-function intercalcus_get_calculation_type(method) {
+function interactivecalculations_get_calculation_type(method) {
     switch (method) {
         case "sum":
             return '+';
@@ -122,15 +122,15 @@ function generateUUID() {
 }
 
 
-let intercalcus_timeouts = {};
+let interactivecalculations_timeouts = {};
 
-function intercalcus_register_interactions(wrappingDiv, calcId) {
+function interactivecalculations_register_interactions(wrappingDiv, calcId) {
     wrappingDiv.addEventListener('change', function () {
         let UUID = getOrCreateUUID();
-        if (intercalcus_timeouts[UUID]) {
-            if (intercalcus_timeouts[UUID] != null) {
-                clearTimeout(intercalcus_timeouts[UUID]);
-                intercalcus_timeouts[UUID] = null;
+        if (interactivecalculations_timeouts[UUID]) {
+            if (interactivecalculations_timeouts[UUID] != null) {
+                clearTimeout(interactivecalculations_timeouts[UUID]);
+                interactivecalculations_timeouts[UUID] = null;
             }
         }
 
@@ -145,9 +145,9 @@ function intercalcus_register_interactions(wrappingDiv, calcId) {
             body[input.id] = ins;
         }
         body["calculationId"] = calcId;
-        intercalcus_timeouts[UUID] = setTimeout(() => {
+        interactivecalculations_timeouts[UUID] = setTimeout(() => {
             const xhr = new XMLHttpRequest();
-            const url = '/wp-json/intercalcus/v1/intercalcusulations/interactions';
+            const url = '/wp-json/interactivecalculations/v1/interactivecalculationsulations/interactions';
             const data = JSON.stringify({
                 calculationId: calcId,
                 body: body,
@@ -170,7 +170,7 @@ function intercalcus_register_interactions(wrappingDiv, calcId) {
     })
 }
 
-function intercalcus_make_string_viable_for_eval(evalString) {
+function interactivecalculations_make_string_viable_for_eval(evalString) {
     while (["+", "-", "*", "/", " ", "\s"].includes(evalString.slice(-1))) {
         evalString = evalString.slice(0, -1);
     }

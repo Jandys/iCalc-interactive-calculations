@@ -1,6 +1,6 @@
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -20,9 +20,9 @@
  *
  */
 
-const draggableComponents = document.querySelectorAll('.intercalcus-draggable');
-const dashboard = document.getElementById('intercalcus-dashboard');
-const dashboardEdit = document.getElementById('intercalcus-dashboard-edit');
+const draggableComponents = document.querySelectorAll('.interactivecalculations-draggable');
+const dashboard = document.getElementById('interactivecalculations-dashboard');
+const dashboardEdit = document.getElementById('interactivecalculations-dashboard-edit');
 
 dashboard.onchange = () => {
     dashboard_content_change();
@@ -41,10 +41,10 @@ draggableComponents.forEach(component => {
 });
 
 dashboard.addEventListener('dragstart', e => {
-    draggedDashboardItem = e.target.closest('.intercalcus-dashboard-item');
+    draggedDashboardItem = e.target.closest('.interactivecalculations-dashboard-item');
 });
 dashboardEdit.addEventListener('dragstart', e => {
-    draggedDashboardItem = e.target.closest('.intercalcus-dashboard-item');
+    draggedDashboardItem = e.target.closest('.interactivecalculations-dashboard-item');
 });
 
 
@@ -63,18 +63,18 @@ dashboardEdit.addEventListener('dragover', e => {
  * @returns {void}
  */
 function addMovableButtons(cloneComponent, dashboardItem) {
-    let configurationBar = cloneComponent.querySelector(".intercalcus-configuration-bar");
+    let configurationBar = cloneComponent.querySelector(".interactivecalculations-configuration-bar");
 
     const moveUpButton = document.createElement('button');
     moveUpButton.innerHTML = '<i class="dashicons dashicons-arrow-up-alt"></i>';
-    moveUpButton.classList.add("intercalcus-config-btn");
-    moveUpButton.classList.add("intercalcus-btn-gray");
+    moveUpButton.classList.add("interactivecalculations-config-btn");
+    moveUpButton.classList.add("interactivecalculations-btn-gray");
     moveUpButton.classList.add("button");
     moveUpButton.addEventListener('click', () => moveComponent(dashboardItem, 'up'));
     const moveDownButton = document.createElement('button');
     moveDownButton.innerHTML = '<i class="dashicons dashicons-arrow-down-alt"></i>';
-    moveDownButton.classList.add("intercalcus-config-btn");
-    moveDownButton.classList.add("intercalcus-btn-gray");
+    moveDownButton.classList.add("interactivecalculations-config-btn");
+    moveDownButton.classList.add("interactivecalculations-btn-gray");
     moveDownButton.classList.add("button");
     moveDownButton.addEventListener('click', () => moveComponent(dashboardItem, 'down'));
 
@@ -104,7 +104,7 @@ dashboard.addEventListener('drop', e => {
     cloneComponent.classList.remove("hidden");
     let nextId = Number(viableComponent.getAttribute("data-next-id"));
     cloneComponent.id = cloneComponent.id + nextId;
-    cloneComponent.classList.add("intercalcus-configurable-draggable-option");
+    cloneComponent.classList.add("interactivecalculations-configurable-draggable-option");
 
     setNewClonedComponent(cloneComponent);
 
@@ -112,7 +112,7 @@ dashboard.addEventListener('drop', e => {
     viableComponent.setAttribute("data-next-id", nextId);
 
     const dashboardItem = document.createElement('div');
-    dashboardItem.classList.add('intercalcus-dashboard-item');
+    dashboardItem.classList.add('interactivecalculations-dashboard-item');
     dashboardItem.appendChild(cloneComponent);
 
     addMovableButtons(cloneComponent, dashboardItem);
@@ -142,7 +142,7 @@ dashboardEdit.addEventListener('drop', e => {
     cloneComponent.classList.remove("hidden");
     let nextId = Number(viableComponent.getAttribute("data-next-id"));
     cloneComponent.id = cloneComponent.id + nextId;
-    cloneComponent.classList.add("intercalcus-configurable-draggable-option");
+    cloneComponent.classList.add("interactivecalculations-configurable-draggable-option");
 
     setNewClonedComponent(cloneComponent);
 
@@ -150,7 +150,7 @@ dashboardEdit.addEventListener('drop', e => {
     viableComponent.setAttribute("data-next-id", nextId);
 
     const dashboardItem = document.createElement('div');
-    dashboardItem.classList.add('intercalcus-dashboard-item');
+    dashboardItem.classList.add('interactivecalculations-dashboard-item');
     dashboardItem.appendChild(cloneComponent);
 
     addMovableButtons(cloneComponent, dashboardItem);
@@ -212,8 +212,8 @@ function moveComponent(dashboardItem, direction) {
     }
 }
 
-let intercalcus_products;
-let intercalcus_services;
+let interactivecalculations_products;
+let interactivecalculations_services;
 
 // loaders
 /**
@@ -222,7 +222,7 @@ let intercalcus_services;
  * @returns {void}
  */
 window.addEventListener('load', () => {
-    const dashboardProducts = document.getElementById('intercalcus-dashboard-products');
+    const dashboardProducts = document.getElementById('interactivecalculations-dashboard-products');
 
     // Create a select list for the products
     const productSelectList = document.createElement('select');
@@ -233,21 +233,21 @@ window.addEventListener('load', () => {
     // Create a div to display the selected products
     const productDiv = document.createElement('div');
     productDiv.id = 'productDiv';
-    productDiv.classList.add("intercalcus-product-div");
+    productDiv.classList.add("interactivecalculations-product-div");
 
     // Send an XHR request to get all products
-    let productsXHR = intercalcus_getAllProducts();
+    let productsXHR = interactivecalculations_getAllProducts();
     productsXHR.onreadystatechange = function () {
         if (productsXHR.readyState === XMLHttpRequest.DONE) {
             if (productsXHR.status === 200) {
                 let products = JSON.parse(productsXHR.responseText);
-                intercalcus_products = products;
+                interactivecalculations_products = products;
 
                 // Add a "None" option to the select list
                 if (products.length > 0) {
                     let noneSelected = document.createElement('option');
                     noneSelected.value = "";
-                    noneSelected.innerText = intercalcusMainScriptLocalization.none;
+                    noneSelected.innerText = interactivecalculationsMainScriptLocalization.none;
                     productSelectList.appendChild(noneSelected);
                 }
 
@@ -262,7 +262,7 @@ window.addEventListener('load', () => {
                     const span = document.createElement('span');
                     span.innerHTML = getProductInHtml(product);
                     span.id = 'product' + product.id + '-'
-                    span.classList.add("intercalcus-selected-span-item");
+                    span.classList.add("interactivecalculations-selected-span-item");
                     span.classList.add("hidden");
                     productDiv.appendChild(span);
                 });
@@ -284,7 +284,7 @@ window.addEventListener('load', () => {
  * @returns {void}
  */
 window.addEventListener('load', () => {
-    const dashboardServices = document.getElementById('intercalcus-dashboard-services');
+    const dashboardServices = document.getElementById('interactivecalculations-dashboard-services');
 
     // Create a select list for the services
     const serviceSelectList = document.createElement('select');
@@ -296,21 +296,21 @@ window.addEventListener('load', () => {
     // Create a div to display the selected services
     const serviceDiv = document.createElement('div');
     serviceDiv.id = 'serviceDiv';
-    serviceDiv.classList.add("intercalcus-service-div");
+    serviceDiv.classList.add("interactivecalculations-service-div");
 
     // Send an XHR request to get all services
-    let servicesXHR = intercalcus_getAllServices();
+    let servicesXHR = interactivecalculations_getAllServices();
     servicesXHR.onreadystatechange = function () {
         if (servicesXHR.readyState === XMLHttpRequest.DONE) {
             if (servicesXHR.status === 200) {
                 let services = JSON.parse(servicesXHR.responseText);
-                intercalcus_services = services;
+                interactivecalculations_services = services;
 
                 // Send an XHR request to get all services
                 if (services.length > 0) {
                     let noneSelected = document.createElement('option');
                     noneSelected.value = "";
-                    noneSelected.innerText = intercalcusMainScriptLocalization.none;
+                    noneSelected.innerText = interactivecalculationsMainScriptLocalization.none;
                     serviceSelectList.appendChild(noneSelected);
                 }
 
@@ -325,7 +325,7 @@ window.addEventListener('load', () => {
                     const span = document.createElement('span');
                     span.innerHTML = getProductInHtml(service);
                     span.id = 'service' + service.id + '-'
-                    span.classList.add("intercalcus-selected-span-item");
+                    span.classList.add("interactivecalculations-selected-span-item");
                     span.classList.add("hidden");
                     serviceDiv.appendChild(span);
                 });
@@ -354,15 +354,15 @@ const genericTypes = new Map(
     ]);
 
 const genericTypesLocalized = new Map(
-    [[0, intercalcusMainScriptLocalization.none],
-        [1, intercalcusMainScriptLocalization.label],
-        [2, intercalcusMainScriptLocalization.text],
-        [3, intercalcusMainScriptLocalization.list],
-        [4, intercalcusMainScriptLocalization.numberInput],
-        [5, intercalcusMainScriptLocalization.slider],
-        [6, intercalcusMainScriptLocalization.checkBox],
-        [7, intercalcusMainScriptLocalization.spacer],
-        [8, intercalcusMainScriptLocalization.horizontalRule]
+    [[0, interactivecalculationsMainScriptLocalization.none],
+        [1, interactivecalculationsMainScriptLocalization.label],
+        [2, interactivecalculationsMainScriptLocalization.text],
+        [3, interactivecalculationsMainScriptLocalization.list],
+        [4, interactivecalculationsMainScriptLocalization.numberInput],
+        [5, interactivecalculationsMainScriptLocalization.slider],
+        [6, interactivecalculationsMainScriptLocalization.checkBox],
+        [7, interactivecalculationsMainScriptLocalization.spacer],
+        [8, interactivecalculationsMainScriptLocalization.horizontalRule]
     ]
 );
 
@@ -377,11 +377,11 @@ const calculationTypes = new Map(
 
 
 const calculationTypesLocalized = new Map(
-    [[0, intercalcusMainScriptLocalization.none],
-        [1, intercalcusMainScriptLocalization.sum],
-        [2, intercalcusMainScriptLocalization.productCalculation],
-        [3, intercalcusMainScriptLocalization.subtractCalculation],
-        [4, intercalcusMainScriptLocalization.complexCalculation]
+    [[0, interactivecalculationsMainScriptLocalization.none],
+        [1, interactivecalculationsMainScriptLocalization.sum],
+        [2, interactivecalculationsMainScriptLocalization.productCalculation],
+        [3, interactivecalculationsMainScriptLocalization.subtractCalculation],
+        [4, interactivecalculationsMainScriptLocalization.complexCalculation]
     ]);
 
 /**
@@ -426,7 +426,7 @@ function calculationTypesGetKeyForValue(lookupKey) {
  * @returns {void}
  */
 window.addEventListener('load', () => {
-    const dashboardComponents = document.getElementById('intercalcus-dashboard-components');
+    const dashboardComponents = document.getElementById('interactivecalculations-dashboard-components');
 
     // Create a select list for the components
     const componentSelectList = document.createElement('select');
@@ -437,7 +437,7 @@ window.addEventListener('load', () => {
     // Create a div to display the selected components
     const componentDiv = document.createElement('div');
     componentDiv.id = 'componentDiv';
-    componentDiv.classList.add("intercalcus-component-div");
+    componentDiv.classList.add("interactivecalculations-component-div");
 
     // Loop through all genericTypes and add them to the select list
     for (const genericType of genericTypes) {
@@ -458,7 +458,7 @@ window.addEventListener('load', () => {
  * @returns {void}
  */
 window.addEventListener('load', () => {
-    const dashboardCalculations = document.getElementById('intercalcus-dashboard-calculations');
+    const dashboardCalculations = document.getElementById('interactivecalculations-dashboard-calculations');
 
     const calculationSelectList = document.createElement('select');
     calculationSelectList.type = "text";
@@ -467,7 +467,7 @@ window.addEventListener('load', () => {
 
     const calculationDiv = document.createElement('div');
     calculationDiv.id = 'calculationDiv';
-    calculationDiv.classList.add("intercalcus-calculation-div");
+    calculationDiv.classList.add("interactivecalculations-calculation-div");
 
     for (const calculationType of calculationTypes) {
         const option = document.createElement('option');
@@ -518,7 +518,7 @@ function setNewServiceComponent(serviceComponent) {
 
     for (const child of serviceComponent.children) {
         modifyChildIdsWithSuffix(child, id);
-        if (child.id.startsWith("intercalcus-dashboard-services")) {
+        if (child.id.startsWith("interactivecalculations-dashboard-services")) {
             dashboard = child;
         }
     }
@@ -562,7 +562,7 @@ function setNewServiceComponent(serviceComponent) {
 
     if (select.children.length === 0) {
         dashboard.removeChild(select);
-        dashboard.appendChild(noComponentFoundError(intercalcusMainScriptLocalization.errorNoServiceFound));
+        dashboard.appendChild(noComponentFoundError(interactivecalculationsMainScriptLocalization.errorNoServiceFound));
     } else {
         appendConfigButton(dashboard);
     }
@@ -583,7 +583,7 @@ function setNewCalculationComponent(calculationComponent) {
 
     for (const child of calculationComponent.children) {
         modifyChildIdsWithSuffix(child, id);
-        if (child.id.startsWith("intercalcus-dashboard-calculations")) {
+        if (child.id.startsWith("interactivecalculations-dashboard-calculations")) {
             dashboard = child;
         }
     }
@@ -614,7 +614,7 @@ function setNewCalculationComponent(calculationComponent) {
 
     if (select.children.length === 1) {
         dashboard.removeChild(select);
-        dashboard.appendChild(noComponentFoundError(intercalcusMainScriptLocalization.errorNoCalculationComponentFound));
+        dashboard.appendChild(noComponentFoundError(interactivecalculationsMainScriptLocalization.errorNoCalculationComponentFound));
     } else {
         appendConfigButton(dashboard);
     }
@@ -635,7 +635,7 @@ function setNewGenericComponent(genericComponent) {
 
     for (const child of genericComponent.children) {
         modifyChildIdsWithSuffix(child, id);
-        if (child.id.startsWith("intercalcus-dashboard-components")) {
+        if (child.id.startsWith("interactivecalculations-dashboard-components")) {
             dashboard = child;
         }
     }
@@ -666,7 +666,7 @@ function setNewGenericComponent(genericComponent) {
 
     if (select.children.length === 1) {
         dashboard.removeChild(select);
-        dashboard.appendChild(noComponentFoundError(intercalcusMainScriptLocalization.errorNoCalculationComponentFound));
+        dashboard.appendChild(noComponentFoundError(interactivecalculationsMainScriptLocalization.errorNoCalculationComponentFound));
     } else {
         appendConfigButton(dashboard);
     }
@@ -687,7 +687,7 @@ function setNewProductComponent(productComponent) {
     let productDiv;
     for (const child of productComponent.children) {
         modifyChildIdsWithSuffix(child, id);
-        if (child.id.startsWith("intercalcus-dashboard-products")) {
+        if (child.id.startsWith("interactivecalculations-dashboard-products")) {
             dashboard = child;
         }
     }
@@ -731,7 +731,7 @@ function setNewProductComponent(productComponent) {
 
     if (select.children.length === 0) {
         dashboard.removeChild(select);
-        dashboard.appendChild(noComponentFoundError(intercalcusMainScriptLocalization.errorNoProductFound));
+        dashboard.appendChild(noComponentFoundError(interactivecalculationsMainScriptLocalization.errorNoProductFound));
     } else {
         appendConfigButton(dashboard);
     }
@@ -754,8 +754,8 @@ let editingCalculation = -1;
 function editUpdateObjectOfNewCalculation() {
     let children = dashboardEdit.children;
 
-    let calculationTitleObject = document.getElementById('intercalcus-calulation-edit-name');
-    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : intercalcusMainScriptLocalization.newCalcTitle;
+    let calculationTitleObject = document.getElementById('interactivecalculations-calulation-edit-name');
+    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : interactivecalculationsMainScriptLocalization.newCalcTitle;
 
     let updateObject = {}
     updateObject.title = calculationTitle;
@@ -778,15 +778,15 @@ function editUpdateObjectOfNewCalculation() {
 async function createUpdateObjectOfNewCalculation() {
     let children = dashboard.children;
 
-    let calculationTitleObject = document.getElementById('intercalcus-calulation-new-name');
-    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : intercalcusMainScriptLocalization.newCalcTitle;
+    let calculationTitleObject = document.getElementById('interactivecalculations-calulation-new-name');
+    let calculationTitle = calculationTitleObject.value ? calculationTitleObject.value : interactivecalculationsMainScriptLocalization.newCalcTitle;
 
     let updateObject = {}
     updateObject.title = calculationTitle;
     updateObject.components = [];
     updateObject.customStyles = "";
     updateObject.configuration = currentCalculationConfiguration;
-    await intercalcus_getNextCalculationDescriptionId().then((value) => {
+    await interactivecalculations_getNextCalculationDescriptionId().then((value) => {
         updateObject.id = value;
     }, (error) => {
         console.log(error);
@@ -823,13 +823,13 @@ function getProductInHtml(product) {
     return "<table class='table table-bordered table-striped col-5 m-1'>" +
         "<thead>" +
         "<tr>" +
-        "<th>" + intercalcusMainScriptLocalization.id + "</th>" +
-        "<th>" + intercalcusMainScriptLocalization.name + "</th>" +
-        "<th>" + intercalcusMainScriptLocalization.description + "</th>" +
-        "<th>" + intercalcusMainScriptLocalization.pricePerUnit + "</th>" +
-        "<th>" + intercalcusMainScriptLocalization.unit + "</th>" +
-        "<th>" + intercalcusMainScriptLocalization.minQuantity + "</th>" +
-        "<th>" + intercalcusMainScriptLocalization.displayType + "</th>" +
+        "<th>" + interactivecalculationsMainScriptLocalization.id + "</th>" +
+        "<th>" + interactivecalculationsMainScriptLocalization.name + "</th>" +
+        "<th>" + interactivecalculationsMainScriptLocalization.description + "</th>" +
+        "<th>" + interactivecalculationsMainScriptLocalization.pricePerUnit + "</th>" +
+        "<th>" + interactivecalculationsMainScriptLocalization.unit + "</th>" +
+        "<th>" + interactivecalculationsMainScriptLocalization.minQuantity + "</th>" +
+        "<th>" + interactivecalculationsMainScriptLocalization.displayType + "</th>" +
         "</tr>" +
         "</thead>" +
         "<tbody>" +
@@ -912,7 +912,7 @@ function getProductToJSONObject(productComponent) {
     let productDiv;
     let validProduct;
     for (const child of children) {
-        if (child.id.startsWith("intercalcus-dashboard")) {
+        if (child.id.startsWith("interactivecalculations-dashboard")) {
             dashboard = child;
         }
     }
@@ -938,7 +938,7 @@ function getProductToJSONObject(productComponent) {
         let conf = {};
 
         let modalConf = document.getElementById(modalConfId);
-        let elementNodeListOf = modalConf.querySelectorAll('.intercalcus-custom-input');
+        let elementNodeListOf = modalConf.querySelectorAll('.interactivecalculations-custom-input');
         for (const customInput of elementNodeListOf) {
             conf[customInput.name] = customInput.dataset.previous;
         }
@@ -978,7 +978,7 @@ function getServiceToJSONObject(serviceComponent) {
     let serviceDiv;
     let validService;
     for (const child of children) {
-        if (child.id.startsWith("intercalcus-dashboard")) {
+        if (child.id.startsWith("interactivecalculations-dashboard")) {
             dashboard = child;
         }
     }
@@ -1004,7 +1004,7 @@ function getServiceToJSONObject(serviceComponent) {
         let conf = {};
 
         let modalConf = document.getElementById(modalConfId);
-        let elementNodeListOf = modalConf.querySelectorAll('.intercalcus-custom-input');
+        let elementNodeListOf = modalConf.querySelectorAll('.interactivecalculations-custom-input');
         for (const customInput of elementNodeListOf) {
             conf[customInput.name] = customInput.dataset.previous;
         }
@@ -1044,7 +1044,7 @@ function getGenericComponentToJSONObject(genericComponent) {
     let option;
     let select;
     for (const child of children) {
-        if (child.id.startsWith("intercalcus-dashboard")) {
+        if (child.id.startsWith("interactivecalculations-dashboard")) {
             dashboard = child;
         }
     }
@@ -1060,7 +1060,7 @@ function getGenericComponentToJSONObject(genericComponent) {
     let conf = {};
 
     let modalConf = document.getElementById(modalConfId);
-    let elementNodeListOf = modalConf.querySelectorAll('.intercalcus-custom-input');
+    let elementNodeListOf = modalConf.querySelectorAll('.interactivecalculations-custom-input');
     for (const customInput of elementNodeListOf) {
         conf[customInput.name] = customInput.dataset.previous;
     }
@@ -1091,7 +1091,7 @@ function getCalculationComponentToJSONObject(calculationComponent) {
     let option;
     let select;
     for (const child of children) {
-        if (child.id.startsWith("intercalcus-dashboard")) {
+        if (child.id.startsWith("interactivecalculations-dashboard")) {
             dashboard = child;
         }
     }
@@ -1106,7 +1106,7 @@ function getCalculationComponentToJSONObject(calculationComponent) {
     let conf = {};
 
     let modalConf = document.getElementById(modalConfId);
-    let elementNodeListOf = modalConf.querySelectorAll('.intercalcus-custom-input');
+    let elementNodeListOf = modalConf.querySelectorAll('.interactivecalculations-custom-input');
     for (const customInput of elementNodeListOf) {
         conf[customInput.name] = customInput.dataset.previous;
     }
@@ -1134,93 +1134,93 @@ function getCalculationComponentToJSONObject(calculationComponent) {
  */
 function getConfigureModal(id, displayType) {
     return `
-    <div class="intercalcus-modal-wrapper hidden intercalcus-component-configuration-modal">
-        <div id="modal-${id}" class="intercalcus-config-modal">
+    <div class="interactivecalculations-modal-wrapper hidden interactivecalculations-component-configuration-modal">
+        <div id="modal-${id}" class="interactivecalculations-config-modal">
         <div class="modal-content p-3">
         <span>
-          <h2>${intercalcusMainScriptLocalization.personalCustomization}</h2>
-           <button class="intercalcus-config-btn btn-danger mt-2 close-btn intercalcus-float-right"><i class="dashicons dashicons-no"></i></button>
+          <h2>${interactivecalculationsMainScriptLocalization.personalCustomization}</h2>
+           <button class="interactivecalculations-config-btn btn-danger mt-2 close-btn interactivecalculations-float-right"><i class="dashicons dashicons-no"></i></button>
         </span>
           
         <span id="show-label-configuration" class="row m-0 align-items-center">
-              <label class="col-2" for="show-label">${intercalcusMainScriptLocalization.showLabel}:</label>
-              <input type="checkbox" id="show-label" name="show-label" class="intercalcus-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
+              <label class="col-2" for="show-label">${interactivecalculationsMainScriptLocalization.showLabel}:</label>
+              <input type="checkbox" id="show-label" name="show-label" class="interactivecalculations-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
         </span>
         
         <span class="display-none row m-0 align-items-center" id="custom-label-configuration">
-              <label class="col-2" for="custom-label">${intercalcusMainScriptLocalization.customLabel}:</label>
-              <input type="text" id="custom-label" name="custom-label" class="intercalcus-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
+              <label class="col-2" for="custom-label">${interactivecalculationsMainScriptLocalization.customLabel}:</label>
+              <input type="text" id="custom-label" name="custom-label" class="interactivecalculations-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/> 
         </span>
          
          <span class="display-none row m-0 align-items-center" id="label-configuration" >
-               <label for="label-classes">${intercalcusMainScriptLocalization.labelClasses}:</label>
-               <input type="text" id="label-classes" name="label-classes" class="intercalcus-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
+               <label for="label-classes">${interactivecalculationsMainScriptLocalization.labelClasses}:</label>
+               <input type="text" id="label-classes" name="label-classes" class="interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
         </span>
         
          <span class="display-none row m-0 align-items-center" id="base-value-configuration" >
-               <label for="base-value" class="col-2">${intercalcusMainScriptLocalization.baseValue}:</label>
-               <input type="number" id="base-value" name="base-value" class="intercalcus-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
+               <label for="base-value" class="col-2">${interactivecalculationsMainScriptLocalization.baseValue}:</label>
+               <input type="number" id="base-value" name="base-value" class="interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
         </span>        
           
         <span class="display-none row m-0 align-items-center" id="unchecked-value-configuration" >
-               <label for="unchecked-value" class="col-2">${intercalcusMainScriptLocalization.uncheckedValue}:</label>
-               <input type="number" id="unchecked-value" name="unchecked-value" class="intercalcus-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
+               <label for="unchecked-value" class="col-2">${interactivecalculationsMainScriptLocalization.uncheckedValue}:</label>
+               <input type="number" id="unchecked-value" name="unchecked-value" class="interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="1"/> 
         </span>       
          
          <div class="display-none m-0 align-items-center" id="complex-calculation-configuration" >
-               <label for="complex-calculation" class="col-4">${intercalcusMainScriptLocalization.complexCalcConf}:</label>
-               <textarea class="intercalcus-custom-input col-10 mt-0 mb-4 ml-4 mr-4"  id="complex-calculation" name="complex-calculation" rows="3" cols="45" data-previous=""></textarea>
+               <label for="complex-calculation" class="col-4">${interactivecalculationsMainScriptLocalization.complexCalcConf}:</label>
+               <textarea class="interactivecalculations-custom-input col-10 mt-0 mb-4 ml-4 mr-4"  id="complex-calculation" name="complex-calculation" rows="3" cols="45" data-previous=""></textarea>
                <span class="mb-2 align-items-center">
-                   <label for="complex-calculation-components">${intercalcusMainScriptLocalization.complexCalcAddComp}:</label>
+                   <label for="complex-calculation-components">${interactivecalculationsMainScriptLocalization.complexCalcAddComp}:</label>
                    <select class="mb-4" id="complex-calculation-components"></select>
                </span>
         </div>
         
          <span class="display-none row m-0 align-items-center" id="subtract-calculation-configuration" >
-               <label for="subtract-value" class="col-2">${intercalcusMainScriptLocalization.subtractFromValue}:</label>
-               <input type="number" id="subtract-value" name="subtract-value" class="intercalcus-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="0"/> 
+               <label for="subtract-value" class="col-2">${interactivecalculationsMainScriptLocalization.subtractFromValue}:</label>
+               <input type="number" id="subtract-value" name="subtract-value" class="interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4" data-previous="" value="0"/> 
         </span>
         
         <span class="display-none row m-0 align-items-center" id="slider-configuration">
-            <label class="col-2" for="slider-max">${intercalcusMainScriptLocalization.sliderMax}:</label>
-            <input type="number" id="slider-max" name="slider-max" class="intercalcus-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/>
-            <label for="slider-show-value">${intercalcusMainScriptLocalization.showValue}:</label>
-            <input type="checkbox" id="slider-show-value" name="slider-show-value" class="intercalcus-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/>  
+            <label class="col-2" for="slider-max">${interactivecalculationsMainScriptLocalization.sliderMax}:</label>
+            <input type="number" id="slider-max" name="slider-max" class="interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/>
+            <label for="slider-show-value">${interactivecalculationsMainScriptLocalization.showValue}:</label>
+            <input type="checkbox" id="slider-show-value" name="slider-show-value" class="interactivecalculations-custom-input form-check form-switch mb-2 ml-2 mr-4" data-previous=""/>  
         </span>
         
         <span class="display-none" id="list-configuration" data-option="1">
             <span class="row m-0 align-items-center">
-                <label class="col-2" for="list-option1">${intercalcusMainScriptLocalization.listOption}:</label>
-                <input type="text" id="list-option1" name="list-option1" class="intercalcus-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
-                <label class="col-2" for="list-value1">${intercalcusMainScriptLocalization.listValue}:</label>
-                <input type="text" id="list-value1" name="list-value1" class="intercalcus-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
+                <label class="col-2" for="list-option1">${interactivecalculationsMainScriptLocalization.listOption}:</label>
+                <input type="text" id="list-option1" name="list-option1" class="interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
+                <label class="col-2" for="list-value1">${interactivecalculationsMainScriptLocalization.listValue}:</label>
+                <input type="text" id="list-value1" name="list-value1" class="interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
             </span>    
             
-            <button id="list-add-option" class="intercalcus-config-btn btn-info mt-2 close-btn intercalcus-float-right"><i class="dashicons dashicons-plus-alt"></i></button>
+            <button id="list-add-option" class="interactivecalculations-config-btn btn-info mt-2 close-btn interactivecalculations-float-right"><i class="dashicons dashicons-plus-alt"></i></button>
         </span>
         
         <span class="display-none" id="sum-configuration">
             <span class="row m-0 align-items-center">
-                <label class="col-2" for="list-option1">${intercalcusMainScriptLocalization.sumPrefix}:</label>
-                <input type="text" id="sum-prefix" name="sum-prefix" class="intercalcus-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
-                <label class="col-2" for="sum-postfix">${intercalcusMainScriptLocalization.sumSuffix}:</label>
-                <input type="text" id="sum-postfix" name="sum-postfix" class="intercalcus-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
+                <label class="col-2" for="list-option1">${interactivecalculationsMainScriptLocalization.sumPrefix}:</label>
+                <input type="text" id="sum-prefix" name="sum-prefix" class="interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
+                <label class="col-2" for="sum-postfix">${interactivecalculationsMainScriptLocalization.sumSuffix}:</label>
+                <input type="text" id="sum-postfix" name="sum-postfix" class="interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4 col-3" data-previous=""/>
             </span>    
         </span>
          
           <span id="input-classes-configuration" class="row m-0 align-items-center">
-               <label class="col-2" for="input-classes">${intercalcusMainScriptLocalization.inputClasses}:</label>
-               <input type="text" id="input-classes" name="input-classes" class="intercalcus-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
+               <label class="col-2" for="input-classes">${interactivecalculationsMainScriptLocalization.inputClasses}:</label>
+               <input type="text" id="input-classes" name="input-classes" class="interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4" data-previous=""/> 
           </span>
            
-          <p class="font-italic font-weight-light text-info">${intercalcusMainScriptLocalization.toAddMultipleClassesText}</p>
+          <p class="font-italic font-weight-light text-info">${interactivecalculationsMainScriptLocalization.toAddMultipleClassesText}</p>
                 
           <span id="custom-css-configuration">
-             <label class="col-2"  for="custom-css">${intercalcusMainScriptLocalization.customCss}:</label>
-             <textarea class="intercalcus-custom-input intercalcus-custom-styler mt-0 mb-4 ml-4 mr-4"  id="custom-css" name="custom-css" rows="8" cols="50" placeholder=".myStyle{color:red}" data-previous=""></textarea>
+             <label class="col-2"  for="custom-css">${interactivecalculationsMainScriptLocalization.customCss}:</label>
+             <textarea class="interactivecalculations-custom-input interactivecalculations-custom-styler mt-0 mb-4 ml-4 mr-4"  id="custom-css" name="custom-css" rows="8" cols="50" placeholder=".myStyle{color:red}" data-previous=""></textarea>
           </span>
        
-          <button class="intercalcus-config-btn btn-success mt-2 save-btn intercalcus-float-right"><i class="dashicons dashicons-saved"></i></button>
+          <button class="interactivecalculations-config-btn btn-success mt-2 save-btn interactivecalculations-float-right"><i class="dashicons dashicons-saved"></i></button>
         </div>
       </div>
     </div>`;
@@ -1231,7 +1231,7 @@ function getConfigureModal(id, displayType) {
  * @param {number} currentId - The current ID of the option row.
  * @returns {{span: HTMLSpanElement, nextId: number}} - An object containing a new span element and the ID of the next option row.
  */
-function intercalcus_getNewRowOfOptionsToConfigure(currentId) {
+function interactivecalculations_getNewRowOfOptionsToConfigure(currentId) {
     const span = document.createElement('span');
     span.classList.add("row");
     const labelOption = document.createElement("label");
@@ -1247,7 +1247,7 @@ function intercalcus_getNewRowOfOptionsToConfigure(currentId) {
     inputOption.type = "text";
     inputOption.id = "list-option" + nextId;
     inputOption.name = "list-option" + nextId;
-    inputOption.className = "intercalcus-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
+    inputOption.className = "interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
     inputOption.dataset.previous = "";
     span.appendChild(inputOption);
     labelValue.classList.add("col-2");
@@ -1257,7 +1257,7 @@ function intercalcus_getNewRowOfOptionsToConfigure(currentId) {
     inputValue.type = "text";
     inputValue.id = "list-value" + nextId;
     inputValue.name = "list-value" + nextId;
-    inputValue.className = "intercalcus-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
+    inputValue.className = "interactivecalculations-custom-input mt-0 mb-2 ml-4 mr-4 col-3"
     inputValue.dataset.previous = "";
     span.appendChild(inputValue);
     return {span, nextId};
@@ -1267,13 +1267,13 @@ function appendConfigButton(div) {
     // Create a new button element
     const button = document.createElement('button');
     button.innerHTML = '<i class="dashicons dashicons-admin-generic"></i>';
-    button.className = 'intercalcus-config-btn button';
-    const componentType = intercalcus_getComponentType(div.id.split("-")[2]);
+    button.className = 'interactivecalculations-config-btn button';
+    const componentType = interactivecalculations_getComponentType(div.id.split("-")[2]);
 
     const id = "conf-" + div.parentNode.id;
 
     // Append the button to the div
-    let configureDiv = div.parentNode.querySelector(".intercalcus-configuration-bar");
+    let configureDiv = div.parentNode.querySelector(".interactivecalculations-configuration-bar");
     configureDiv.appendChild(button);
 
     // Append the modal to the body
@@ -1290,15 +1290,15 @@ function appendConfigButton(div) {
 
     const addListOptionBtn = modal.querySelector('#list-add-option');
     addListOptionBtn.onclick = () => {
-        let elementNodeListOf = addListOptionBtn.previousElementSibling.querySelectorAll(".intercalcus-custom-input");
+        let elementNodeListOf = addListOptionBtn.previousElementSibling.querySelectorAll(".interactivecalculations-custom-input");
         for (const prevInput of elementNodeListOf) {
             if (!prevInput.value) {
-                alert(intercalcusMainScriptLocalization.errorFillPreviousOptions);
+                alert(interactivecalculationsMainScriptLocalization.errorFillPreviousOptions);
                 return;
             }
         }
         let currentId = Number(addListOptionBtn.parentNode.dataset.option);
-        const {span, nextId} = intercalcus_getNewRowOfOptionsToConfigure(currentId);
+        const {span, nextId} = interactivecalculations_getNewRowOfOptionsToConfigure(currentId);
         addListOptionBtn.parentNode.dataset.option = nextId;
 
         addListOptionBtn.parentNode.insertBefore(span, addListOptionBtn);
@@ -1319,7 +1319,7 @@ function appendConfigButton(div) {
             const currentDashboard = div.parentElement.parentElement.parentElement;
             for (const item of currentDashboard.children) {
                 const component = item.querySelector("div");
-                if (!component.id.includes("calculation") && listenableDisplayTypes.includes(intercalcus_getDisplayTypeOfSelectedChild(component))) {
+                if (!component.id.includes("calculation") && listenableDisplayTypes.includes(interactivecalculations_getDisplayTypeOfSelectedChild(component))) {
                     const option = document.createElement("option");
                     let selected = component.querySelector('select');
 
@@ -1346,7 +1346,7 @@ function appendConfigButton(div) {
 
     function saveModal() {
         modal.parentNode.classList.add("hidden");
-        let customInputs = modal.querySelectorAll('.intercalcus-custom-input');
+        let customInputs = modal.querySelectorAll('.interactivecalculations-custom-input');
         for (const input of customInputs) {
             if (input.type === "checkbox") {
                 input.dataset.previous = input.checked;
@@ -1366,7 +1366,7 @@ function appendConfigButton(div) {
     // Function to close the modal
     function closeModal() {
         modal.parentNode.classList.add("hidden");
-        let customInputs = modal.querySelectorAll('.intercalcus-custom-input');
+        let customInputs = modal.querySelectorAll('.interactivecalculations-custom-input');
         for (const input of customInputs) {
             input.value = input.dataset.previous;
         }
@@ -1379,7 +1379,7 @@ function appendConfigButton(div) {
         } else {
             wrappingSpan.classList.add("display-none");
 
-            let labelConfigurations = wrappingSpan.querySelectorAll('.intercalcus-custom-input');
+            let labelConfigurations = wrappingSpan.querySelectorAll('.interactivecalculations-custom-input');
             labelConfigurations.forEach((input) => {
                 input.value = ""
             });
@@ -1418,12 +1418,12 @@ function appendConfigButton(div) {
         if (previousType) {
             if (displayType !== previousType) {
 
-                let labelInputs = labelSpan.querySelectorAll('.intercalcus-custom-input');
+                let labelInputs = labelSpan.querySelectorAll('.interactivecalculations-custom-input');
                 labelInputs.forEach((input) => {
                     input.value = ""
                 });
 
-                let sliderConfigurations = sliderConfSpan.querySelectorAll('.intercalcus-custom-input');
+                let sliderConfigurations = sliderConfSpan.querySelectorAll('.interactivecalculations-custom-input');
                 sliderConfigurations.forEach((input) => {
                     if (input.type === "checkbox") {
                         input.checked = false
@@ -1432,32 +1432,32 @@ function appendConfigButton(div) {
                     }
                 });
 
-                let baseValueInputs = baseValueConfiguration.querySelectorAll('.intercalcus-custom-input');
+                let baseValueInputs = baseValueConfiguration.querySelectorAll('.interactivecalculations-custom-input');
                 baseValueInputs.forEach((input) => {
                     input.value = ""
                 });
 
-                let listInputs = listConfiguration.querySelectorAll('.intercalcus-custom-input');
+                let listInputs = listConfiguration.querySelectorAll('.interactivecalculations-custom-input');
                 listInputs.forEach((input) => {
                     input.value = ""
                 });
 
-                let labelConfigurations = showLabelSpan.querySelectorAll('.intercalcus-custom-input');
+                let labelConfigurations = showLabelSpan.querySelectorAll('.interactivecalculations-custom-input');
                 labelConfigurations.forEach((input) => {
                     input.value = ""
                 });
 
-                let subtractValue = subtractConfiguration.querySelectorAll('.intercalcus-custom-input');
+                let subtractValue = subtractConfiguration.querySelectorAll('.interactivecalculations-custom-input');
                 subtractValue.forEach((input) => {
                     input.value = "0"
                 });
 
-                let complexInputs = complexCalcConfiguration.querySelectorAll('.intercalcus-custom-input');
+                let complexInputs = complexCalcConfiguration.querySelectorAll('.interactivecalculations-custom-input');
                 complexInputs.forEach((input) => {
                     input.value = ""
                 })
 
-                let uncheckedValues = uncheckedValueConfiguration.querySelectorAll('.intercalcus-custom-input');
+                let uncheckedValues = uncheckedValueConfiguration.querySelectorAll('.interactivecalculations-custom-input');
                 uncheckedValues.forEach((input) => {
                     input.value = "1";
                 });
@@ -1537,11 +1537,11 @@ function appendConfigButton(div) {
 
 
 function updateEditPreview(jsonBodyToUpdate) {
-    masterUpdatePreview(jsonBodyToUpdate, 'intercalcus-preview-edit')
+    masterUpdatePreview(jsonBodyToUpdate, 'interactivecalculations-preview-edit')
 }
 
 function updatePreview(jsonBodyToUpdate) {
-    masterUpdatePreview(jsonBodyToUpdate, 'intercalcus-preview')
+    masterUpdatePreview(jsonBodyToUpdate, 'interactivecalculations-preview')
 }
 
 /**
@@ -1567,7 +1567,7 @@ function masterUpdatePreview(jsonBodyToUpdate, previewId) {
     }
 
     const wrapperDiv = document.createElement("div")
-    wrapperDiv.id = 'intercalcus-preview-wrapper';
+    wrapperDiv.id = 'interactivecalculations-preview-wrapper';
 
     if (updateObject.configuration["wrapper-classes"]) {
         let classes = updateObject.configuration["wrapper-classes"].split(";");
@@ -1585,7 +1585,7 @@ function masterUpdatePreview(jsonBodyToUpdate, previewId) {
 
     const form = document.createElement("form");
 
-    intercalcus_calculations.set(updateObject["id"], []);
+    interactivecalculations_calculations.set(updateObject["id"], []);
 
 
     for (const component of updateObject["components"]) {
@@ -1593,11 +1593,11 @@ function masterUpdatePreview(jsonBodyToUpdate, previewId) {
         if (component["displayType"].trim().replaceAll(" ", "").replaceAll("-", "").toLowerCase() === "none") {
             continue;
         }
-        form.appendChild(intercalcus_displayComponent(component, updateObject["id"], updateObject["components"]));
+        form.appendChild(interactivecalculations_displayComponent(component, updateObject["id"], updateObject["components"]));
     }
 
 
-    let customStyles = intercalcus_createCustomStyle(updateObject["customStyles"])
+    let customStyles = interactivecalculations_createCustomStyle(updateObject["customStyles"])
     if (customStyles !== false) {
         preview.appendChild(customStyles);
     }
@@ -1624,12 +1624,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     toggleBtn.addEventListener('click', () => {
         if (thirdDiv.classList.contains('visible')) {
-            firstDiv.classList.remove('intercalcus-hidden-slow');
+            firstDiv.classList.remove('interactivecalculations-hidden-slow');
             firstDiv.classList.add('visible');
             secondDiv.classList.remove('visible');
             thirdDiv.classList.remove('visible');
-            secondDiv.classList.add('intercalcus-hidden-slow');
-            thirdDiv.classList.add('intercalcus-hidden-slow');
+            secondDiv.classList.add('interactivecalculations-hidden-slow');
+            thirdDiv.classList.add('interactivecalculations-hidden-slow');
             firstDiv.classList.remove("display-none")
             setTimeout(() => secondDiv.classList.add("display-none"), 300);
             setTimeout(() => thirdDiv.classList.add("display-none"), 300);
@@ -1641,23 +1641,23 @@ document.addEventListener('DOMContentLoaded', () => {
             let innerText = toggleBtn.innerText;
             toggleBtn.setAttribute('data-toggled-text', innerText);
             toggleBtn.innerText = toggleText;
-            toggleBtn.classList.remove('intercalcus-reappear');
-            toggleBtn.classList.add('intercalcus-reappear');
+            toggleBtn.classList.remove('interactivecalculations-reappear');
+            toggleBtn.classList.add('interactivecalculations-reappear');
 
             //clear possible components/modals left from editing
-            intercalcus_clear_edit_calculation_data();
+            interactivecalculations_clear_edit_calculation_data();
 
             return;
         }
 
-        intercalcus_clear_edit_calculation_data();
+        interactivecalculations_clear_edit_calculation_data();
 
         if (firstDiv.classList.contains('visible')) {
             firstDiv.classList.remove('visible');
-            firstDiv.classList.add('intercalcus-hidden-slow');
+            firstDiv.classList.add('interactivecalculations-hidden-slow');
             thirdDiv.classList.remove('visible');
-            thirdDiv.classList.add('intercalcus-hidden-slow');
-            secondDiv.classList.remove('intercalcus-hidden-slow');
+            thirdDiv.classList.add('interactivecalculations-hidden-slow');
+            secondDiv.classList.remove('interactivecalculations-hidden-slow');
             secondDiv.classList.add('visible');
             secondDiv.classList.remove("display-none");
             setTimeout(() => firstDiv.classList.add("display-none"), 300);
@@ -1666,12 +1666,12 @@ document.addEventListener('DOMContentLoaded', () => {
             editCalculation.classList.add("hidden");
             editConfiguration.classList.remove("hidden");
         } else {
-            firstDiv.classList.remove('intercalcus-hidden-slow');
+            firstDiv.classList.remove('interactivecalculations-hidden-slow');
             firstDiv.classList.add('visible');
             secondDiv.classList.remove('visible');
             thirdDiv.classList.remove('visible');
-            secondDiv.classList.add('intercalcus-hidden-slow');
-            thirdDiv.classList.add('intercalcus-hidden-slow');
+            secondDiv.classList.add('interactivecalculations-hidden-slow');
+            thirdDiv.classList.add('interactivecalculations-hidden-slow');
             firstDiv.classList.remove("display-none")
             setTimeout(() => secondDiv.classList.add("display-none"), 300);
             setTimeout(() => thirdDiv.classList.add("display-none"), 300);
@@ -1683,8 +1683,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let innerText = toggleBtn.innerText;
         toggleBtn.setAttribute('data-toggled-text', innerText);
         toggleBtn.innerText = toggleText;
-        toggleBtn.classList.remove('intercalcus-reappear');
-        toggleBtn.classList.add('intercalcus-reappear');
+        toggleBtn.classList.remove('interactivecalculations-reappear');
+        toggleBtn.classList.add('interactivecalculations-reappear');
     });
 
 
@@ -1700,7 +1700,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (updateObjectOfNewCalculation['components'].length > 0) {
-            let calcCreationXHR = intercalcus_process_calculation_description_creation();
+            let calcCreationXHR = interactivecalculations_process_calculation_description_creation();
 
             calcCreationXHR.onreadystatechange = function () {
                 if (calcCreationXHR.readyState === XMLHttpRequest.DONE) {
@@ -1714,7 +1714,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             calcCreationXHR.send(updateObjectOfNewCalculationJSON);
         } else {
-            alert(intercalcusMainScriptLocalization.errorNoValidComponents);
+            alert(interactivecalculationsMainScriptLocalization.errorNoValidComponents);
         }
     }
 
@@ -1730,7 +1730,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (updateObjectOfNewCalculation['components'].length > 0) {
-            let calcCreationXHR = intercalcus_process_calculation_description_edit();
+            let calcCreationXHR = interactivecalculations_process_calculation_description_edit();
 
             calcCreationXHR.onreadystatechange = function () {
                 if (calcCreationXHR.readyState === XMLHttpRequest.DONE) {
@@ -1749,7 +1749,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             calcCreationXHR.send(JSON.stringify(data));
         } else {
-            alert(intercalcusMainScriptLocalization.errorNoValidComponents);
+            alert(interactivecalculationsMainScriptLocalization.errorNoValidComponents);
         }
     }
 
@@ -1762,7 +1762,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function saveModal() {
             modal.classList.add("hidden");
-            let customInputs = modal.querySelectorAll('.intercalcus-custom-input');
+            let customInputs = modal.querySelectorAll('.interactivecalculations-custom-input');
             for (const input of customInputs) {
                 if (input.type === "checkbox") {
                     input.dataset.previous = input.checked;
@@ -1781,7 +1781,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Function to close the modal
         function closeModal() {
             modal.classList.add("hidden");
-            let customInputs = modal.querySelectorAll('.intercalcus-custom-input');
+            let customInputs = modal.querySelectorAll('.interactivecalculations-custom-input');
             for (const input of customInputs) {
                 input.value = input.dataset.previous;
             }
@@ -1791,7 +1791,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveBtn.addEventListener('click', saveModal);
 
         modal.onchange = () => {
-            intercalcus_process_calculation_configuration_change(modal);
+            interactivecalculations_process_calculation_configuration_change(modal);
         };
 
         window.addEventListener('click', (event) => {
@@ -1811,7 +1811,7 @@ function noComponentFoundError(error) {
     return span;
 }
 
-function intercalcus_getComponentType(idPart) {
+function interactivecalculations_getComponentType(idPart) {
     switch (true) {
         case idPart.startsWith("product"):
             return "product";
@@ -1824,7 +1824,7 @@ function intercalcus_getComponentType(idPart) {
 
 let currentCalculationConfiguration = {
     "show-title": true,
-    "calculation-description": intercalcusMainScriptLocalization.defaultDescription,
+    "calculation-description": interactivecalculationsMainScriptLocalization.defaultDescription,
     "wrapper-classes": "",
 }
 
@@ -1832,7 +1832,7 @@ let currentCalculationConfiguration = {
  * Sets the values of the calculation configuration modal based on the provided calculation configuration object.
  * @param {Object} calculateConfiguration - The calculation configuration object to use to set the modal values.
  */
-function intercalcus_set_calculation_configuration_values(calculateConfiguration) {
+function interactivecalculations_set_calculation_configuration_values(calculateConfiguration) {
     const modal = document.getElementById('configure-calculation-modal')
     const showTitleCheckBox = modal.querySelector('#show-title');
     if (calculateConfiguration["show-title"]) {
@@ -1856,7 +1856,7 @@ function intercalcus_set_calculation_configuration_values(calculateConfiguration
  * Processes changes made in the calculation configuration modal and updates the currentCalculationConfiguration object.
  * @param {HTMLElement} modal - The HTML element of the calculation configuration modal.
  */
-function intercalcus_process_calculation_configuration_change(modal) {
+function interactivecalculations_process_calculation_configuration_change(modal) {
     const showTitleCheckBox = modal.querySelector('#show-title');
     if (showTitleCheckBox.checked) {
         currentCalculationConfiguration["show-title"] = true;
@@ -1879,7 +1879,7 @@ function intercalcus_process_calculation_configuration_change(modal) {
  * Handles the swap between two div elements and a button, and reveals a third div.
  * @returns {void}
  */
-function intercalcus_handle_button_and_div_swap() {
+function interactivecalculations_handle_button_and_div_swap() {
     const toggleBtn = document.getElementById('toggleBtn');
     const firstDiv = document.getElementById('firstDiv');
     const secondDiv = document.getElementById('secondDiv');
@@ -1890,10 +1890,10 @@ function intercalcus_handle_button_and_div_swap() {
 
     setTimeout(() => firstDiv.classList.add("display-none"), 300);
     setTimeout(() => secondDiv.classList.add("display-none"), 300);
-    firstDiv.classList.add("intercalcus-hidden-slow");
-    secondDiv.classList.add("intercalcus-hidden-slow");
+    firstDiv.classList.add("interactivecalculations-hidden-slow");
+    secondDiv.classList.add("interactivecalculations-hidden-slow");
     thirdDiv.classList.remove("display-none");
-    thirdDiv.classList.remove("intercalcus-hidden-slow");
+    thirdDiv.classList.remove("interactivecalculations-hidden-slow");
     thirdDiv.classList.add("visible");
 
 
@@ -1905,16 +1905,16 @@ function intercalcus_handle_button_and_div_swap() {
     let innerText = toggleBtn.innerText;
     toggleBtn.setAttribute('data-toggled-text', innerText);
     toggleBtn.innerText = toggleText;
-    toggleBtn.classList.remove('intercalcus-reappear');
-    toggleBtn.classList.add('intercalcus-reappear');
+    toggleBtn.classList.remove('interactivecalculations-reappear');
+    toggleBtn.classList.add('interactivecalculations-reappear');
 }
 
-function intercalcus_set_edit_calculation_name(configuredName) {
-    const input = document.getElementById("intercalcus-calulation-edit-name");
+function interactivecalculations_set_edit_calculation_name(configuredName) {
+    const input = document.getElementById("interactivecalculations-calulation-edit-name");
     input.value = configuredName;
 }
 
-function intercalcus_add_custom_styles_edit_calculation(customStyles) {
+function interactivecalculations_add_custom_styles_edit_calculation(customStyles) {
     let thirdDiv = document.getElementById('thirdDiv');
     let styles = document.createElement('style');
     styles.innerHTML = customStyles;
@@ -1927,7 +1927,7 @@ function intercalcus_add_custom_styles_edit_calculation(customStyles) {
  * @param {Array} components - An array of components to be added to the edit calculation form.
  * @return {void}
  * */
-function intercalcus_fill_components_of_edit_calculation(components) {
+function interactivecalculations_fill_components_of_edit_calculation(components) {
     const nextIds = {
         "product-component": 1,
         "service-component": 1,
@@ -1964,13 +1964,13 @@ function intercalcus_fill_components_of_edit_calculation(components) {
         }
 
         const dashboardItem = document.createElement('div');
-        dashboardItem.classList.add('intercalcus-dashboard-item');
+        dashboardItem.classList.add('interactivecalculations-dashboard-item');
         dashboardItem.appendChild(insertedComponent);
 
         addMovableButtons(insertedComponent, dashboardItem);
         dashboardEdit.appendChild(dashboardItem);
 
-        intercalcus_insertDataToComponent(insertedComponent, component, id);
+        interactivecalculations_insertDataToComponent(insertedComponent, component, id);
     }
 
     const thirdDiv = document.getElementById('thirdDiv')
@@ -1983,7 +1983,7 @@ function intercalcus_fill_components_of_edit_calculation(components) {
 }
 
 
-function intercalcus_insertDataToComponent(insertedComponent, jsonData) {
+function interactivecalculations_insertDataToComponent(insertedComponent, jsonData) {
     insertedComponent.classList.remove("hidden");
 
     const possibleItem = insertedComponent.querySelector("#" + jsonData["domId"]);
@@ -1994,11 +1994,11 @@ function intercalcus_insertDataToComponent(insertedComponent, jsonData) {
     const possibleSelect = insertedComponent.querySelector("select");
     possibleSelect.value = jsonData["id"];
 
-    intercalcus_insertDataToComponentModal(insertedComponent, jsonData);
+    interactivecalculations_insertDataToComponentModal(insertedComponent, jsonData);
 }
 
 //"conf":{"confId":"modal-conf-component-component0","configuration":{"show-label":"","custom-label":"","label-class":"","base-value":"","slider-max":"","slider-show-value":"","list-option1":"","list-value1":"","input-class":"","custom-css":""}},
-function intercalcus_insertDataToComponentModal(insertedComponent, jsonData) {
+function interactivecalculations_insertDataToComponentModal(insertedComponent, jsonData) {
 
     const modal = document.getElementById(jsonData.conf.confId);
     modal.dataset.type = jsonData.displayType.toLowerCase()
@@ -2013,7 +2013,7 @@ function intercalcus_insertDataToComponentModal(insertedComponent, jsonData) {
                 let possibleElement = listConfiguration.querySelector('#' + attribute);
                 if (!possibleElement) {
                     const id = parseInt(attribute.match(/\d+/)[0], 10);
-                    let {span, nextId} = intercalcus_getNewRowOfOptionsToConfigure(id);
+                    let {span, nextId} = interactivecalculations_getNewRowOfOptionsToConfigure(id);
                     let button = listConfiguration.querySelector('#list-add-option');
                     listConfiguration.dataset.option = nextId;
                     listConfiguration.insertBefore(span, button);
@@ -2042,8 +2042,8 @@ function intercalcus_insertDataToComponentModal(insertedComponent, jsonData) {
  *
  * @param {string} id - The ID of the calculation to edit.
  */
-function intercalcus_process_calculation_edit_action(id) {
-    const calculationXHR = intercalcus_getCalculationDescriptionById(id);
+function interactivecalculations_process_calculation_edit_action(id) {
+    const calculationXHR = interactivecalculations_getCalculationDescriptionById(id);
 
     calculationXHR.onreadystatechange = function () {
         if (calculationXHR.readyState === XMLHttpRequest.DONE) {
@@ -2051,15 +2051,15 @@ function intercalcus_process_calculation_edit_action(id) {
                 const databaseObject = JSON.parse(calculationXHR.responseText);
                 const calculationObject = JSON.parse(databaseObject.body);
 
-                intercalcus_clear_create_calculation_data();
+                interactivecalculations_clear_create_calculation_data();
 
-                intercalcus_set_calculation_configuration_values(calculationObject.configuration);
-                intercalcus_handle_button_and_div_swap();
+                interactivecalculations_set_calculation_configuration_values(calculationObject.configuration);
+                interactivecalculations_handle_button_and_div_swap();
 
-                intercalcus_set_edit_calculation_name(calculationObject.title);
-                intercalcus_add_custom_styles_edit_calculation(calculationObject.customStyles);
+                interactivecalculations_set_edit_calculation_name(calculationObject.title);
+                interactivecalculations_add_custom_styles_edit_calculation(calculationObject.customStyles);
 
-                intercalcus_fill_components_of_edit_calculation(calculationObject.components);
+                interactivecalculations_fill_components_of_edit_calculation(calculationObject.components);
 
                 editingCalculation = id;
 
@@ -2074,37 +2074,37 @@ function intercalcus_process_calculation_edit_action(id) {
 }
 
 
-function intercalcus_clear_edit_calculation_data() {
-    const dashboard = document.getElementById('intercalcus-dashboard-edit');
+function interactivecalculations_clear_edit_calculation_data() {
+    const dashboard = document.getElementById('interactivecalculations-dashboard-edit');
     dashboard.innerHTML = "";
-    const preview = document.getElementById('intercalcus-preview-edit');
+    const preview = document.getElementById('interactivecalculations-preview-edit');
     preview.innerHTML = "";
-    intercalcus_clear_configure_modals();
+    interactivecalculations_clear_configure_modals();
 }
 
-function intercalcus_clear_create_calculation_data() {
-    const dashboard = document.getElementById('intercalcus-dashboard');
+function interactivecalculations_clear_create_calculation_data() {
+    const dashboard = document.getElementById('interactivecalculations-dashboard');
     dashboard.innerHTML = "";
-    const preview = document.getElementById('intercalcus-preview');
+    const preview = document.getElementById('interactivecalculations-preview');
     preview.innerHTML = "";
-    intercalcus_clear_configure_modals();
+    interactivecalculations_clear_configure_modals();
 }
 
-function intercalcus_clear_configure_modals() {
-    let modals = document.body.querySelectorAll(".intercalcus-component-configuration-modal");
+function interactivecalculations_clear_configure_modals() {
+    let modals = document.body.querySelectorAll(".interactivecalculations-component-configuration-modal");
     for (const modal of modals) {
         document.body.removeChild(modal.parentNode);
     }
 }
 
-function intercalcus_getDisplayTypeOfSelectedChild(component) {
+function interactivecalculations_getDisplayTypeOfSelectedChild(component) {
     let querySelector = component.querySelector("select");
     let selectedIndex = querySelector.selectedIndex;
     switch (true) {
         case querySelector.name.includes("product"):
-            return intercalcus_products[selectedIndex - 1]["display_type"];
+            return interactivecalculations_products[selectedIndex - 1]["display_type"];
         case querySelector.name.includes("service"):
-            return intercalcus_services[selectedIndex - 1]["display_type"];
+            return interactivecalculations_services[selectedIndex - 1]["display_type"];
         case querySelector.name.includes("component"):
             return genericTypes.get(selectedIndex).toLowerCase().trim();
     }

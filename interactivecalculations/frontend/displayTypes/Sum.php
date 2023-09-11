@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,7 +21,7 @@
  *
  */
 
-namespace intercalcus\fe\displayTypes;
+namespace interactivecalculations\fe\displayTypes;
 
 class Sum extends DisplayType
 {
@@ -32,7 +32,7 @@ class Sum extends DisplayType
 
     public function render(): string
     {
-        $wrapper = '<div class="intercalcus-form-group form-outline form-group row">';
+        $wrapper = '<div class="interactivecalculations-form-group form-outline form-group row">';
 
         $wrapper = $wrapper . $this->showLabel();
 
@@ -69,6 +69,6 @@ class Sum extends DisplayType
 
     protected function displayInput()
     {
-        return '<input id="' . $this->id . '" type="text" disabled class="form-control intercalcus-calculation-sum">';
+        return '<input id="' . $this->id . '" type="text" disabled class="form-control interactivecalculations-calculation-sum">';
     }
 }

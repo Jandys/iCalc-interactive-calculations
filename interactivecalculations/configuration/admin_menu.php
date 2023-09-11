@@ -21,12 +21,12 @@
  *
  */
 
-use intercalcus\fe\MainMenuFrontend;
-use intercalcus\fe\ProductAdminFrontend;
-use intercalcus\fe\ServiceAdminFrontend;
-use intercalcus\fe\StatisticsAdminFrontend;
+use interactivecalculations\fe\MainMenuFrontend;
+use interactivecalculations\fe\ProductAdminFrontend;
+use interactivecalculations\fe\ServiceAdminFrontend;
+use interactivecalculations\fe\StatisticsAdminFrontend;
 
-add_action('admin_menu', 'intercalcus_admin_menu');
+add_action('admin_menu', 'interactivecalculations_admin_menu');
 add_action('admin_init', 'inter_calc_set_cookie');
 
 const configurationSites = array(
@@ -41,12 +41,12 @@ $settingCookie = false;
 
 
 /**
- * Sets an authentication cookie for the intercalcus plugin in the admin area.
+ * Sets an authentication cookie for the interactivecalculations plugin in the admin area.
  *
  * This function checks if the current user has the 'manage_options' capability.
  * If true, it creates or updates a transient based on the current session token and user ID.
  * Then, it ensures a valid token is set and not expired. If the token is missing or expired,
- * it requests a new token from the intercalcus API and sets it as a cookie.
+ * it requests a new token from the interactivecalculations API and sets it as a cookie.
  *
  * @return void
  * @global bool $settingCookie A flag to prevent multiple token requests during a single request.
@@ -65,13 +65,13 @@ function inter_calc_set_cookie()
     }
 
     if (isset($_GET['page']) && in_array($_GET['page'], configurationSites)) {
-        if (!isset($_COOKIE['intercalcus-expiration']) ||
-            !isset($_COOKIE['intercalcus-token']) ||
-            $_COOKIE['intercalcus-expiration'] <= time()) {
+        if (!isset($_COOKIE['interactivecalculations-expiration']) ||
+            !isset($_COOKIE['interactivecalculations-token']) ||
+            $_COOKIE['interactivecalculations-expiration'] <= time()) {
             $issued_jwt_token = issue_jwt_token(wp_get_current_user()->ID, wp_get_session_token());
             $expiration_time = time() + 3300; // Set the cookie to expire in 55 minutes
-            setcookie('intercalcus-token', $issued_jwt_token, $expiration_time, '/');
-            setcookie('intercalcus-expiration', $expiration_time, $expiration_time, '/');
+            setcookie('interactivecalculations-token', $issued_jwt_token, $expiration_time, '/');
+            setcookie('interactivecalculations-expiration', $expiration_time, $expiration_time, '/');
         }
     }
 }
@@ -86,7 +86,7 @@ function inter_calc_set_cookie()
  * @since 1.0.0
  *
  */
-function intercalcus_admin_menu()
+function interactivecalculations_admin_menu()
 {
     $menuIcon = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svg" width="400"
                      height="430.1507537688442" viewBox="0, 0, 400,430.1507537688442">
@@ -140,85 +140,85 @@ function intercalcus_admin_menu()
 function inter_calc_main_configuration()
 {
     if (is_admin()) {
-        wp_enqueue_style('intercalcus_main-styles', plugins_url('../styles/intercalcus-main-sheetstyle.css', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
-        add_action('wp_enqueue_style', 'intercalcus_main-styles');
+        wp_enqueue_style('interactivecalculations_main-styles', plugins_url('../styles/interactivecalculations-main-sheetstyle.css', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
+        add_action('wp_enqueue_style', 'interactivecalculations_main-styles');
 
         echo '<div class="wrap">
-        <h2>' . __("Inter Calcus Menu", "intercalcus") . '</h2>';
+        <h2>' . __("Inter Calcus Menu", "interactivecalculations") . '</h2>';
         MainMenuFrontend::configuration();
         echo '</div>';
 
-        intercalcus_main_script_localization();
+        interactivecalculations_main_script_localization();
 
     }
 }
 
-function intercalcus_main_script_localization()
+function interactivecalculations_main_script_localization()
 {
-    wp_enqueue_script('intercalcus_main-script', plugins_url('../scripts/intercalcus_main.js', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
+    wp_enqueue_script('interactivecalculations_main-script', plugins_url('../scripts/interactivecalculations_main.js', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
     $localization_data = array(
-        'id' => __("ID", "intercalcus"),
-        'name' => __("Name", "intercalcus"),
-        'description' => __("Description", "intercalcus"),
-        'pricePerUnit' => __("Price per Unit", "intercalcus"),
-        'unit' => __("Unit", "intercalcus"),
-        'minQuantity' => __("Minimal Quantity", "intercalcus"),
-        'displayType' => __("Display Type", "intercalcus"),
-        'createNewCalc' => __("Create New Calculation", "intercalcus"),
-        'newCalcTitle' => __("New Calculation title", "intercalcus"),
-        'editCurrentConfig' => __("Edit Current Configuration", "intercalcus"),
-        'saveCalc' => __("Save Calculation", "intercalcus"),
-        'calcList' => __("Calculation List", "intercalcus"),
-        'calcName' => __("Calculation Name", "intercalcus"),
-        'product' => __("Product", "intercalcus"),
-        'service' => __("Service", "intercalcus"),
-        'genericComp' => __("Generic Component", "intercalcus"),
-        'calcComp' => __("Calculation Component", "intercalcus"),
-        'preview' => __("Preview", "intercalcus"),
-        'none' => __("-- None --", "intercalcus"),
-        'showLabel' => __("Show Label", "intercalcus"),
-        'customLabel' => __("Custom Label", "intercalcus"),
-        'labelClasses' => __("Label Classes", "intercalcus"),
-        'inputClasses' => __("Input Classes", "intercalcus"),
-        'toAddMultipleClassesText' => __("To add multiple classes separate them by using semicolon: ';'", "intercalcus"),
-        'customCss' => __("Custom CSS", "intercalcus"),
-        'baseValue' => __("Base Value", "intercalcus"),
-        'uncheckedValue' => __("Unchecked Value", "intercalcus"),
-        'listOption' => __("Option", "intercalcus"),
-        'listValue' => __("Value", "intercalcus"),
-        'sliderMax' => __("Slider Max", "intercalcus"),
-        'showValue' => __("Show Value", "intercalcus"),
-        'sumPrefix' => __("Prefix", "intercalcus"),
-        'sumSuffix' => __("Suffix", "intercalcus"),
-        'subtractFromValue' => __("Original Value to Subtract from", "intercalcus"),
-        'complexCalcConf' => __("Complex calculation configuration", "intercalcus"),
-        'complexCalcAddComp' => __("Add Component Reference", "intercalcus"),
-        'personalCustomization' => __("Personal Customization", "intercalcus"),
-        'wrapperCustomClass' => __("Wrapper custom class", "intercalcus"),
-        'calcDescription' => __("Calculation Description", "intercalcus"),
-        'label' => __("Label", "intercalcus"),
-        'text' => __("Text", "intercalcus"),
-        'list' => __("List", "intercalcus"),
-        'numberInput' => __("Number Input", "intercalcus"),
-        'slider' => __("Slider", "intercalcus"),
-        'checkBox' => __("Checkbox", "intercalcus"),
-        'spacer' => __("Spacer", "intercalcus"),
-        'horizontalRule' => __("Horizontal Rule", "intercalcus"),
-        'sum' => __("Sum", "intercalcus"),
-        'productCalculation' => __("Product Calculation", "intercalcus"),
-        'subtractCalculation' => __("Subtract Calculation", "intercalcus"),
-        'complexCalculation' => __("Complex Calculation", "intercalcus"),
-        'errorNoServiceFound' => __("No Service found", "intercalcus"),
-        'errorNoCalculationComponentFound' => __("No Calculation Component found", "intercalcus"),
-        'errorNoGenericComponentFound' => __("No Generic Component found", "intercalcus"),
-        'errorNoProductFound' => __("No Product found", "intercalcus"),
-        'errorFillPreviousOptions' => __("Please fill previous option and value", "intercalcus"),
-        'errorNoValidComponents' => __("There are no valid components to be saved to calculation", "intercalcus"),
-        'defaultDescription' => __("Default calculation description", "intercalcus"),
+        'id' => __("ID", "interactivecalculations"),
+        'name' => __("Name", "interactivecalculations"),
+        'description' => __("Description", "interactivecalculations"),
+        'pricePerUnit' => __("Price per Unit", "interactivecalculations"),
+        'unit' => __("Unit", "interactivecalculations"),
+        'minQuantity' => __("Minimal Quantity", "interactivecalculations"),
+        'displayType' => __("Display Type", "interactivecalculations"),
+        'createNewCalc' => __("Create New Calculation", "interactivecalculations"),
+        'newCalcTitle' => __("New Calculation title", "interactivecalculations"),
+        'editCurrentConfig' => __("Edit Current Configuration", "interactivecalculations"),
+        'saveCalc' => __("Save Calculation", "interactivecalculations"),
+        'calcList' => __("Calculation List", "interactivecalculations"),
+        'calcName' => __("Calculation Name", "interactivecalculations"),
+        'product' => __("Product", "interactivecalculations"),
+        'service' => __("Service", "interactivecalculations"),
+        'genericComp' => __("Generic Component", "interactivecalculations"),
+        'calcComp' => __("Calculation Component", "interactivecalculations"),
+        'preview' => __("Preview", "interactivecalculations"),
+        'none' => __("-- None --", "interactivecalculations"),
+        'showLabel' => __("Show Label", "interactivecalculations"),
+        'customLabel' => __("Custom Label", "interactivecalculations"),
+        'labelClasses' => __("Label Classes", "interactivecalculations"),
+        'inputClasses' => __("Input Classes", "interactivecalculations"),
+        'toAddMultipleClassesText' => __("To add multiple classes separate them by using semicolon: ';'", "interactivecalculations"),
+        'customCss' => __("Custom CSS", "interactivecalculations"),
+        'baseValue' => __("Base Value", "interactivecalculations"),
+        'uncheckedValue' => __("Unchecked Value", "interactivecalculations"),
+        'listOption' => __("Option", "interactivecalculations"),
+        'listValue' => __("Value", "interactivecalculations"),
+        'sliderMax' => __("Slider Max", "interactivecalculations"),
+        'showValue' => __("Show Value", "interactivecalculations"),
+        'sumPrefix' => __("Prefix", "interactivecalculations"),
+        'sumSuffix' => __("Suffix", "interactivecalculations"),
+        'subtractFromValue' => __("Original Value to Subtract from", "interactivecalculations"),
+        'complexCalcConf' => __("Complex calculation configuration", "interactivecalculations"),
+        'complexCalcAddComp' => __("Add Component Reference", "interactivecalculations"),
+        'personalCustomization' => __("Personal Customization", "interactivecalculations"),
+        'wrapperCustomClass' => __("Wrapper custom class", "interactivecalculations"),
+        'calcDescription' => __("Calculation Description", "interactivecalculations"),
+        'label' => __("Label", "interactivecalculations"),
+        'text' => __("Text", "interactivecalculations"),
+        'list' => __("List", "interactivecalculations"),
+        'numberInput' => __("Number Input", "interactivecalculations"),
+        'slider' => __("Slider", "interactivecalculations"),
+        'checkBox' => __("Checkbox", "interactivecalculations"),
+        'spacer' => __("Spacer", "interactivecalculations"),
+        'horizontalRule' => __("Horizontal Rule", "interactivecalculations"),
+        'sum' => __("Sum", "interactivecalculations"),
+        'productCalculation' => __("Product Calculation", "interactivecalculations"),
+        'subtractCalculation' => __("Subtract Calculation", "interactivecalculations"),
+        'complexCalculation' => __("Complex Calculation", "interactivecalculations"),
+        'errorNoServiceFound' => __("No Service found", "interactivecalculations"),
+        'errorNoCalculationComponentFound' => __("No Calculation Component found", "interactivecalculations"),
+        'errorNoGenericComponentFound' => __("No Generic Component found", "interactivecalculations"),
+        'errorNoProductFound' => __("No Product found", "interactivecalculations"),
+        'errorFillPreviousOptions' => __("Please fill previous option and value", "interactivecalculations"),
+        'errorNoValidComponents' => __("There are no valid components to be saved to calculation", "interactivecalculations"),
+        'defaultDescription' => __("Default calculation description", "interactivecalculations"),
     );
-    wp_localize_script('intercalcus_main-script', 'intercalcusMainScriptLocalization', $localization_data);
+    wp_localize_script('interactivecalculations_main-script', 'interactivecalculationsMainScriptLocalization', $localization_data);
 
-    add_action('wp_enqueue_scripts', 'intercalcus_main-script');
+    add_action('wp_enqueue_scripts', 'interactivecalculations_main-script');
 
 }
 
@@ -238,7 +238,7 @@ function ic_menu_products_configuration()
     if (is_admin()) {
 
         echo '<div class="wrap">
-        <h2>' . __("Product Menu", "intercalcus") . '</h2>';
+        <h2>' . __("Product Menu", "interactivecalculations") . '</h2>';
 
         ProductAdminFrontend::configuration();
 
@@ -262,7 +262,7 @@ function ic_menu_services_configuration()
     session_write_close();
     if (is_admin()) {
         echo '<div class="wrap">
-        <h2>' . __("Services Menu", "intercalcus") . '</h2>';
+        <h2>' . __("Services Menu", "interactivecalculations") . '</h2>';
         ServiceAdminFrontend::configuration();
         echo '</div>';
     }
@@ -282,7 +282,7 @@ function ic_menu_statistics()
     if (is_admin()) {
 
         echo '<div class="wrap">
-        <h2>' . __("Statistics Menu", "intercalcus") . '</h2>';
+        <h2>' . __("Statistics Menu", "interactivecalculations") . '</h2>';
 
         StatisticsAdminFrontend::configuration();
 

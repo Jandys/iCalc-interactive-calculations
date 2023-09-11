@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,14 +21,14 @@
  *
  */
 
-namespace intercalcus\fe\displayTypes;
+namespace interactivecalculations\fe\displayTypes;
 
 /**
  * Class CheckBox
  *
  * A class that represents a checkbox display type.
  *
- * @package intercalcus\fe\displayTypes
+ * @package interactivecalculations\fe\displayTypes
  * @since 1.0.0
  */
 class CheckBox extends DisplayType
@@ -54,7 +54,7 @@ class CheckBox extends DisplayType
      */
     function render(): string
     {
-        $wrapper = '<div class="intercalcus-form-group form-outline form-group row">';
+        $wrapper = '<div class="interactivecalculations-form-group form-outline form-group row">';
 
         $wrapper = $wrapper . $this->showLabel();
 
@@ -112,7 +112,7 @@ class CheckBox extends DisplayType
      */
     private function displayInput(): string
     {
-        $returnValue = '<input class="intercalcus-calculation-checkbox-input ' . $this->classes . '" type="checkbox" id="' . $this->id . '" 
+        $returnValue = '<input class="interactivecalculations-calculation-checkbox-input ' . $this->classes . '" type="checkbox" id="' . $this->id . '" 
 		data-value="' . $this->value . '"';
 
         if (!is_null($this->name)) {

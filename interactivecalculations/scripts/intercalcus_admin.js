@@ -1,6 +1,6 @@
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -20,7 +20,7 @@
  *
  */
 
-function intercalcus_process_service_edition(id, modalId) {
+function interactivecalculations_process_service_edition(id, modalId) {
     let nameElement = document.getElementById(modalId + '_name_form');
     let descriptionElement = document.getElementById(modalId + '_desc_form');
     let priceElement = document.getElementById(modalId + '_price_form');
@@ -29,7 +29,7 @@ function intercalcus_process_service_edition(id, modalId) {
     let displayTypeElement = document.getElementById(modalId + '_display_type_form');
 
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/intercalcus/v1/services';
+    const url = '/wp-json/interactivecalculations/v1/services';
     const data = JSON.stringify({
         id: id,
         name: nameElement.value,
@@ -42,8 +42,8 @@ function intercalcus_process_service_edition(id, modalId) {
 
     xhr.open('PUT', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('user', intercalcusApiSettings.user);
-    xhr.setRequestHeader('session', intercalcusApiSettings.session);
+    xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+    xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
     xhr.withCredentials = true;
 
@@ -61,7 +61,7 @@ function intercalcus_process_service_edition(id, modalId) {
     xhr.send(data);
 }
 
-function intercalcus_process_service_creation(modalId) {
+function interactivecalculations_process_service_creation(modalId) {
 
     let nameElement = document.getElementById(modalId + '_name_form');
     let descriptionElement = document.getElementById(modalId + '_desc_form');
@@ -71,7 +71,7 @@ function intercalcus_process_service_creation(modalId) {
     let displayTypeElement = document.getElementById(modalId + '_display_type_form');
 
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/intercalcus/v1/services';
+    const url = '/wp-json/interactivecalculations/v1/services';
     const data = JSON.stringify({
         name: nameElement.value,
         description: descriptionElement.value,
@@ -83,8 +83,8 @@ function intercalcus_process_service_creation(modalId) {
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('user', intercalcusApiSettings.user);
-    xhr.setRequestHeader('session', intercalcusApiSettings.session);
+    xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+    xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
     xhr.withCredentials = true;
 
@@ -102,21 +102,21 @@ function intercalcus_process_service_creation(modalId) {
     xhr.send(data);
 }
 
-function intercalcus_process_service_deletion(id, name) {
+function interactivecalculations_process_service_deletion(id, name) {
 
     const result = confirm("Opravdu chcete odstranit Službu: " + name + "?");
 
     if (result) {
         const xhr = new XMLHttpRequest();
-        const url = '/wp-json/intercalcus/v1/services';
+        const url = '/wp-json/interactivecalculations/v1/services';
         const data = JSON.stringify({
             id: id
         });
 
         xhr.open('DELETE', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('user', intercalcusApiSettings.user);
-        xhr.setRequestHeader('session', intercalcusApiSettings.session);
+        xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+        xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
         xhr.withCredentials = true;
 
@@ -141,7 +141,7 @@ function intercalcus_process_service_deletion(id, name) {
 }
 
 
-function intercalcus_process_product_edition(id, modalId) {
+function interactivecalculations_process_product_edition(id, modalId) {
 
     let nameElement = document.getElementById(modalId + '_name_form');
     let descriptionElement = document.getElementById(modalId + '_desc_form');
@@ -151,7 +151,7 @@ function intercalcus_process_product_edition(id, modalId) {
     let displayTypeElement = document.getElementById(modalId + '_display_type_form');
 
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/intercalcus/v1/products';
+    const url = '/wp-json/interactivecalculations/v1/products';
     const data = JSON.stringify({
         id: id,
         name: nameElement.value,
@@ -164,8 +164,8 @@ function intercalcus_process_product_edition(id, modalId) {
 
     xhr.open('PUT', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('user', intercalcusApiSettings.user);
-    xhr.setRequestHeader('session', intercalcusApiSettings.session);
+    xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+    xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
     xhr.withCredentials = true;
 
@@ -183,7 +183,7 @@ function intercalcus_process_product_edition(id, modalId) {
     xhr.send(data);
 }
 
-function intercalcus_process_product_creation(modalId) {
+function interactivecalculations_process_product_creation(modalId) {
 
     let nameElement = document.getElementById(modalId + '_name_form');
     let descriptionElement = document.getElementById(modalId + '_desc_form');
@@ -193,7 +193,7 @@ function intercalcus_process_product_creation(modalId) {
     let displayTypeElement = document.getElementById(modalId + '_display_type_form');
 
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/intercalcus/v1/products';
+    const url = '/wp-json/interactivecalculations/v1/products';
     const data = JSON.stringify({
         name: nameElement.value,
         description: descriptionElement.value,
@@ -205,8 +205,8 @@ function intercalcus_process_product_creation(modalId) {
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('user', intercalcusApiSettings.user);
-    xhr.setRequestHeader('session', intercalcusApiSettings.session);
+    xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+    xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
     xhr.withCredentials = true;
 
@@ -224,21 +224,21 @@ function intercalcus_process_product_creation(modalId) {
     xhr.send(data);
 }
 
-function intercalcus_process_product_deletion(id, name) {
+function interactivecalculations_process_product_deletion(id, name) {
 
     const result = confirm("Opravdu chcete odstranit Službu: " + name + "?");
 
     if (result) {
         const xhr = new XMLHttpRequest();
-        const url = '/wp-json/intercalcus/v1/products';
+        const url = '/wp-json/interactivecalculations/v1/products';
         const data = JSON.stringify({
             id: id
         });
 
         xhr.open('DELETE', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('user', intercalcusApiSettings.user);
-        xhr.setRequestHeader('session', intercalcusApiSettings.session);
+        xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+        xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
         xhr.withCredentials = true;
 
@@ -263,23 +263,23 @@ function intercalcus_process_product_deletion(id, name) {
 
 }
 
-var intercalcusApiSettings = {};
+var interactivecalculationsApiSettings = {};
 
-function populateIntercalcusSettings(user, session) {
-    intercalcusApiSettings.user = user;
-    intercalcusApiSettings.session = session;
+function populateinteractivecalculationsSettings(user, session) {
+    interactivecalculationsApiSettings.user = user;
+    interactivecalculationsApiSettings.session = session;
 }
 
 
-function intercalcus_getAllProducts() {
+function interactivecalculations_getAllProducts() {
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/intercalcus/v1/products';
+    const url = '/wp-json/interactivecalculations/v1/products';
 
 
     xhr.open('GET', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('user', intercalcusApiSettings.user);
-    xhr.setRequestHeader('session', intercalcusApiSettings.session);
+    xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+    xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
     xhr.withCredentials = true;
 
@@ -287,14 +287,14 @@ function intercalcus_getAllProducts() {
 }
 
 
-async function intercalcus_getNextCalculationDescriptionId() {
+async function interactivecalculations_getNextCalculationDescriptionId() {
     return new Promise(function (resolve, reject) {
         const xhr = new XMLHttpRequest();
-        const url = `/wp-json/intercalcus/v1/intercalcusulation-descriptions/next`;
+        const url = `/wp-json/interactivecalculations/v1/interactivecalculationsulation-descriptions/next`;
         xhr.open('GET', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('user', intercalcusApiSettings.user);
-        xhr.setRequestHeader('session', intercalcusApiSettings.session);
+        xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+        xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
         xhr.withCredentials = true;
 
@@ -314,64 +314,64 @@ async function intercalcus_getNextCalculationDescriptionId() {
 }
 
 
-function intercalcus_getAllServices() {
+function interactivecalculations_getAllServices() {
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/intercalcus/v1/services';
+    const url = '/wp-json/interactivecalculations/v1/services';
 
 
     xhr.open('GET', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('user', intercalcusApiSettings.user);
-    xhr.setRequestHeader('session', intercalcusApiSettings.session);
+    xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+    xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
     xhr.withCredentials = true;
 
     return xhr;
 }
 
-function intercalcus_process_calculation_description_creation() {
+function interactivecalculations_process_calculation_description_creation() {
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/intercalcus/v1/intercalcusulation-descriptions';
+    const url = '/wp-json/interactivecalculations/v1/interactivecalculationsulation-descriptions';
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('user', intercalcusApiSettings.user);
-    xhr.setRequestHeader('session', intercalcusApiSettings.session);
+    xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+    xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
     xhr.withCredentials = true;
 
     return xhr;
 }
 
-function intercalcus_process_calculation_description_edit() {
+function interactivecalculations_process_calculation_description_edit() {
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/intercalcus/v1/intercalcusulation-descriptions';
+    const url = '/wp-json/interactivecalculations/v1/interactivecalculationsulation-descriptions';
 
     xhr.open('PUT', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('user', intercalcusApiSettings.user);
-    xhr.setRequestHeader('session', intercalcusApiSettings.session);
+    xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+    xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
     xhr.withCredentials = true;
 
     return xhr;
 }
 
-function intercalcus_process_calculation_delete_action(id, name) {
+function interactivecalculations_process_calculation_delete_action(id, name) {
 
     const result = confirm("Opravdu chcete odstranit Kalkulaci: " + name + "?");
 
     if (result) {
         const xhr = new XMLHttpRequest();
-        const url = '/wp-json/intercalcus/v1/intercalcusulation-descriptions';
+        const url = '/wp-json/interactivecalculations/v1/interactivecalculationsulation-descriptions';
         const data = JSON.stringify({
             id: id
         });
 
         xhr.open('DELETE', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('user', intercalcusApiSettings.user);
-        xhr.setRequestHeader('session', intercalcusApiSettings.session);
+        xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
+        xhr.setRequestHeader('session', interactivecalculationsApiSettings.session);
 
         xhr.withCredentials = true;
 

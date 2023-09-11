@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,8 +21,8 @@
  *
  */
 
-use intercalcus\fe\Component;
-use intercalcus\fe\Form;
+use interactivecalculations\fe\Component;
+use interactivecalculations\fe\Form;
 use PHPUnit\Framework\TestCase;
 
 class FormTest extends TestCase

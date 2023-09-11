@@ -21,9 +21,9 @@
  *
  */
 
-namespace intercalcus\fe;
+namespace interactivecalculations\fe;
 
-use function intercalcus\util\callJSFunction;
+use function interactivecalculations\util\callJSFunction;
 
 /**
  * Abstract class for admin frontend functionality.
@@ -62,29 +62,29 @@ abstract class AbstractAdminFrontend
     }
 
     /**
-     * Method for setting the intercalcus token cookie.
+     * Method for setting the interactivecalculations token cookie.
      */
-    public static function setIntercalcusTokenCookie()
+    public static function setinteractivecalculationsTokenCookie()
     {
         $maxWait = 10;
         $iter = 0;
-        while (!isset($_COOKIE['intercalcus-token']) && $iter < $maxWait) {
+        while (!isset($_COOKIE['interactivecalculations-token']) && $iter < $maxWait) {
             sleep(0.1);
             $iter++;
         }
     }
 
     /**
-     * Method for populating intercalcus JavaScript data.
+     * Method for populating interactivecalculations JavaScript data.
      */
-    public static function populateIntercalcusJSData()
+    public static function populateinteractivecalculationsJSData()
     {
-        $output = "populateIntercalcusSettings(\"" . wp_get_current_user()->ID . "\",\"" . wp_get_session_token() . "\");";
+        $output = "populateinteractivecalculationsSettings(\"" . wp_get_current_user()->ID . "\",\"" . wp_get_session_token() . "\");";
         callJSFunction($output);
     }
 
     /**
-     * Method for calling a GET request on an endpoint with the intercalcus authentication cookie.
+     * Method for calling a GET request on an endpoint with the interactivecalculations authentication cookie.
      *
      * @param string $endpoint The endpoint to make the GET request on.
      * @return mixed|null Returns the data retrieved from the GET request or null if there was an error.
@@ -93,12 +93,12 @@ abstract class AbstractAdminFrontend
     {
         $endpointWithPrefix = INTERACTIVECALCULATIONS_EP_PREFIX . $endpoint;
         $url = get_rest_url(null, $endpointWithPrefix);
-        self::setIntercalcusTokenCookie();
+        self::setinteractivecalculationsTokenCookie();
         $headers = array(
             'Content-Type' => 'application/json',
             'user' => wp_get_current_user()->ID,
             'session' => wp_get_session_token(),
-            'intercalcus-token' => $_COOKIE['intercalcus-token']
+            'interactivecalculations-token' => $_COOKIE['interactivecalculations-token']
         );
         $args = array(
             'headers' => $headers

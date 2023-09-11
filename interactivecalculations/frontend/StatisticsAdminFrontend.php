@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,9 +21,9 @@
  *
  */
 
-namespace intercalcus\fe;
+namespace interactivecalculations\fe;
 
-use intercalcus\db\model\Icalculations;
+use interactivecalculations\db\model\Icalculations;
 
 class StatisticsAdminFrontend extends AbstractAdminFrontend
 {

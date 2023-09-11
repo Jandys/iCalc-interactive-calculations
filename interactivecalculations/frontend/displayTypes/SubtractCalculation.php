@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,7 +21,7 @@
  *
  */
 
-namespace intercalcus\fe\displayTypes;
+namespace interactivecalculations\fe\displayTypes;
 
 class SubtractCalculation extends Sum
 {
@@ -30,7 +30,7 @@ class SubtractCalculation extends Sum
 
     protected function displayInput()
     {
-        return '<input id="' . $this->id . '" type="text" disabled class="form-control intercalcus-calculation-subtract-calculation" data-starting-value=' . $this->startingValue . '>';
+        return '<input id="' . $this->id . '" type="text" disabled class="form-control interactivecalculations-calculation-subtract-calculation" data-starting-value=' . $this->startingValue . '>';
     }
 
 

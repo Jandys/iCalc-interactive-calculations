@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,7 +21,7 @@
  *
  */
 
-namespace intercalcus\fe;
+namespace interactivecalculations\fe;
 
 /**
  * The ScriptWrapper class is a helper class that provides a way to build a JavaScript script that can be added to an HTML page.

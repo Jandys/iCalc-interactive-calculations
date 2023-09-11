@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,7 +21,7 @@
  *
  */
 
-namespace intercalcus\db\model;
+namespace interactivecalculations\db\model;
 
 class Unit extends BaseDatabaseModel
 {
@@ -43,15 +43,15 @@ class Unit extends BaseDatabaseModel
 
     public static function insertNew($unit)
     {
-	    if (parent::get('unit', $unit) != null) {
-		    return parent::get('unit', $unit)->id;
-	    }
+        if (parent::get('unit', $unit) != null) {
+            return parent::get('unit', $unit)->id;
+        }
 
-	    $data = array('unit' => $unit);
-	    parent::insert($data);
+        $data = array('unit' => $unit);
+        parent::insert($data);
 
-	    global $wpdb;
-	    return $wpdb->insert_id;
+        global $wpdb;
+        return $wpdb->insert_id;
     }
 
     public static function deleteByName($value)

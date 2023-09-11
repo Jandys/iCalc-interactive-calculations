@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,18 +21,18 @@
  *
  */
 
-namespace intercalcus\fe;
+namespace interactivecalculations\fe;
 
-use intercalcus\db\model\Service;
-use intercalcus\fe\displayTypes\ChooseList;
-use intercalcus\fe\displayTypes\DisplayTypeManager;
+use interactivecalculations\db\model\Service;
+use interactivecalculations\fe\displayTypes\ChooseList;
+use interactivecalculations\fe\displayTypes\DisplayTypeManager;
 
 class ServiceAdminFrontend extends AbstractAdminFrontend
 {
 
     public static function configuration()
     {
-        self::populateIntercalcusJSData();
+        self::populateinteractivecalculationsJSData();
 
         $data = Service::get_all_with_unit();
 
@@ -66,7 +66,7 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
                     <td>' . $item["min_quantity"] . '</td>
                     <td>' . $item["display_type"] . '</td>
                     <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
-                    <td class="text-center"><button class="btn btn-danger" onclick="intercalcus_process_service_deletion(' . $item["id"] . ',\'' . $item["name"] . '\')"><span class="dashicons dashicons-trash"></span></button></td>
+                    <td class="text-center"><button class="btn btn-danger" onclick="interactivecalculations_process_service_deletion(' . $item["id"] . ',\'' . $item["name"] . '\')"><span class="dashicons dashicons-trash"></span></button></td>
                 </tr>';
         }
 
@@ -120,32 +120,32 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
                             <div class="modal-body p-5">
                               <h4 class="modal-title">' . __("Edit Service") . '</h4>
                               <form id="' . $modalId . '_form">
-                              <div class="form-row intercalcus-service-form-row">
-                                <div class="col intercalcus-edit-table-space-between">
+                              <div class="form-row interactivecalculations-service-form-row">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_id_form">' . __("ID") . '</label>
                                   <input id="' . $modalId . '_id_form" type="text" class="form-control" value="' . $id . '" readonly>
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_name_form">' . __("Name") . '</label>
                                   <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="' . __("Name") . '" value="' . $formFields['name'] . '">
                                 </div>
-                                 <div class="col intercalcus-edit-table-space-between">
+                                 <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_desc_form">' . __("Description") . '</label>
                                   <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __("Description") . '" value="' . $formFields['desc'] . '">
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_price_form">' . __("Price per Unit") . '</label>
                                   <input id="' . $modalId . '_price_form" type="text" class="form-control" placeholder="' . __("Price per Unit") . '" value="' . $formFields['price'] . '">
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_unit_form">' . __("Unit") . '</label>
                                   <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __("Unit") . '" value="' . $formFields['unit'] . '">
                                 </div> 
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_min_quantity_form">' . __("Minimal Quantity") . '</label>
                                   <input id="' . $modalId . '_min_quantity_form" type="text" class="form-control" placeholder="' . __("Minimal Quantity") . '" value="' . $formFields['min_quantity'] . '">
                                 </div>
-                                 <div class="col intercalcus-edit-table-space-between">
+                                 <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_display_type_form">' . __("Display Type") . '</label>
                                     ' .
             $displayTypeList->render()
@@ -159,7 +159,7 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
                             <div class="modal-footer">
                             
                               <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">' . __("Close") . '</button>
-                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="intercalcus_process_service_edition(\'' . $id . '\',\'' . $modalId . '\')">' . __("Edit") . '</button>
+                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="interactivecalculations_process_service_edition(\'' . $id . '\',\'' . $modalId . '\')">' . __("Edit") . '</button>
                             </div>
                           </div>
                         </div>
@@ -180,28 +180,28 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
                             <div class="modal-body p-5">
                               <h4 class="modal-title">' . __("Create New Service") . '</h4>
                               <form id="' . $modalId . '_form">
-                              <div class="form-row intercalcus-service-form-row">
-                                <div class="col intercalcus-edit-table-space-between">
+                              <div class="form-row interactivecalculations-service-form-row">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_name_form">' . __("Name") . '</label>
                                   <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="' . __("Service Name") . '">
                                 </div>
-                                 <div class="col intercalcus-edit-table-space-between">
+                                 <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_desc_form">' . __("Description") . '</label>
                                   <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __("Service Description") . '" >
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_price_form">' . __("Price per Unit") . '</label>
                                   <input id="' . $modalId . '_price_form" type="number" class="form-control" placeholder="' . __("Service Price") . '" >
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_unit_form">' . __("Unit") . '</label>
                                   <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __("Service Unit") . '" >
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_min_quantity_form">' . __("Minimal Quantity") . '</label>
                                   <input id="' . $modalId . '_min_quantity_form" type="number" class="form-control" placeholder="' . __("Service Minimal Quantity") . '" >
                                 </div>
-                                 <div class="col intercalcus-edit-table-space-between">
+                                 <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_display_type_form">' . __("Display Type") . '</label>
                                                                    ' .
             $displayTypeList->render()
@@ -214,7 +214,7 @@ class ServiceAdminFrontend extends AbstractAdminFrontend
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">' . __("Close") . '</button>
-                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="intercalcus_process_service_creation(\'' . $modalId . '\')">' . __("Save") . '</button>
+                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="interactivecalculations_process_service_creation(\'' . $modalId . '\')">' . __("Save") . '</button>
                             </div>
                           </div>
                         </div>

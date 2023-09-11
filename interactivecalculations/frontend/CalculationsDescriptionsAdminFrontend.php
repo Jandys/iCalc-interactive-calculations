@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,17 +21,17 @@
  *
  */
 
-namespace intercalcus\fe;
+namespace interactivecalculations\fe;
 
 
-use intercalcus\db\model\IcalculationsDescription;
+use interactivecalculations\db\model\IcalculationsDescription;
 
 class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend
 {
 
     public static function configuration()
     {
-        self::populateIntercalcusJSData();
+        self::populateinteractivecalculationsJSData();
         $data = IcalculationsDescription::get_all();
 
         if (is_null($data)) {
@@ -46,31 +46,31 @@ class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend
                     <td>' . $item["id"] . '</td>
                     <td>' . $item["name"] . '</td>
                     <td>' . $item["description"] . '</td>
-                    <td class="intercalcus-long-text-clipping">' . $item["body"] . '</td>
+                    <td class="interactivecalculations-long-text-clipping">' . $item["body"] . '</td>
                     <td>' . $item["created_at"] . '</td>
                     <td>' . $item["modified_at"] . '</td>
-                    <td class="text-center"><button class="btn btn-info" onclick="intercalcus_process_calculation_edit_action(\'' . $item["id"] . '\')"><span class="dashicons dashicons-edit"></span></button></td>
-                    <td class="text-center"><button class="btn btn-danger" onclick="intercalcus_process_calculation_delete_action(' . $item["id"] . ',\'' . $item["name"] . '\')"><span class="dashicons dashicons-trash"></span></button></td>
+                    <td class="text-center"><button class="btn btn-info" onclick="interactivecalculations_process_calculation_edit_action(\'' . $item["id"] . '\')"><span class="dashicons dashicons-edit"></span></button></td>
+                    <td class="text-center"><button class="btn btn-danger" onclick="interactivecalculations_process_calculation_delete_action(' . $item["id"] . ',\'' . $item["name"] . '\')"><span class="dashicons dashicons-trash"></span></button></td>
                 </tr>';
         }
 
         $howToInsertCalculation = "";
         if (!empty($tbody)) {
-            $howToInsertCalculation = __("To insert calculation use shortcode in form: <span class='intercalcus-shortcode'>[intercalcus_calculation id=3]</span> or if you are using Elementor plugin you can just drag and drop widget");
+            $howToInsertCalculation = __("To insert calculation use shortcode in form: <span class='interactivecalculations-shortcode'>[interactivecalculations_calculation id=3]</span> or if you are using Elementor plugin you can just drag and drop widget");
         }
 
 
         $html = $html . '
     <div class="container pt-5">
             <!-- Table -->
-            <span class="intercalcus-shortcode-reminder">' . $howToInsertCalculation . '</span>
+            <span class="interactivecalculations-shortcode-reminder">' . $howToInsertCalculation . '</span>
             <table class="table table-bordered table-striped table-hover col-12">
                 <thead class="thead-dark">
                     <tr class="col-12">
                         <th class="p-2 m-2">' . __("ID") . '</th>
                         <th class="p-2 m-2">' . __("Name") . '</th>
                         <th class="p-2 m-2">' . __("Description") . '</th>
-                        <th class="p-2 m-2 intercalcus-long-text-clipping">' . __("Body") . '</th>
+                        <th class="p-2 m-2 interactivecalculations-long-text-clipping">' . __("Body") . '</th>
                         <th class="p-2 m-2">' . __("Created At") . '</th>
                         <th class="p-2 m-2">' . __("Modified At") . '</th>
                         <th class="col-1"></th>

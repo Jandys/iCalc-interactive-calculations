@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,13 +21,13 @@
  *
  */
 
-namespace intercalcus\db;
+namespace interactivecalculations\db;
 
-use intercalcus\db\model\Icalculations;
-use intercalcus\db\model\IcalculationsDescription;
-use intercalcus\db\model\Product;
-use intercalcus\db\model\Service;
-use intercalcus\db\model\Unit;
+use interactivecalculations\db\model\Icalculations;
+use interactivecalculations\db\model\IcalculationsDescription;
+use interactivecalculations\db\model\Product;
+use interactivecalculations\db\model\Service;
+use interactivecalculations\db\model\Unit;
 
 /**
  * Class DatabaseInit
@@ -48,11 +48,11 @@ class DatabaseInit
         $product = Product::create_table();
         $service = Service::create_table();
         $unit = Unit::create_table();
-        $intercalcusDesc = IcalculationsDescription::create_table();
-        $intercalcuss = Icalculations::create_table();
+        $interactivecalculationsDesc = IcalculationsDescription::create_table();
+        $interactivecalculationss = Icalculations::create_table();
 
         // Returns true if all table creation queries executed successfully, false otherwise.
-        return $product && $service && $unit && $intercalcusDesc && $intercalcuss;
+        return $product && $service && $unit && $interactivecalculationsDesc && $interactivecalculationss;
     }
 
     public static function clearAll()
@@ -60,8 +60,8 @@ class DatabaseInit
         Product::clearAll();
         Service::clearAll();
         Unit::clearAll();
-	    IcalculationsDescription::clearAll();
-	    Icalculations::clearAll();
+        IcalculationsDescription::clearAll();
+        Icalculations::clearAll();
     }
 
 }

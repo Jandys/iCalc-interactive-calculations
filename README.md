@@ -1,10 +1,14 @@
-# Inter-Calcus - Interactive Calculation WordPress Plugin
+# Interactive Calculations - WordPress Plugin
 
-![Inter-Calcus - Interactive Calculation WordPress Plugin](https://php.jandys.eu/wp-content/uploads/2023/05/iCalc-Small.png)
+![Interactive Calculations WordPress Plugin](https://php.jandys.eu/wp-content/uploads/2023/05/iCalc-Small.png)
 
-Inter-Calcus is a powerful and easy-to-use interactive calculation plugin for WordPress websites. It allows you to create
+Interactive Calculations is a powerful and easy-to-use interactive calculation plugin for WordPress websites. It allows
+you to
+create
 beautiful and responsive calculators, giving your users the power to make instant calculations on your site. From simple
-arithmetic to complex formulas, Inter-Calcus can handle it all. Additionally, it comes with built-in support for running inside
+arithmetic to complex formulas, Interactive Calculations can handle it all. Additionally, it comes with built-in support
+for running
+inside
 Docker containers, making deployment a breeze!
 
 ## Table of Contents
@@ -31,7 +35,8 @@ Docker containers, making deployment a breeze!
    one of those sources:
     1. From
        the [latest main commit ](https://github.com/Jandys/Inter-Calcus-interactive-calculations/blob/release-archives/release.zip ).
-    2. Choose from one of the [stable releases](https://github.com/Jandys/Inter-Calcus-interactive-calculations/releases).
+    2. Choose from one of
+       the [stable releases](https://github.com/Jandys/Inter-Calcus-interactive-calculations/releases).
 2. Log in to your WordPress dashboard and navigate to **Plugins** > **Add New**.
 3. Click **Upload Plugin** and select the downloaded Inter-Calcus zip file (release.zip).
 4. Click **Install Now** and wait for the installation to complete.
@@ -65,10 +70,12 @@ you need to adjust the script to your port.
 ## Support and Contributions
 
 If you encounter any issues or would like to contribute to the project, please file an issue on
-the [GitHub repository](https://github.com/Jandys/Inter-Calcus-interactive-calculations/issues) or submit a pull request.
+the [GitHub repository](https://github.com/Jandys/Inter-Calcus-interactive-calculations/issues) or submit a pull
+request.
 
 ## License
 
-Inter-Calcus is released under the [GNU GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.en.html). See [LICENSE](LICENSE)
+Inter-Calcus is released under the [GNU GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.en.html).
+See [LICENSE](LICENSE)
 for more
 information.

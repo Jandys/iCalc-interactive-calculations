@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,7 +21,7 @@
  *
  */
 
-namespace intercalcus\fe\displayTypes;
+namespace interactivecalculations\fe\displayTypes;
 
 class Slider extends DisplayType
 {
@@ -43,7 +43,7 @@ class Slider extends DisplayType
 
     function render(): string
     {
-        $wrapper = '<div class="intercalcus-form-group form-outline form-group row">';
+        $wrapper = '<div class="interactivecalculations-form-group form-outline form-group row">';
 
         $wrapper = $wrapper . $this->showLabel();
 
@@ -98,7 +98,7 @@ class Slider extends DisplayType
     private function showValue(): string
     {
         if ($this->showValue) {
-            return '<div id="displayValue-' . $this->id . '" class="intercalcus-display-slider-value">' . $this->value . '</div>';
+            return '<div id="displayValue-' . $this->id . '" class="interactivecalculations-display-slider-value">' . $this->value . '</div>';
         }
 
         return "";
@@ -115,7 +115,7 @@ class Slider extends DisplayType
 
     private function displayInput(): string
     {
-        $returnValue = '<input class="intercalcus-calculation-slider ' . $this->classes . '" type="range" id="' . $this->id . '"';
+        $returnValue = '<input class="interactivecalculations-calculation-slider ' . $this->classes . '" type="range" id="' . $this->id . '"';
 
         if (!is_null($this->name)) {
             $returnValue = $returnValue . 'name="' . $this->name . '"';

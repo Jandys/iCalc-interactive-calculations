@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,20 +21,19 @@
  *
  */
 
-namespace intercalcus\fe;
+namespace interactivecalculations\fe;
 
-use intercalcus\db\model\Product;
-use intercalcus\fe\displayTypes\ChooseList;
-use intercalcus\fe\displayTypes\DisplayTypeManager;
+use interactivecalculations\db\model\Product;
+use interactivecalculations\fe\displayTypes\ChooseList;
+use interactivecalculations\fe\displayTypes\DisplayTypeManager;
 
 class ProductAdminFrontend extends AbstractAdminFrontend
 {
 
     public static function configuration()
     {
-        self::populateIntercalcusJSData();
+        self::populateinteractivecalculationsJSData();
         $data = Product::get_all_with_unit();
-
 
 
         if (is_null($data)) {
@@ -67,7 +66,7 @@ class ProductAdminFrontend extends AbstractAdminFrontend
                     <td>' . $item["min_quantity"] . '</td>
                     <td>' . $item["display_type"] . '</td>
                     <td class="text-center"><button class="btn btn-info" data-toggle="modal" data-target="#' . $modalId . '"><span class="dashicons dashicons-edit"></span></button></td>
-                    <td class="text-center"><button class="btn btn-danger" onclick="intercalcus_process_product_deletion(' . $item["id"] . ',\'' . $item["name"] . '\')"><span class="dashicons dashicons-trash"></span></button></td>
+                    <td class="text-center"><button class="btn btn-danger" onclick="interactivecalculations_process_product_deletion(' . $item["id"] . ',\'' . $item["name"] . '\')"><span class="dashicons dashicons-trash"></span></button></td>
                 </tr>';
         }
         $productCreationModal = "productCreationModal";
@@ -119,32 +118,32 @@ class ProductAdminFrontend extends AbstractAdminFrontend
                             <div class="modal-body p-5">
                               <h4 class="modal-title">' . __("Edit Product") . '</h4>
                               <form id="' . $modalId . '_form">
-                              <div class="form-row intercalcus-product-form-row">
-                                <div class="col intercalcus-edit-table-space-between">
+                              <div class="form-row interactivecalculations-product-form-row">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_id_form">' . __("ID") . '</label>
                                   <input id="' . $modalId . '_id_form" type="text" class="form-control" value="' . $id . '" readonly>
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_name_form">' . __("Name") . '</label>
                                   <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="' . __("Name") . '" value="' . $formFields['name'] . '">
                                 </div>
-                                 <div class="col intercalcus-edit-table-space-between">
+                                 <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_desc_form">' . __("Description") . '</label>
                                   <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __("Description") . '" value="' . $formFields['desc'] . '">
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_price_form">' . __("Price per Unit") . '</label>
                                   <input id="' . $modalId . '_price_form" type="text" class="form-control" placeholder="' . __("Price per Unit") . '" value="' . $formFields['price'] . '">
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_unit_form">' . __("Unit") . '</label>
                                   <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __("Unit") . '" value="' . $formFields['unit'] . '">
                                 </div> 
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_min_quantity_form">' . __("Minimal Quantity") . '</label>
                                   <input id="' . $modalId . '_min_quantity_form" type="text" class="form-control" placeholder="' . __("Minimal Quantity") . '" value="' . $formFields['min_quantity'] . '">
                                 </div>
-                                 <div class="col intercalcus-edit-table-space-between">
+                                 <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_display_type_form">' . __("Display Type") . '</label>
                                     ' .
             $displayTypeList->render()
@@ -158,7 +157,7 @@ class ProductAdminFrontend extends AbstractAdminFrontend
                             <div class="modal-footer">
                             
                               <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">' . __("Close") . '</button>
-                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="intercalcus_process_product_edition(\'' . $id . '\',\'' . $modalId . '\')">' . __("Edit") . '</button>
+                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="interactivecalculations_process_product_edition(\'' . $id . '\',\'' . $modalId . '\')">' . __("Edit") . '</button>
                             </div>
                           </div>
                         </div>
@@ -180,28 +179,28 @@ class ProductAdminFrontend extends AbstractAdminFrontend
                             <div class="modal-body p-5">
                               <h4 class="modal-title">' . __("Create New Product") . '</h4>
                               <form id="' . $modalId . '_form">
-                              <div class="form-row intercalcus-product-form-row">
-                                <div class="col intercalcus-edit-table-space-between">
+                              <div class="form-row interactivecalculations-product-form-row">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_name_form">' . __("Name") . '</label>
                                   <input id="' . $modalId . '_name_form" type="text" class="form-control" placeholder="' . __("Product Name") . '">
                                 </div>
-                                 <div class="col intercalcus-edit-table-space-between">
+                                 <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_desc_form">' . __("Description") . '</label>
                                   <input id="' . $modalId . '_desc_form" type="text" class="form-control" placeholder="' . __("Product Description") . '" >
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_price_form">' . __("Price per Unit") . '</label>
                                   <input id="' . $modalId . '_price_form" type="number" class="form-control" placeholder="' . __("Product Price") . '" >
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_unit_form">' . __("Unit") . '</label>
                                   <input id="' . $modalId . '_unit_form" type="text" class="form-control" placeholder="' . __("Product Unit") . '" >
                                 </div>
-                                <div class="col intercalcus-edit-table-space-between">
+                                <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_min_quantity_form">' . __("Minimal Quantity") . '</label>
                                   <input id="' . $modalId . '_min_quantity_form" type="number" class="form-control" placeholder="' . __("Product Minimal Quantity") . '" >
                                 </div>
-                                 <div class="col intercalcus-edit-table-space-between">
+                                 <div class="col interactivecalculations-edit-table-space-between">
                                   <label for="' . $modalId . '_display_type_form">' . __("Display Type") . '</label>
                                                                   ' .
             $displayTypeList->render()
@@ -215,7 +214,7 @@ class ProductAdminFrontend extends AbstractAdminFrontend
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-danger mr-2" data-dismiss="modal">' . __("Close") . '</button>
-                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="intercalcus_process_product_creation(\'' . $modalId . '\')">' . __("Save") . '</button>
+                              <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="interactivecalculations_process_product_creation(\'' . $modalId . '\')">' . __("Save") . '</button>
                             </div>
                           </div>
                         </div>

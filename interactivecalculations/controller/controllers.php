@@ -23,23 +23,23 @@
 
 
 /**
- * prefix mapping = /wp-json/intercalcus/v1/
+ * prefix mapping = /wp-json/interactivecalculations/v1/
  */
 
 
-use intercalcus\db\model\Icalculations;
-use intercalcus\db\model\IcalculationsDescription;
-use intercalcus\db\model\Product;
-use intercalcus\db\model\Service;
-use intercalcus\db\model\Unit;
-use function intercalcus\util\getPossibleCookieValue;
+use interactivecalculations\db\model\Icalculations;
+use interactivecalculations\db\model\IcalculationsDescription;
+use interactivecalculations\db\model\Product;
+use interactivecalculations\db\model\Service;
+use interactivecalculations\db\model\Unit;
+use function interactivecalculations\util\getPossibleCookieValue;
 
-add_action('rest_api_init', 'intercalcus_plugin_add_service_endpoints');
-add_action('rest_api_init', 'intercalcus_plugin_add_product_endpoints');
-add_action('rest_api_init', 'intercalcus_plugin_add_intercalcusulation_descriptions_endpoints');
-add_action('rest_api_init', 'intercalcus_autocomplete_endpoints');
-add_action('rest_api_init', 'intercalcus_plugin_add_jwt_endpoints');
-add_action('rest_api_init', 'intercalcus_plugin_add_public_endpoints');
+add_action('rest_api_init', 'interactivecalculations_plugin_add_service_endpoints');
+add_action('rest_api_init', 'interactivecalculations_plugin_add_product_endpoints');
+add_action('rest_api_init', 'interactivecalculations_plugin_add_interactivecalculationsulation_descriptions_endpoints');
+add_action('rest_api_init', 'interactivecalculations_autocomplete_endpoints');
+add_action('rest_api_init', 'interactivecalculations_plugin_add_jwt_endpoints');
+add_action('rest_api_init', 'interactivecalculations_plugin_add_public_endpoints');
 
 
 const NOT_AUTH_MSG = "Not authorized, token needed";
@@ -47,13 +47,13 @@ const NO_SESSION_MSG = "No such session found for given user.";
 
 
 /**
- * Registers public REST API endpoints for the intercalcus plugin.
+ * Registers public REST API endpoints for the interactivecalculations plugin.
  *
  * @return void
  * @since 1.0.0
  *
  */
-function intercalcus_plugin_add_public_endpoints()
+function interactivecalculations_plugin_add_public_endpoints()
 {
     /**
      * Registers a REST API route for retrieving a product by ID.
@@ -64,7 +64,7 @@ function intercalcus_plugin_add_public_endpoints()
      */
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/products/(?P<id>\d+)', array(
         'methods' => 'GET',
-        'callback' => 'intercalcus_getProductById',
+        'callback' => 'interactivecalculations_getProductById',
         'args' => array( // Argument validation and sanitization.
             'id' => array(
                 'validate_callback' => 'my_id_validate_callback',
@@ -82,7 +82,7 @@ function intercalcus_plugin_add_public_endpoints()
      */
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/services/(?P<id>\d+)', array(
         'methods' => 'GET',
-        'callback' => 'intercalcus_getServiceById',
+        'callback' => 'interactivecalculations_getServiceById',
         'args' => array( // Argument validation and sanitization.
             'id' => array(
                 'validate_callback' => 'my_id_validate_callback',
@@ -99,9 +99,9 @@ function intercalcus_plugin_add_public_endpoints()
      * @return WP_REST_Response|WP_Error The calculation description data on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions/(?P<id>\d+)', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions/(?P<id>\d+)', array(
         'methods' => 'GET',
-        'callback' => 'intercalcus_getCalculationDescriptionById',
+        'callback' => 'interactivecalculations_getCalculationDescriptionById',
         'args' => array( // Argument validation and sanitization.
             'id' => array(
                 'validate_callback' => 'my_id_validate_callback',
@@ -117,9 +117,9 @@ function intercalcus_plugin_add_public_endpoints()
      * @return WP_REST_Response|WP_Error The interaction data on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulations/interactions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulations/interactions', array(
         'methods' => 'POST',
-        'callback' => 'intercalcus_registerNewCalculationInteraction',
+        'callback' => 'interactivecalculations_registerNewCalculationInteraction',
         'permission_callback' => '__return_true'
     ));
 }
@@ -147,7 +147,7 @@ function my_id_validate_callback($value, $request, $param)
  * @return WP_REST_Response The product data on success, or a WP_Error object on failure.
  * @since 1.0.0
  */
-function intercalcus_getProductById(WP_REST_Request $request)
+function interactivecalculations_getProductById(WP_REST_Request $request)
 {
     $id = $request->get_param('id');
     $product = Product::get("id", $id);
@@ -162,7 +162,7 @@ function intercalcus_getProductById(WP_REST_Request $request)
  * @return WP_REST_Response The service data on success, or a WP_Error object on failure.
  * @since 1.0.0
  */
-function intercalcus_getServiceById(WP_REST_Request $request)
+function interactivecalculations_getServiceById(WP_REST_Request $request)
 {
     $id = $request->get_param('id');
     $service = Service::get("id", $id);
@@ -171,18 +171,18 @@ function intercalcus_getServiceById(WP_REST_Request $request)
 }
 
 /**
- * Retrieves an intercalcusulation description by ID from the database.
+ * Retrieves an interactivecalculationsulation description by ID from the database.
  *
  * @param WP_REST_Request $request The current REST API request object, containing the ID parameter.
- * @return WP_REST_Response The intercalcusulation description data on success, or a WP_Error object on failure.
+ * @return WP_REST_Response The interactivecalculationsulation description data on success, or a WP_Error object on failure.
  * @since 1.0.0
  */
-function intercalcus_getCalculationDescriptionById(WP_REST_Request $request)
+function interactivecalculations_getCalculationDescriptionById(WP_REST_Request $request)
 {
     $id = $request->get_param('id');
-    $intercalcusDescription = IcalculationsDescription::get("id", $id);
+    $interactivecalculationsDescription = IcalculationsDescription::get("id", $id);
 
-    return new WP_REST_Response($intercalcusDescription);
+    return new WP_REST_Response($interactivecalculationsDescription);
 }
 
 /**
@@ -192,7 +192,7 @@ function intercalcus_getCalculationDescriptionById(WP_REST_Request $request)
  * @return WP_REST_Response The interaction data on success, or a WP_Error object on failure.
  * @since 1.0.0
  */
-function intercalcus_registerNewCalculationInteraction(WP_REST_Request $request)
+function interactivecalculations_registerNewCalculationInteraction(WP_REST_Request $request)
 {
     $data = $request->get_json_params();
 
@@ -212,7 +212,7 @@ function intercalcus_registerNewCalculationInteraction(WP_REST_Request $request)
  * @return void
  * @since 1.0.0
  */
-function intercalcus_plugin_add_jwt_endpoints()
+function interactivecalculations_plugin_add_jwt_endpoints()
 {
     /**
      * Registers a REST API route for issuing a JWT token.
@@ -223,7 +223,7 @@ function intercalcus_plugin_add_jwt_endpoints()
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/token', array(
         'methods' => 'POST',
         'callback' => 'issue_jwt_token_callback',
-        'permission_callback' => 'intercalcus_user_can_manage'
+        'permission_callback' => 'interactivecalculations_user_can_manage'
     ));
 
     /**
@@ -274,91 +274,91 @@ function verify_jwt_token_callback(WP_REST_Request $request)
 {
     $user = $request->get_header('user');
     $session = $request->get_header('session');
-    $token = $request->get_header('intercalcus-token');
+    $token = $request->get_header('interactivecalculations-token');
 
     return new WP_REST_Response(['valid' => validate_jwt_token($token, $user, $session)]);
 }
 
 /**
- * Registers REST API endpoints for intercalcusulation descriptions.
+ * Registers REST API endpoints for interactivecalculationsulation descriptions.
  *
  * @return void
  * @since 1.0.0
  */
-function intercalcus_plugin_add_intercalcusulation_descriptions_endpoints()
+function interactivecalculations_plugin_add_interactivecalculationsulation_descriptions_endpoints()
 {
     /**
-     * Registers a REST API route for creating a new intercalcusulation description.
+     * Registers a REST API route for creating a new interactivecalculationsulation description.
      *
-     * @return WP_REST_Response|WP_Error The new intercalcusulation description on success, or an error on failure.
+     * @return WP_REST_Response|WP_Error The new interactivecalculationsulation description on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions', array(
         'methods' => 'POST',
-        'callback' => 'intercalcus_postIcalculationsDescriptions',
+        'callback' => 'interactivecalculations_postIcalculationsDescriptions',
         'permission_callback' => '__return_true'
     ));
 
     /**
-     * Registers a REST API route for retrieving all intercalcusulation descriptions.
-     * @return WP_REST_Response|WP_Error The intercalcusulation descriptions on success, or an error on failure.
+     * Registers a REST API route for retrieving all interactivecalculationsulation descriptions.
+     * @return WP_REST_Response|WP_Error The interactivecalculationsulation descriptions on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions', array(
         'methods' => 'GET',
-        'callback' => 'intercalcus_getIcalculationsDescriptions',
+        'callback' => 'interactivecalculations_getIcalculationsDescriptions',
         'permission_callback' => '__return_true'
     ));
 
     /**
-     * Registers a REST API route for updating an existing intercalcusulation description.
+     * Registers a REST API route for updating an existing interactivecalculationsulation description.
      *
-     * @return WP_REST_Response|WP_Error The updated intercalcusulation description on success, or an error on failure.
+     * @return WP_REST_Response|WP_Error The updated interactivecalculationsulation description on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions', array(
         'methods' => 'PUT',
-        'callback' => 'intercalcus_putIcalculationsDescriptions',
+        'callback' => 'interactivecalculations_putIcalculationsDescriptions',
         'permission_callback' => '__return_true'
     ));
 
 
     /**
-     * Registers a REST API route for deleting an intercalcusulation description.
+     * Registers a REST API route for deleting an interactivecalculationsulation description.
      *
-     * @return WP_REST_Response|WP_Error The deleted intercalcusulation description on success, or an error on failure.
+     * @return WP_REST_Response|WP_Error The deleted interactivecalculationsulation description on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions', array(
         'methods' => 'DELETE',
-        'callback' => 'intercalcus_deleteIcalculationsDescriptions',
+        'callback' => 'interactivecalculations_deleteIcalculationsDescriptions',
         'permission_callback' => '__return_true'
     ));
 
     /**
-     * Registers a REST API route for retrieving the next available intercalcusulation description ID.
+     * Registers a REST API route for retrieving the next available interactivecalculationsulation description ID.
      *
-     * @return WP_REST_Response|WP_Error The next intercalcusulation description ID on success, or an error on failure.
+     * @return WP_REST_Response|WP_Error The next interactivecalculationsulation description ID on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/intercalcusulation-descriptions/next', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions/next', array(
         'methods' => 'GET',
-        'callback' => 'intercalcus_getNextIcalculationsDescriptionId',
+        'callback' => 'interactivecalculations_getNextIcalculationsDescriptionId',
         'permission_callback' => '__return_true'
     ));
 }
 
 /**
- * Callback function for creating a new intercalcusulation description.
+ * Callback function for creating a new interactivecalculationsulation description.
  *
- * @param WP_REST_Request $request The current REST API request object, containing the intercalcusulation description data in the request body and the JWT token in the headers.
- * @return WP_REST_Response|WP_Error The new intercalcusulation description on success, or an error on failure.
+ * @param WP_REST_Request $request The current REST API request object, containing the interactivecalculationsulation description data in the request body and the JWT token in the headers.
+ * @return WP_REST_Response|WP_Error The new interactivecalculationsulation description on success, or an error on failure.
  * @since 1.0.0
  *
  */
-function intercalcus_postIcalculationsDescriptions(WP_REST_Request $request)
+function interactivecalculations_postIcalculationsDescriptions(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -372,22 +372,22 @@ function intercalcus_postIcalculationsDescriptions(WP_REST_Request $request)
     $name = $data['title'];
     $desc = $data['configuration']['calculation-description'];
 
-    // Save the intercalcusulation description to the database.
+    // Save the interactivecalculationsulation description to the database.
     $success = IcalculationsDescription::insertNew($name, $desc, json_encode($data));
 
     return new WP_REST_Response($success);
 }
 
 /**
- * Callback function for updating an existing intercalcusulation description.
+ * Callback function for updating an existing interactivecalculationsulation description.
  *
- * @param WP_REST_Request $request The current REST API request object, containing the updated intercalcusulation description data in the request body and the JWT token in the headers.
- * @return WP_REST_Response|WP_Error The updated intercalcusulation description on success, or an error on failure.
+ * @param WP_REST_Request $request The current REST API request object, containing the updated interactivecalculationsulation description data in the request body and the JWT token in the headers.
+ * @return WP_REST_Response|WP_Error The updated interactivecalculationsulation description on success, or an error on failure.
  * @since 1.0.0
  */
-function intercalcus_putIcalculationsDescriptions(WP_REST_Request $request)
+function interactivecalculations_putIcalculationsDescriptions(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -408,15 +408,15 @@ function intercalcus_putIcalculationsDescriptions(WP_REST_Request $request)
 }
 
 /**
- * Callback function for getting the next available intercalcusulation description ID.
+ * Callback function for getting the next available interactivecalculationsulation description ID.
  *
  * @param WP_REST_Request $request The current REST API request object, containing the JWT token in the headers.
- * @return WP_REST_Response|WP_Error The next available intercalcusulation description ID on success, or an error on failure.
+ * @return WP_REST_Response|WP_Error The next available interactivecalculationsulation description ID on success, or an error on failure.
  * @since 1.0.0
  */
-function intercalcus_getNextIcalculationsDescriptionId(WP_REST_Request $request)
+function interactivecalculations_getNextIcalculationsDescriptionId(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -431,15 +431,15 @@ function intercalcus_getNextIcalculationsDescriptionId(WP_REST_Request $request)
 }
 
 /**
- * Callback function for deleting an intercalcusulation description.
+ * Callback function for deleting an interactivecalculationsulation description.
  *
- * @param WP_REST_Request $request The current REST API request object, containing the ID of the intercalcusulation description to delete in the request body and the JWT token in the headers.
+ * @param WP_REST_Request $request The current REST API request object, containing the ID of the interactivecalculationsulation description to delete in the request body and the JWT token in the headers.
  * @return WP_REST_Response|WP_Error The result of the deletion operation on success, or an error on failure.
  * @since 1.0.0
  */
-function intercalcus_deleteIcalculationsDescriptions(WP_REST_Request $request)
+function interactivecalculations_deleteIcalculationsDescriptions(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -458,16 +458,16 @@ function intercalcus_deleteIcalculationsDescriptions(WP_REST_Request $request)
 
 
 /**
- * Callback function for getting all intercalcusulation descriptions.
+ * Callback function for getting all interactivecalculationsulation descriptions.
  *
  * @param WP_REST_Request $request The current REST API request object, containing the JWT token in the headers.
- * @return WP_REST_Response|WP_Error An array of all intercalcusulation descriptions on success, or an error on failure.
+ * @return WP_REST_Response|WP_Error An array of all interactivecalculationsulation descriptions on success, or an error on failure.
  * @since 1.0.0
  *
  */
-function intercalcus_getIcalculationsDescriptions(WP_REST_Request $request)
+function interactivecalculations_getIcalculationsDescriptions(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -476,7 +476,7 @@ function intercalcus_getIcalculationsDescriptions(WP_REST_Request $request)
         return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
     }
 
-    // Retrieve all intercalcusulation descriptions from the database using the `get_all()` function of the `IcalculationsDescription` model class.
+    // Retrieve all interactivecalculationsulation descriptions from the database using the `get_all()` function of the `IcalculationsDescription` model class.
     $allDescriptions = IcalculationsDescription::get_all();
 
     return new WP_REST_Response($allDescriptions);
@@ -489,33 +489,33 @@ function intercalcus_getIcalculationsDescriptions(WP_REST_Request $request)
  * @return void
  * @since 1.0.0
  */
-function intercalcus_plugin_add_product_endpoints()
+function interactivecalculations_plugin_add_product_endpoints()
 {
     // Register the 'products' endpoint for creating a new product.
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/products', array(
         'methods' => 'POST',
-        'callback' => 'intercalcus_postProduct',
+        'callback' => 'interactivecalculations_postProduct',
         'permission_callback' => '__return_true'
     ));
 
     // Register the 'products' endpoint for retrieving all products.
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/products', array(
         'methods' => 'GET',
-        'callback' => 'intercalcus_getProducts',
+        'callback' => 'interactivecalculations_getProducts',
         'permission_callback' => '__return_true'
     ));
 
     // Register the 'products' endpoint for updating an existing product.
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/products', array(
         'methods' => 'PUT',
-        'callback' => 'intercalcus_putProduct',
+        'callback' => 'interactivecalculations_putProduct',
         'permission_callback' => '__return_true'
     ));
 
     // Register the 'products' endpoint for deleting an existing product.
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/products', array(
         'methods' => 'DELETE',
-        'callback' => 'intercalcus_deleteProduct',
+        'callback' => 'interactivecalculations_deleteProduct',
         'permission_callback' => '__return_true'
     ));
 }
@@ -528,9 +528,9 @@ function intercalcus_plugin_add_product_endpoints()
  * @return WP_REST_Response The REST API response object.
  * @since 1.0.0
  */
-function intercalcus_postProduct(WP_REST_Request $request)
+function interactivecalculations_postProduct(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -561,9 +561,9 @@ function intercalcus_postProduct(WP_REST_Request $request)
  * @return WP_REST_Response The REST response object.
  * @since 1.0.0
  */
-function intercalcus_putProduct(WP_REST_Request $request)
+function interactivecalculations_putProduct(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -594,9 +594,9 @@ function intercalcus_putProduct(WP_REST_Request $request)
  * @return WP_REST_Response Returns a response containing an array of all products retrieved from the database.
  * @since 1.0.0
  */
-function intercalcus_getProducts(WP_REST_Request $request)
+function interactivecalculations_getProducts(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -618,9 +618,9 @@ function intercalcus_getProducts(WP_REST_Request $request)
  * @return WP_REST_Response The REST response object
  * @since 1.0.0
  */
-function intercalcus_deleteProduct(WP_REST_Request $request)
+function interactivecalculations_deleteProduct(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -642,43 +642,43 @@ function intercalcus_deleteProduct(WP_REST_Request $request)
  *
  * @return void
  */
-function intercalcus_plugin_add_service_endpoints()
+function interactivecalculations_plugin_add_service_endpoints()
 {
     // Registers a POST endpoint for creating a new service.
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/services', array(
         'methods' => 'POST',
-        'callback' => 'intercalcus_postService',
+        'callback' => 'interactivecalculations_postService',
         'permission_callback' => '__return_true'
     ));
 
     // Registers a GET endpoint for retrieving all services.
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/services', array(
         'methods' => 'GET',
-        'callback' => 'intercalcus_getServices',
+        'callback' => 'interactivecalculations_getServices',
         'permission_callback' => '__return_true'
     ));
 
     // Registers a PUT endpoint for updating an existing service.
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/services', array(
         'methods' => 'PUT',
-        'callback' => 'intercalcus_putService',
+        'callback' => 'interactivecalculations_putService',
         'permission_callback' => '__return_true'
     ));
 
     // Registers a DELETE endpoint for deleting a service.
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/services', array(
         'methods' => 'DELETE',
-        'callback' => 'intercalcus_deleteService',
+        'callback' => 'interactivecalculations_deleteService',
         'permission_callback' => '__return_true'
     ));
 }
 
 
-function intercalcus_autocomplete_endpoints()
+function interactivecalculations_autocomplete_endpoints()
 {
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/autocomplete/unit', array(
         'methods' => 'POST',
-        'callback' => 'intercalcus_autocompleteUnit',
+        'callback' => 'interactivecalculations_autocompleteUnit',
         'permission_callback' => '__return_true'
     ));
 }
@@ -687,7 +687,7 @@ function intercalcus_autocomplete_endpoints()
 /**
  * POST /autocomplete/id
  */
-function intercalcus_autocompleteUnit(WP_REST_Request $request)
+function interactivecalculations_autocompleteUnit(WP_REST_Request $request)
 {
     $data = $request->get_json_params();
     $value = $data["value"];
@@ -703,9 +703,9 @@ function intercalcus_autocompleteUnit(WP_REST_Request $request)
  * @return WP_REST_Response The response containing the newly created service.
  * @since 1.0.0
  */
-function intercalcus_postService(WP_REST_Request $request)
+function interactivecalculations_postService(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -735,9 +735,9 @@ function intercalcus_postService(WP_REST_Request $request)
  * @return WP_REST_Response The response containing the updated service.
  * @since 1.0.0
  */
-function intercalcus_putService(WP_REST_Request $request)
+function interactivecalculations_putService(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -767,9 +767,9 @@ function intercalcus_putService(WP_REST_Request $request)
  * @return WP_REST_Response The response containing all services.
  * @since 1.0.0
  */
-function intercalcus_getServices(WP_REST_Request $request)
+function interactivecalculations_getServices(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -791,9 +791,9 @@ function intercalcus_getServices(WP_REST_Request $request)
  * @return WP_REST_Response The response containing the result of the deletion.
  * @since 1.0.0
  */
-function intercalcus_deleteService(WP_REST_Request $request)
+function interactivecalculations_deleteService(WP_REST_Request $request)
 {
-    $validated = validate_intercalcus_jwt_token($request);
+    $validated = validate_interactivecalculations_jwt_token($request);
     if ($validated instanceof WP_REST_Response) {
         return $validated;
     }
@@ -811,20 +811,20 @@ function intercalcus_deleteService(WP_REST_Request $request)
 }
 
 /**
- * Validates a intercalcus JWT token for a given REST API request in a WordPress plugin.
+ * Validates a interactivecalculations JWT token for a given REST API request in a WordPress plugin.
  *
  * @param WP_REST_Request $request The REST API request object.
  * @return bool|WP_REST_Response Returns true if the token is valid, a WP_REST_Response if it's invalid, or false if it's not present.
  * @since 1.0.0
  */
-function validate_intercalcus_jwt_token(WP_REST_Request $request)
+function validate_interactivecalculations_jwt_token(WP_REST_Request $request)
 {
     $user = $request->get_header('user');
     $session = $request->get_header('session');
-    $token = $request->get_header('intercalcus-token');
+    $token = $request->get_header('interactivecalculations-token');
 
     if (empty($token)) {
-        $token = getPossibleCookieValue($request, 'intercalcus-token');
+        $token = getPossibleCookieValue($request, 'interactivecalculations-token');
     }
 
     return validate_jwt_token($token, $user, $session);
@@ -837,7 +837,7 @@ function validate_intercalcus_jwt_token(WP_REST_Request $request)
  * @return bool Returns true if the user has the capability, false otherwise.
  * @since 1.0.0
  */
-function intercalcus_user_can_manage(WP_REST_Request $request)
+function interactivecalculations_user_can_manage(WP_REST_Request $request)
 {
     $body = $request->get_json_params();
     $user = $body['user'];

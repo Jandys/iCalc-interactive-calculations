@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *   This file is part of the 'Inter Calcus' project.
+ *   This file is part of the 'iCalc - Interactive Calculations' project.
  *
  *   Copyright (C) 2023, Jakub Jandák
  *
@@ -21,7 +21,7 @@
  *
  */
 
-namespace intercalcus\fe\displayTypes;
+namespace interactivecalculations\fe\displayTypes;
 
 class Number extends DisplayType
 {
@@ -43,7 +43,7 @@ class Number extends DisplayType
 
     function render(): string
     {
-        $wrapper = '<div class="intercalcus-form-group form-outline form-group row">';
+        $wrapper = '<div class="interactivecalculations-form-group form-outline form-group row">';
 
         $wrapper = $wrapper . $this->showLabel();
 
@@ -93,7 +93,7 @@ class Number extends DisplayType
 
     private function displayInput(): string
     {
-        $returnValue = '<input class="intercalcus-calculation-number-input ' . $this->classes . '" type="number" id="' . $this->id . '"';
+        $returnValue = '<input class="interactivecalculations-calculation-number-input ' . $this->classes . '" type="number" id="' . $this->id . '"';
 
         if (!is_null($this->name)) {
             $returnValue = $returnValue . 'name="' . $this->name . '"';

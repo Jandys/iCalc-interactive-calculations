@@ -27,19 +27,19 @@
 
 use Elementor\Plugin;
 
-add_action('elementor/widgets/widgets_registered', 'intercalcus_register_elementor_widgets');
+add_action('elementor/widgets/widgets_registered', 'interactiveCalculations_register_elementor_widgets');
 
 /**
- * Register the IntercalcusElementorWidget with Elementor.
+ * Register the interactivecalculationsElementorWidget with Elementor.
  */
-function intercalcus_register_elementor_widgets()
+function interactiveCalculations_register_elementor_widgets()
 {
     if (defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base')) {
-        require_once(INTERACTIVECALCULATIONS_PATH . '/integration/IntercalcusElementorWidget.php');
+        require_once(INTERACTIVECALCULATIONS_PATH . '/integration/InteractiveCalculationsElementorWidget.php');
         $widget_manager = Plugin::$instance->widgets_manager;
-        $widget_manager->register(new IntercalcusElementorWidget());
+        $widget_manager->register(new InteractiveCalculationsElementorWidget());
 
-        wp_enqueue_script('intercalcus_pages_scripts_el', plugins_url('/scripts/intercalcus_pages.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
-        add_action('wp_enqueue_scripts', 'intercalcus_pages_scripts_el');
+        wp_enqueue_script('interactivecalculations_pages_scripts_el', plugins_url('/scripts/interactivecalculations_pages.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
+        add_action('wp_enqueue_scripts', 'interactivecalculations_pages_scripts_el');
     }
 }
