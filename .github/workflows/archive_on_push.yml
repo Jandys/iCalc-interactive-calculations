@@ -25,25 +25,25 @@ jobs:
           coverage: xdebug
 
       - name: Validate composer.json and composer.lock
-        working-directory: ./intercalcus
+        working-directory: ./interactivecalculations
         run: composer validate
 
       - name: Install dependencies
-        working-directory: ./intercalcus
+        working-directory: ./interactivecalculations
         run: composer install --prefer-dist --no-progress --no-dev
 
 
       - name: Relocate Archive
-        run: rm -rf ./intercalcus/tests/ -R && rm -rf ./intercalcus/phpunit.xml
+        run: rm -rf ./interactivecalculations/tests/ -R && rm -rf ./interactivecalculations/phpunit.xml
 
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.1
         with:
           type: 'zip'
           filename: 'release.zip'
-          path: './intercalcus/'
+          path: './interactivecalculations/'
           exclusions: '*.git* /*node_modules/* .editorconfig /*tests*/ '
-        
+
       - name: Configure git
         run: |
           git config --global user.name "GitHub Actions"
@@ -59,7 +59,7 @@ jobs:
 
       - name: Commit and push artifact to another branch
         env:
-            GITHUB_TOKEN: ${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}
         run: |
           # Set GIT_ASKPASS in the current step
           export GIT_ASKPASS=$(pwd)/askpass.sh

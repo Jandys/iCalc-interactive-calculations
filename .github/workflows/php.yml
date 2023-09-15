@@ -15,25 +15,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Validate composer.json and composer.lock
-      working-directory: ./intercalcus
-      run: composer validate --strict
+      - name: Validate composer.json and composer.lock
+        working-directory: ./interactivecalculations
+        run: composer validate --strict
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: intercalcus/vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: interactivecalculations/vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
 
-    - name: Install dependencies
-      working-directory: ./intercalcus
-      run: composer install --prefer-dist --no-progress
+      - name: Install dependencies
+        working-directory: ./interactivecalculations
+        run: composer install --prefer-dist --no-progress
 
-    - name: Run test suite
-      working-directory: ./intercalcus
-      run: composer run-script test
+      - name: Run test suite
+        working-directory: ./interactivecalculations
+        run: composer run-script test
