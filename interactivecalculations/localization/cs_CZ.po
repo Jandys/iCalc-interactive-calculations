@@ -1,106 +1,106 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Interactive Calculations\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-09 14:21+0000\n"
-"PO-Revision-Date: 2023-12-10 17:55+0000\n"
-"Last-Translator: Jakub Jandak <jandyyysek@seznam.cz>\n"
+"PO-Revision-Date: 2023-12-10 23:17+0500\n"
+"Last-Translator: \n"
 "Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Domain: interactivecalculations"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
+"X-Domain: interactivecalculations\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: frontend/Calculation.php:55
 msgid "-- NONE --"
-msgstr ""
+msgstr "-- ŽÁDNÝ --"
 
 #: configuration/admin_menu.php:178
 msgid "-- None --"
-msgstr ""
+msgstr "-- Žádný --"
 
 #: configuration/admin_menu.php:195
 msgid "Add Component Reference"
-msgstr ""
+msgstr "Přidat referenci komponentu"
 
 #: configuration/admin_menu.php:185
 msgid "Base Value"
-msgstr ""
+msgstr "Základní hodnota"
 
 #: configuration/admin_menu.php:176
 msgid "Calculation Component"
-msgstr ""
+msgstr "Komponent kalkulace"
 
 #: configuration/admin_menu.php:198
 msgid "Calculation Description"
-msgstr ""
+msgstr "Popis Kalkulace"
 
 #: configuration/admin_menu.php:171
 msgid "Calculation List"
-msgstr ""
+msgstr "Seznam kalkulací"
 
 #: configuration/admin_menu.php:172
 msgid "Calculation Name"
-msgstr ""
+msgstr "Název kalkulace"
 
 #: configuration/admin_menu.php:204
 msgid "Checkbox"
-msgstr ""
+msgstr "Zaškrtávací políčko"
 
 #: configuration/admin_menu.php:210
 msgid "Complex Calculation"
-msgstr ""
+msgstr "Komplexní kalkulace"
 
 #: configuration/admin_menu.php:194
 msgid "Complex calculation configuration"
-msgstr ""
+msgstr "Konfigurace komplexní kalkulace"
 
 #: integration/InteractiveCalculationsElementorWidget.php:94
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurace"
 
 #: configuration/admin_menu.php:167
 msgid "Create New Calculation"
-msgstr ""
+msgstr "Vytvořit novou kalkulaci"
 
 #: configuration/admin_menu.php:184
 msgid "Custom CSS"
-msgstr ""
+msgstr "Vlastní styly"
 
 #: configuration/admin_menu.php:180
 msgid "Custom Label"
-msgstr ""
+msgstr "Vlastní štítek"
 
 #: configuration/admin_menu.php:217
 msgid "Default calculation description"
-msgstr ""
+msgstr "Výchozí popis kalkulace"
 
 #: configuration/admin_menu.php:162
 msgid "Description"
-msgstr ""
+msgstr "Popisek"
 
 #: configuration/admin_menu.php:166
 msgid "Display Type"
-msgstr ""
+msgstr "Zobrazovací typ"
 
 #: configuration/admin_menu.php:169
 msgid "Edit Current Configuration"
-msgstr ""
+msgstr "Upravit aktuální konfiguraci"
 
 #: integration/wordpress-integration.php:60
 msgid "ERROR"
-msgstr ""
+msgstr "CHYBA"
 
 #: configuration/admin_menu.php:175
 msgid "Generic Component"
-msgstr ""
+msgstr "Obecná komponenta"
 
 #: configuration/admin_menu.php:206
 msgid "Horizontal Rule"
-msgstr ""
+msgstr "Vodorovná čára"
 
 #. Author URI of the plugin
 msgid "http://github.com/Jandys"
@@ -112,27 +112,27 @@ msgstr ""
 
 #: configuration/admin_menu.php:160
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: configuration/admin_menu.php:182
 msgid "Input Classes"
-msgstr ""
+msgstr "Třídy vstupu"
 
 #. Name of the plugin
 msgid "Interactive Calculations"
-msgstr ""
+msgstr "Interaktivní kalkulace"
 
 #: integration/InteractiveCalculationsElementorWidget.php:51
 msgid "Interactive Calculations Custom Widget"
-msgstr ""
+msgstr "Interaktivní kalkulace vlastní Widget"
 
 #: configuration/admin_menu.php:147
 msgid "Interactive Calculations Menu"
-msgstr ""
+msgstr "Interaktivní kalkulace Menu"
 
 #: integration/InteractiveCalculations_Wordpress_Widget.php:60
 msgid "interactivecalculations Custom Widget"
-msgstr ""
+msgstr "Interaktivní kalkulace vlastní Widget"
 
 #. Author of the plugin
 msgid "Jakub Jandák"
@@ -140,67 +140,67 @@ msgstr ""
 
 #: configuration/admin_menu.php:199
 msgid "Label"
-msgstr ""
+msgstr "Štítek"
 
 #: configuration/admin_menu.php:181
 msgid "Label Classes"
-msgstr ""
+msgstr "Třída štítku"
 
 #: configuration/admin_menu.php:201
 msgid "List"
-msgstr ""
+msgstr "Seznam"
 
 #: configuration/admin_menu.php:165
 msgid "Minimal Quantity"
-msgstr ""
+msgstr "Minimální množství"
 
 #: configuration/admin_menu.php:161
 msgid "Name"
-msgstr ""
+msgstr "Jméno"
 
 #: configuration/admin_menu.php:168
 msgid "New Calculation title"
-msgstr ""
+msgstr "Nová kalkulace"
 
 #: configuration/admin_menu.php:212
 msgid "No Calculation Component found"
-msgstr ""
+msgstr "Nebyla nalezena žádná komponenta kalkulace"
 
 #: integration/InteractiveCalculationsElementorWidget.php:124
 msgid "No calculation selected"
-msgstr ""
+msgstr "Nebyla vybrána kalkulace"
 
 #: configuration/admin_menu.php:213
 msgid "No Generic Component found"
-msgstr ""
+msgstr "Nebyla nalezena žádná obecná komponenta"
 
 #: configuration/admin_menu.php:214
 msgid "No Product found"
-msgstr ""
+msgstr "Nebyl nalezen žádný produkt"
 
 #: configuration/admin_menu.php:211
 msgid "No Service found"
-msgstr ""
+msgstr "Nebyla nalezena žádná služba"
 
 #: configuration/admin_menu.php:202
 msgid "Number Input"
-msgstr ""
+msgstr "Číselné zadání"
 
 #: configuration/admin_menu.php:187
 msgid "Option"
-msgstr ""
+msgstr "Výběr"
 
 #: configuration/admin_menu.php:193
 msgid "Original Value to Subtract from"
-msgstr ""
+msgstr "Výchozí hodnota k odečtu"
 
 #: configuration/admin_menu.php:196
 msgid "Personal Customization"
-msgstr ""
+msgstr "Osobní úprava nastavení"
 
 #: configuration/admin_menu.php:215
 msgid "Please fill previous option and value"
-msgstr ""
+msgstr "Vyplňte prosím předešlé hodnoty"
 
 #. Description of the plugin
 msgid "Plugin for easy creation of custom calculations."
@@ -208,104 +208,104 @@ msgstr ""
 
 #: configuration/admin_menu.php:191
 msgid "Prefix"
-msgstr ""
+msgstr "Předpona"
 
 #: configuration/admin_menu.php:177
 msgid "Preview"
-msgstr ""
+msgstr "Náhled"
 
 #: configuration/admin_menu.php:163
 msgid "Price per Unit"
-msgstr ""
+msgstr "Cena za jednotku"
 
 #: configuration/admin_menu.php:173
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #: configuration/admin_menu.php:208
 msgid "Product Calculation"
-msgstr ""
+msgstr "Kalkulace násobením"
 
 #: configuration/admin_menu.php:241
 msgid "Product Menu"
-msgstr ""
+msgstr "Menu produktů"
 
 #: configuration/admin_menu.php:170
 msgid "Save Calculation"
-msgstr ""
+msgstr "Uložit kalkulaci"
 
 #: integration/InteractiveCalculationsElementorWidget.php:102
 msgid "Select Calculation"
-msgstr ""
+msgstr "Vybrat kalkulaci"
 
 #: configuration/admin_menu.php:174
 msgid "Service"
-msgstr ""
+msgstr "Služba"
 
 #: configuration/admin_menu.php:265
 msgid "Services Menu"
-msgstr ""
+msgstr "Menu služeb"
 
 #: configuration/admin_menu.php:179
 msgid "Show Label"
-msgstr ""
+msgstr "Zobrazit štítek"
 
 #: configuration/admin_menu.php:190
 msgid "Show Value"
-msgstr ""
+msgstr "Zobrazit hodnotu"
 
 #: configuration/admin_menu.php:203
 msgid "Slider"
-msgstr ""
+msgstr "Posuvník"
 
 #: configuration/admin_menu.php:189
 msgid "Slider Max"
-msgstr ""
+msgstr "Maximální hodnota"
 
 #: configuration/admin_menu.php:205
 msgid "Spacer"
-msgstr ""
+msgstr "Mezera"
 
 #: configuration/admin_menu.php:285
 msgid "Statistics Menu"
-msgstr ""
+msgstr "Menu statistiky"
 
 #: configuration/admin_menu.php:209
 msgid "Subtract Calculation"
-msgstr ""
+msgstr "Odčítací kalkulace"
 
 #: configuration/admin_menu.php:192
 msgid "Suffix"
-msgstr ""
+msgstr "Přípona"
 
 #: configuration/admin_menu.php:207
 msgid "Sum"
-msgstr ""
+msgstr "Suma"
 
 #: configuration/admin_menu.php:200
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: configuration/admin_menu.php:216
 msgid "There are no valid components to be saved to calculation"
-msgstr ""
+msgstr "Neexistují žádné validní komponenty pro uložení do kalkulace"
 
 #: configuration/admin_menu.php:183
 msgid "To add multiple classes separate them by using semicolon: ';'"
-msgstr ""
+msgstr "Pro aplikaci více tříd je oddělujte středníkem ';'"
 
 #: configuration/admin_menu.php:186
 msgid "Unchecked Value"
-msgstr ""
+msgstr "Nezaškrtnutá hodnota"
 
 #: configuration/admin_menu.php:164
 msgid "Unit"
-msgstr ""
+msgstr "Jednotka"
 
 #: configuration/admin_menu.php:188
 msgid "Value"
-msgstr ""
+msgstr "Hodnota"
 
 #: configuration/admin_menu.php:197
 msgid "Wrapper custom class"
-msgstr ""
+msgstr "Vlastní obalující třída"

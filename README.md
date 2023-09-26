@@ -31,20 +31,20 @@ Docker containers, making deployment a breeze!
 
 ## Installation
 
-1. Download the archive of Inter-Calcus plugin from
+1. Download the archive of Interactive Calculations plugin from
    one of those sources:
     1. From
        the [latest main commit ](https://github.com/Jandys/Inter-Calcus-interactive-calculations/blob/release-archives/release.zip ).
     2. Choose from one of
        the [stable releases](https://github.com/Jandys/Inter-Calcus-interactive-calculations/releases).
 2. Log in to your WordPress dashboard and navigate to **Plugins** > **Add New**.
-3. Click **Upload Plugin** and select the downloaded Inter-Calcus zip file (release.zip).
+3. Click **Upload Plugin** and select the downloaded Interactive Calculations zip file (release.zip).
 4. Click **Install Now** and wait for the installation to complete.
-5. Activate the Inter-Calcus plugin by clicking **Activate Plugin**.
+5. Activate the Interactive Calculations plugin by clicking **Activate Plugin**.
 
 ## How to Use
 
-1. Navigate to your WordPress dashboard and click **Inter-Calcus** in the left-hand menu.
+1. Navigate to your WordPress dashboard and click **Interactive Calculations** in the left-hand menu.
 2. Create a new calculator by clicking **Add New Calculator**.
 3. Use the drag-and-drop interface to design your calculator layout and configure its functions.
 4. Save your calculator and copy the generated shortcode.
@@ -58,8 +58,8 @@ Don't worry just run this command inside your container with Wordpress and apach
 
 ```shell
 
-echo -e "\nListen 8080\n" >> /etc/apache2/ports.conf
-echo -e "\n<VirtualHost *:*>\n</VirtualHost>\n" >> /etc/apache2/sites-available/000-default.conf
+echo "\nListen 8080\n" >> /etc/apache2/ports.conf
+echo "\n<VirtualHost *:*>\n</VirtualHost>\n" >> /etc/apache2/sites-available/000-default.conf
 
 cat /etc/apache2/ports.conf && cat /etc/apache2/sites-available/000-default.conf
 ```
@@ -75,7 +75,7 @@ request.
 
 ## License
 
-Inter-Calcus is released under the [GNU GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.en.html).
+Interactive Calculations is released under the [GNU GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.en.html).
 See [LICENSE](LICENSE)
 for more
 information.

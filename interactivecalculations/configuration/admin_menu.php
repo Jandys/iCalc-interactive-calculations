@@ -77,9 +77,9 @@ function inter_calc_set_cookie()
 }
 
 /**
- * Registers the Inter Calcus plugin menu and submenu pages in the admin area.
+ * Registers the Interactive Calculations plugin menu and submenu pages in the admin area.
  *
- * This function adds the main menu page for the Inter Calcus plugin with the 'Calcus' title
+ * This function adds the main menu page for the Interactive Calculations plugin with the 'Calcus' title
  * and a set of submenu pages for Products, Services, and Statistics.
  *
  * @return void
@@ -99,38 +99,38 @@ function interactivecalculations_admin_menu()
 
 
     add_menu_page(
-        __('Inter-Calcus'),
-        __('Inter-Calcus'),
+        __('Interactive Calculations'),
+        __('Interactive Calculations'),
         'manage_options',
         'inter-calc-configuration',
         'inter_calc_main_configuration',
         'data:image/svg+xml;base64,' . base64_encode($menuIcon),
         26);
     add_submenu_page('inter-calc-configuration',
-        __('Products - Inter Calcus'),
-        __('Inter-Calcus - Products'),
+        __('Products - Interactive Calculations'),
+        __('Interactive Calculations - Products'),
         'manage_options',
         'ic-products-configuration',
         'ic_menu_products_configuration');
     add_submenu_page('inter-calc-configuration',
-        __('Services - Inter Calcus'),
-        __('Inter-Calcus - Services'),
+        __('Services - Interactive Calculations'),
+        __('Interactive Calculations - Services'),
         'manage_options',
         'ic-services-configuration',
         'ic_menu_services_configuration');
     add_submenu_page('inter-calc-configuration',
-        __('Statistics - Inter Calcus'),
-        __('Inter-Calcus - Statistics'),
+        __('Statistics - Interactive Calculations'),
+        __('Interactive Calculations - Statistics'),
         'manage_options',
         'ic-menu-statistics',
         'ic_menu_statistics');
 }
 
 /**
- * Displays the main configuration page for the Inter Calcus plugin in the admin area.
+ * Displays the main configuration page for the Interactive Calculations plugin in the admin area.
  *
  * This function checks if the current user is an administrator, then enqueues the required
- * styles and scripts for the Inter Calcus plugin. It also initializes the database and
+ * styles and scripts for the Interactive Calculations plugin. It also initializes the database and
  * displays the main configuration menu using the MainMenuFrontend class.
  *
  * @return void
@@ -144,7 +144,7 @@ function inter_calc_main_configuration()
         add_action('wp_enqueue_style', 'interactivecalculations_main-styles');
 
         echo '<div class="wrap">
-        <h2>' . __("Inter Calcus Menu", "interactivecalculations") . '</h2>';
+        <h2>' . __("Interactive Calculations Menu", "interactivecalculations") . '</h2>';
         MainMenuFrontend::configuration();
         echo '</div>';
 
