@@ -52,7 +52,7 @@ class Calculation
     public static function getConfiguredCalculationAsOptions()
     {
         $allCalculations = IcalculationsDescription::get_all();
-        $options = ["default_interactivecalculations_option0" => __('-- NONE --', 'interactivecalculations')];
+        $options = ["default_interactivecalculations_option0" => esc_html(__('-- NONE --', 'interactivecalculations'))];
         foreach ($allCalculations as $calculation) {
             $options[$calculation["id"]] = $calculation["name"];
         }

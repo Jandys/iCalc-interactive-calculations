@@ -265,7 +265,7 @@ function interactivecalculations_process_product_deletion(id, name) {
 
 var interactivecalculationsApiSettings = {};
 
-function populateinteractivecalculationsSettings(user, session) {
+function populateinteractivecalculationsettings(user, session) {
     interactivecalculationsApiSettings.user = user;
     interactivecalculationsApiSettings.session = session;
 }
@@ -290,7 +290,7 @@ function interactivecalculations_getAllProducts() {
 async function interactivecalculations_getNextCalculationDescriptionId() {
     return new Promise(function (resolve, reject) {
         const xhr = new XMLHttpRequest();
-        const url = `/wp-json/interactivecalculations/v1/interactivecalculationsulation-descriptions/next`;
+        const url = `/wp-json/interactivecalculations/v1/descriptions/next`;
         xhr.open('GET', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('user', interactivecalculationsApiSettings.user);
@@ -331,7 +331,7 @@ function interactivecalculations_getAllServices() {
 
 function interactivecalculations_process_calculation_description_creation() {
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/interactivecalculations/v1/interactivecalculationsulation-descriptions';
+    const url = '/wp-json/interactivecalculations/v1/descriptions';
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -345,7 +345,7 @@ function interactivecalculations_process_calculation_description_creation() {
 
 function interactivecalculations_process_calculation_description_edit() {
     const xhr = new XMLHttpRequest();
-    const url = '/wp-json/interactivecalculations/v1/interactivecalculationsulation-descriptions';
+    const url = '/wp-json/interactivecalculations/v1/descriptions';
 
     xhr.open('PUT', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -363,7 +363,7 @@ function interactivecalculations_process_calculation_delete_action(id, name) {
 
     if (result) {
         const xhr = new XMLHttpRequest();
-        const url = '/wp-json/interactivecalculations/v1/interactivecalculationsulation-descriptions';
+        const url = '/wp-json/interactivecalculations/v1/descriptions';
         const data = JSON.stringify({
             id: id
         });

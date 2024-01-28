@@ -24,6 +24,8 @@
 /**
  * Registers an Elementor widget and enqueues a script on the front-end.
  */
+if (!defined('ABSPATH')) exit;
+
 
 use Elementor\Plugin;
 

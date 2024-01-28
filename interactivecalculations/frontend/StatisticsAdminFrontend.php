@@ -59,7 +59,7 @@ class StatisticsAdminFrontend extends AbstractAdminFrontend
         }
 
         if ($byCalcHasValues && $inTimeHasValues) {
-            echo "<a class='text-decoration-none' href='" . esc_url($makeCsvData) . "'><button  class='button btn-info position-relative mt-4 float-right'>" . __("Download Interactions CSV") . "</button></a>";
+            echo "<a class='text-decoration-none' href='" . esc_url($makeCsvData) . "'><button  class='button btn-info position-relative mt-4 float-right'>" . esc_html(__("Download Interactions CSV")) . "</button></a>";
         }
 
         if ($inTimeHasValues) {
@@ -70,7 +70,7 @@ class StatisticsAdminFrontend extends AbstractAdminFrontend
         }
 
         if (!$byCalcHasValues && !$inTimeHasValues) {
-            echo "<div><p>" . __("There are no statistics to be shown yet. Once there will be interactions with your calculations, come back.") . "</p></div>";
+            echo "<div><p>" . esc_html(__("There are no statistics to be shown yet. Once there will be interactions with your calculations, come back.")) . "</p></div>";
             return;
         }
     }

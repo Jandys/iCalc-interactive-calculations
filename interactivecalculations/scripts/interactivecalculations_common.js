@@ -112,7 +112,7 @@ function interactivecalculations_getServiceById(id) {
 
 function interactivecalculations_getCalculationDescriptionById(id) {
     const xhr = new XMLHttpRequest();
-    const url = `/wp-json/interactivecalculations/v1/interactivecalculationsulation-descriptions/${id}`;
+    const url = `/wp-json/interactivecalculations/v1/descriptions/${id}`;
     xhr.open('GET', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     return xhr;

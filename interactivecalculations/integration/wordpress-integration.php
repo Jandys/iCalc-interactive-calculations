@@ -21,6 +21,8 @@
  *
  */
 
+if (!defined('ABSPATH')) exit;
+
 use interactivecalculations\fe\Calculation as CalculationAlias;
 
 /**

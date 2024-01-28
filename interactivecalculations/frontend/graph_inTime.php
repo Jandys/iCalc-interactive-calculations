@@ -21,6 +21,8 @@
  *
  */
 
+if (!defined('ABSPATH')) exit;
+
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use Amenadiel\JpGraph\Graph\Graph;
@@ -30,7 +32,7 @@ header('Content-Type: image/png');
 
 session_start();
 
-$data = $_SESSION["interactionsInTime"];
+$data = sanitize_text_field($_SESSION["interactionsInTime"]);
 
 $inTime = new Graph(800, 400);
 $inTime->SetScale("datlin");

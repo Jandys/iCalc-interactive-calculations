@@ -147,7 +147,7 @@ function interactivecalculations_register_interactions(wrappingDiv, calcId) {
         body["calculationId"] = calcId;
         interactivecalculations_timeouts[UUID] = setTimeout(() => {
             const xhr = new XMLHttpRequest();
-            const url = '/wp-json/interactivecalculations/v1/interactivecalculationsulations/interactions';
+            const url = '/wp-json/interactivecalculations/v1/interactions';
             const data = JSON.stringify({
                 calculationId: calcId,
                 body: body,

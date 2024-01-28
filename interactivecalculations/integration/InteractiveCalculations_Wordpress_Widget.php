@@ -23,6 +23,8 @@
 
 use interactivecalculations\fe\Calculation;
 
+if (!defined('ABSPATH')) exit;
+
 function interactivecalculations_register_custom_widget()
 {
     register_widget('interactivecalculations_Wordpress_Widget');

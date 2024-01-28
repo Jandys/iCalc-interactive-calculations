@@ -38,6 +38,7 @@ define('INTERACTIVECALCULATIONS_VERSION', '0.1');
 define('INTERACTIVECALCULATIONS_PATH', dirname(INTERACTIVECALCULATIONS_FILE));
 define('INTERACTIVECALCULATIONS_URL', plugins_url('', INTERACTIVECALCULATIONS_FILE));
 define('INTERACTIVECALCULATIONS_EP_PREFIX', 'interactivecalculations/v1');
+define('INTEACTIVECALCULATIONS_PREFIX', 'interactivecalculations-');
 
 
 require INTERACTIVECALCULATIONS_PATH . '/loader.php';
@@ -57,28 +58,28 @@ prefix_enqueue();
 function prefix_enqueue(): void
 {
     // JS
-    wp_register_script('prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js');
-    wp_enqueue_script('prefix_bootstrap');
+    wp_register_script(INTEACTIVECALCULATIONS_PREFIX . 'bootstrap', plugins_url('/styles/bootstrap.min.js', __FILE__));
+    wp_enqueue_script(INTEACTIVECALCULATIONS_PREFIX . 'bootstrap');
 
     interactivecalculations_load_scripts();
 
     // CSS
-    wp_register_style('prefix_bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css');
-    wp_enqueue_style('prefix_bootstrap');
+    wp_register_style(INTEACTIVECALCULATIONS_PREFIX . 'bootstrap', plugins_url('/styles/bootstrap.min.css', __FILE__));
+    wp_enqueue_style(INTEACTIVECALCULATIONS_PREFIX . 'bootstrap');
 
-    wp_enqueue_style('interactivecalculations_custom_style', plugins_url('/styles/interactivecalculations-custom-style.css', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
+    wp_enqueue_style(INTEACTIVECALCULATIONS_PREFIX . 'custom_style', plugins_url('/styles/interactivecalculations-custom-style.css', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
     add_action('wp_enqueue_style', 'interactivecalculations_custom_style');
 
-    wp_enqueue_style('interactivecalculations_page_style', plugins_url('/styles/interactivecalculations-pages-generic.css', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
+    wp_enqueue_style(INTEACTIVECALCULATIONS_PREFIX . 'page_style', plugins_url('/styles/interactivecalculations-pages-generic.css', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
     add_action('wp_enqueue_style', 'interactivecalculations_page_style');
 }
 
 function interactivecalculations_load_scripts()
 {
     if (is_admin()) {
-        wp_enqueue_script('interactivecalculations_common_scripts', plugins_url('/scripts/interactivecalculations_common.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
+        wp_enqueue_script(INTEACTIVECALCULATIONS_PREFIX . 'common_scripts', plugins_url('/scripts/interactivecalculations_common.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
         add_action('wp_enqueue_scripts', 'interactivecalculations_common_scripts');
-        wp_enqueue_script('interactivecalculations_admin_scripts', plugins_url('/scripts/interactivecalculations_admin.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
+        wp_enqueue_script(INTEACTIVECALCULATIONS_PREFIX . 'admin_scripts', plugins_url('/scripts/interactivecalculations_admin.js', INTERACTIVECALCULATIONS_FILE), array(), INTERACTIVECALCULATIONS_VERSION, false);
         add_action('wp_enqueue_scripts', 'interactivecalculations_admin_scripts');
     }
 }

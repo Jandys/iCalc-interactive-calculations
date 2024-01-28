@@ -99,7 +99,7 @@ class Service extends BaseDatabaseModel
         $unitTable = Unit::_tableName();
 
         return $wpdb->get_results(
-            sprintf('SELECT * FROM %s JOIN %s ON %s.unitId = %s.id ORDER BY %s ASC', self::_tableName(), $unitTable, self::_tableName(), $unitTable, self::_tableName() . "." . static::$id), //phpcs:ignore
+            $wpdb->prepare('SELECT * FROM %s JOIN %s ON %s.unitId = %s.id ORDER BY %s ASC', self::_tableName(), $unitTable, self::_tableName(), $unitTable, self::_tableName() . "." . static::$id), //phpcs:ignore
             ARRAY_A
         );
     }

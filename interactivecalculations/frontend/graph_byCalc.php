@@ -29,7 +29,7 @@ use Amenadiel\JpGraph\Plot\BarPlot;
 session_start();
 header('Content-Type: image/png');
 
-$data = $_SESSION["interactionsByCalculationId"];
+$data = sanitize_text_field($_SESSION["interactionsByCalculationId"]);
 
 // Extract the second value (interactions) for each bar
 $interactionCounts = array_map('intval', array_values($data));

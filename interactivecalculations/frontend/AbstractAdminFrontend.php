@@ -79,7 +79,7 @@ abstract class AbstractAdminFrontend
      */
     public static function populateinteractivecalculationsJSData()
     {
-        $output = "populateinteractivecalculationsSettings(\"" . wp_get_current_user()->ID . "\",\"" . wp_get_session_token() . "\");";
+        $output = "populateinteractivecalculationsettings(\"" . wp_get_current_user()->ID . "\",\"" . wp_get_session_token() . "\");";
         callJSFunction($output);
     }
 
@@ -98,7 +98,7 @@ abstract class AbstractAdminFrontend
             'Content-Type' => 'application/json',
             'user' => wp_get_current_user()->ID,
             'session' => wp_get_session_token(),
-            'interactivecalculations-token' => $_COOKIE['interactivecalculations-token']
+            'interactivecalculations-token' => sanitize_text_field($_COOKIE['interactivecalculations-token'])
         );
         $args = array(
             'headers' => $headers

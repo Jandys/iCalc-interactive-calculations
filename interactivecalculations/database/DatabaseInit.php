@@ -43,16 +43,16 @@ class DatabaseInit
      * @return bool Returns true if all table creation queries executed successfully, false otherwise.
      * @since 1.0.0
      */
-    public static function init()
+    public static function init(): bool
     {
         $product = Product::create_table();
         $service = Service::create_table();
         $unit = Unit::create_table();
         $interactivecalculationsDesc = IcalculationsDescription::create_table();
-        $interactivecalculationss = Icalculations::create_table();
+        $interactivecalculations = Icalculations::create_table();
 
         // Returns true if all table creation queries executed successfully, false otherwise.
-        return $product && $service && $unit && $interactivecalculationsDesc && $interactivecalculationss;
+        return $product && $service && $unit && $interactivecalculationsDesc && $interactivecalculations;
     }
 
     public static function clearAll()

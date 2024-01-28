@@ -107,8 +107,8 @@ class BaseDatabaseModel
     private static function _fetch_sql($key, $value)
     { //phpcs:ignore
         global $wpdb;
-        $sql = sprintf('SELECT * FROM %s WHERE %s = %%s', self::_tableName(), $key);
-        return $wpdb->prepare($sql, $value); //phpcs:ignore
+        $sql = 'SELECT * FROM %s WHERE %s = %s';
+        return $wpdb->prepare($sql, self::_tableName(), $key, $value); //phpcs:ignore
     }
 
     /**
@@ -135,7 +135,7 @@ class BaseDatabaseModel
     {
         global $wpdb;
         return $wpdb->get_results(
-            sprintf('SELECT * FROM %s ORDER BY %s ASC', self::_tableName(), static::$id), //phpcs:ignore
+            $wpdb->prepare('SELECT * FROM %s ORDER BY %s ASC', self::_tableName(), static::$id), //phpcs:ignore
             ARRAY_A
         );
     }
@@ -150,9 +150,9 @@ class BaseDatabaseModel
     public static function delete($value)
     {
         global $wpdb;
-        $sql = sprintf('DELETE FROM %s WHERE %s = %%s', self::_tableName(), static::$id);
+        $sql = 'DELETE FROM %s WHERE %s = %s';
 
-        return $wpdb->query($wpdb->prepare($sql, $value)); //phpcs:ignore
+        return $wpdb->query($wpdb->prepare($sql, self::_tableName(), static::$id, $value)); //phpcs:ignore
     }
 
     public static function clearAll()
@@ -160,6 +160,6 @@ class BaseDatabaseModel
         global $wpdb;
         $table_name = self::_tableName();
 
-        $wpdb->query("DROP TABLE IF EXISTS `{$table_name}`");
+        $wpdb->query($wpdb->prepare("DROP TABLE IF EXISTS %s", $table_name));
     }
 }

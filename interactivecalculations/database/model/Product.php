@@ -99,8 +99,7 @@ class Product extends BaseDatabaseModel
         global $wpdb;
         $unitTable = Unit::_tableName();
 
-        return $wpdb->get_results(
-            sprintf('SELECT * FROM %s JOIN %s ON %s.unitId = %s.id ORDER BY %s ASC', self::_tableName(), $unitTable, self::_tableName(), $unitTable, self::_tableName() . "." . static::$id), //phpcs:ignore
+        return $wpdb->get_results($wpdb->prepare('SELECT * FROM %s JOIN %s ON %s.unitId = %s.id ORDER BY %s ASC', self::_tableName(), $unitTable, self::_tableName(), $unitTable, self::_tableName() . "." . static::$id), //phpcs:ignore
             ARRAY_A
         );
     }

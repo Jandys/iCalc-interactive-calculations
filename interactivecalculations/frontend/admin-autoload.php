@@ -21,6 +21,8 @@
  *
  */
 
+if (!defined('ABSPATH')) exit;
+
 require_once INTERACTIVECALCULATIONS_PATH . '/frontend/AbstractAdminFrontend.php';
 require_once INTERACTIVECALCULATIONS_PATH . '/frontend/ServiceAdminFrontend.php';
 require_once INTERACTIVECALCULATIONS_PATH . '/frontend/ProductAdminFrontend.php';

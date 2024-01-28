@@ -50,7 +50,7 @@ function generate_site_specific_secret_key()
  * @since 1.0.0
  *
  */
-function issue_jwt_token($user_id, $session): string
+function interactivecalculations_issue_jwt_token($user_id, $session): string
 {
     // Set the issued and expiration times for the token and generate a random string.
     $issued_at = time();
@@ -85,7 +85,7 @@ function issue_jwt_token($user_id, $session): string
  * @return bool|WP_REST_Response Returns true if the token is valid, a WP_REST_Response if it's invalid, or false if there is an error decoding the token.
  * @since 1.0.0
  */
-function validate_jwt_token($token, $userid, $session)
+function interactivecalculations_validate_jwt_token($token, $userid, $session)
 {
     try {
         // Decode the JWT token using the site-specific secret key.

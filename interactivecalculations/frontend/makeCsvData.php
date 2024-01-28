@@ -23,7 +23,7 @@
 
 session_start();
 
-$data = $_SESSION["interactionsData"];
+$data = sanitize_text_field($_SESSION["interactionsData"]);
 
 if (!empty($data)) {
 

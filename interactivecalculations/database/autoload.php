@@ -21,6 +21,7 @@
  *
  */
 
+if (!defined('ABSPATH')) exit;
 require_once INTERACTIVECALCULATIONS_PATH . '/database/model/BaseDatabaseModel.php';
 require_once INTERACTIVECALCULATIONS_PATH . '/database/model/Product.php';
 require_once INTERACTIVECALCULATIONS_PATH . '/database/model/Service.php';

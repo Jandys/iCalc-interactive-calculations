@@ -56,7 +56,7 @@ class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend
 
         $howToInsertCalculation = "";
         if (!empty($tbody)) {
-            $howToInsertCalculation = __("To insert calculation use shortcode in form: <span class='interactivecalculations-shortcode'>[interactivecalculations_calculation id=3]</span> or if you are using Elementor plugin you can just drag and drop widget");
+            $howToInsertCalculation = esc_html(__("To insert calculation use shortcode in form: <span class='interactivecalculations-shortcode'>[interactivecalculations_calculation id=3]</span> or if you are using Elementor plugin you can just drag and drop widget"));
         }
 
 
@@ -67,12 +67,12 @@ class CalculationsDescriptionsAdminFrontend extends AbstractAdminFrontend
             <table class="table table-bordered table-striped table-hover col-12">
                 <thead class="thead-dark">
                     <tr class="col-12">
-                        <th class="p-2 m-2">' . __("ID") . '</th>
-                        <th class="p-2 m-2">' . __("Name") . '</th>
-                        <th class="p-2 m-2">' . __("Description") . '</th>
-                        <th class="p-2 m-2 interactivecalculations-long-text-clipping">' . __("Body") . '</th>
-                        <th class="p-2 m-2">' . __("Created At") . '</th>
-                        <th class="p-2 m-2">' . __("Modified At") . '</th>
+                        <th class="p-2 m-2">' . esc_html(__("ID")) . '</th>
+                        <th class="p-2 m-2">' . esc_html(__("Name")) . '</th>
+                        <th class="p-2 m-2">' . esc_html(__("Description")) . '</th>
+                        <th class="p-2 m-2 interactivecalculations-long-text-clipping">' . esc_html(__("Body")) . '</th>
+                        <th class="p-2 m-2">' . esc_html(__("Created At")) . '</th>
+                        <th class="p-2 m-2">' . esc_html(__("Modified At")) . '</th>
                         <th class="col-1"></th>
                         <th class="col-1"></th>
                     </tr>

@@ -27,7 +27,7 @@ use interactivecalculations\fe\ServiceAdminFrontend;
 use interactivecalculations\fe\StatisticsAdminFrontend;
 
 add_action('admin_menu', 'interactivecalculations_admin_menu');
-add_action('admin_init', 'inter_calc_set_cookie');
+add_action('admin_init', 'interactivecalculations_set_cookie');
 
 const configurationSites = array(
     'inter-calc-configuration',
@@ -54,7 +54,7 @@ $settingCookie = false;
  * @since 1.0.0
  *
  */
-function inter_calc_set_cookie()
+function interactivecalculations_set_cookie()
 {
     if (current_user_can('manage_options')) {
         $currentSession = wp_get_session_token();
@@ -68,10 +68,10 @@ function inter_calc_set_cookie()
         if (!isset($_COOKIE['interactivecalculations-expiration']) ||
             !isset($_COOKIE['interactivecalculations-token']) ||
             $_COOKIE['interactivecalculations-expiration'] <= time()) {
-            $issued_jwt_token = issue_jwt_token(wp_get_current_user()->ID, wp_get_session_token());
+            $issued_jwt_token = interactivecalculations_issue_jwt_token(wp_get_current_user()->ID, wp_get_session_token());
             $expiration_time = time() + 3300; // Set the cookie to expire in 55 minutes
-            setcookie('interactivecalculations-token', $issued_jwt_token, $expiration_time, '/');
-            setcookie('interactivecalculations-expiration', $expiration_time, $expiration_time, '/');
+            setcookie(INTEACTIVECALCULATIONS_PREFIX . 'token', $issued_jwt_token, $expiration_time, '/');
+            setcookie(INTEACTIVECALCULATIONS_PREFIX . 'expiration', $expiration_time, $expiration_time, '/');
         }
     }
 }
@@ -102,8 +102,8 @@ function interactivecalculations_admin_menu()
         __('Interactive Calculations'),
         __('Interactive Calculations'),
         'manage_options',
-        'inter-calc-configuration',
-        'inter_calc_main_configuration',
+        'interactivecalculations-configuration',
+        'interactivecalculations_main_configuration',
         'data:image/svg+xml;base64,' . base64_encode($menuIcon),
         26);
     add_submenu_page('inter-calc-configuration',
@@ -111,19 +111,19 @@ function interactivecalculations_admin_menu()
         __('Interactive Calculations - Products'),
         'manage_options',
         'ic-products-configuration',
-        'ic_menu_products_configuration');
+        'interactivecalculations_menu_products_configuration');
     add_submenu_page('inter-calc-configuration',
         __('Services - Interactive Calculations'),
         __('Interactive Calculations - Services'),
         'manage_options',
         'ic-services-configuration',
-        'ic_menu_services_configuration');
+        'interactivecalculations_menu_services_configuration');
     add_submenu_page('inter-calc-configuration',
         __('Statistics - Interactive Calculations'),
         __('Interactive Calculations - Statistics'),
         'manage_options',
         'ic-menu-statistics',
-        'ic_menu_statistics');
+        'interactivecalculations_menu_statistics');
 }
 
 /**
@@ -137,14 +137,14 @@ function interactivecalculations_admin_menu()
  * @since 1.0.0
  *
  */
-function inter_calc_main_configuration()
+function interactivecalculations_main_configuration()
 {
     if (is_admin()) {
         wp_enqueue_style('interactivecalculations_main-styles', plugins_url('../styles/interactivecalculations-main-sheetstyle.css', __FILE__), array(), INTERACTIVECALCULATIONS_VERSION, false);
         add_action('wp_enqueue_style', 'interactivecalculations_main-styles');
 
         echo '<div class="wrap">
-        <h2>' . __("Interactive Calculations Menu", "interactivecalculations") . '</h2>';
+        <h2>' . esc_html(__("Interactive Calculations Menu", "interactivecalculations")) . '</h2>';
         MainMenuFrontend::configuration();
         echo '</div>';
 
@@ -232,7 +232,7 @@ function interactivecalculations_main_script_localization()
  * @return void
  * @since 1.0.0
  */
-function ic_menu_products_configuration()
+function interactivecalculations_menu_products_configuration()
 {
     session_write_close();
     if (is_admin()) {
@@ -257,7 +257,7 @@ function ic_menu_products_configuration()
  * @since 1.0.0
  *
  */
-function ic_menu_services_configuration()
+function interactivecalculations_menu_services_configuration()
 {
     session_write_close();
     if (is_admin()) {
@@ -277,7 +277,7 @@ function ic_menu_services_configuration()
  * @return void
  * @since 1.0.0
  */
-function ic_menu_statistics()
+function interactivecalculations_menu_statistics()
 {
     if (is_admin()) {
 

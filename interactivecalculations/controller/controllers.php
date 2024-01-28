@@ -26,6 +26,7 @@
  * prefix mapping = /wp-json/interactivecalculations/v1/
  */
 
+if (!defined('ABSPATH')) exit;
 
 use interactivecalculations\db\model\Icalculations;
 use interactivecalculations\db\model\IcalculationsDescription;
@@ -36,7 +37,7 @@ use function interactivecalculations\util\getPossibleCookieValue;
 
 add_action('rest_api_init', 'interactivecalculations_plugin_add_service_endpoints');
 add_action('rest_api_init', 'interactivecalculations_plugin_add_product_endpoints');
-add_action('rest_api_init', 'interactivecalculations_plugin_add_interactivecalculationsulation_descriptions_endpoints');
+add_action('rest_api_init', 'interactivecalculations_plugin_add_interactivecalculations_descriptions_endpoints');
 add_action('rest_api_init', 'interactivecalculations_autocomplete_endpoints');
 add_action('rest_api_init', 'interactivecalculations_plugin_add_jwt_endpoints');
 add_action('rest_api_init', 'interactivecalculations_plugin_add_public_endpoints');
@@ -67,7 +68,7 @@ function interactivecalculations_plugin_add_public_endpoints()
         'callback' => 'interactivecalculations_getProductById',
         'args' => array( // Argument validation and sanitization.
             'id' => array(
-                'validate_callback' => 'my_id_validate_callback',
+                'validate_callback' => 'interactivecalculations_id_validate_callback',
             ),
         ),
         'permission_callback' => '__return_true'
@@ -85,7 +86,7 @@ function interactivecalculations_plugin_add_public_endpoints()
         'callback' => 'interactivecalculations_getServiceById',
         'args' => array( // Argument validation and sanitization.
             'id' => array(
-                'validate_callback' => 'my_id_validate_callback',
+                'validate_callback' => 'interactivecalculations_id_validate_callback',
             ),
         ),
         'permission_callback' => '__return_true'
@@ -99,12 +100,12 @@ function interactivecalculations_plugin_add_public_endpoints()
      * @return WP_REST_Response|WP_Error The calculation description data on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions/(?P<id>\d+)', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/descriptions/(?P<id>\d+)', array(
         'methods' => 'GET',
         'callback' => 'interactivecalculations_getCalculationDescriptionById',
         'args' => array( // Argument validation and sanitization.
             'id' => array(
-                'validate_callback' => 'my_id_validate_callback',
+                'validate_callback' => 'interactivecalculations_id_validate_callback',
             ),
         ),
         'permission_callback' => '__return_true'
@@ -117,7 +118,7 @@ function interactivecalculations_plugin_add_public_endpoints()
      * @return WP_REST_Response|WP_Error The interaction data on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulations/interactions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactions', array(
         'methods' => 'POST',
         'callback' => 'interactivecalculations_registerNewCalculationInteraction',
         'permission_callback' => '__return_true'
@@ -135,7 +136,7 @@ function interactivecalculations_plugin_add_public_endpoints()
  * @since 1.0.0
  *
  */
-function my_id_validate_callback($value, $request, $param)
+function interactivecalculations_id_validate_callback($value, $request, $param)
 {
     return is_numeric($value);
 }
@@ -171,15 +172,15 @@ function interactivecalculations_getServiceById(WP_REST_Request $request)
 }
 
 /**
- * Retrieves an interactivecalculationsulation description by ID from the database.
+ * Retrieves an interactivecalculations description by ID from the database.
  *
  * @param WP_REST_Request $request The current REST API request object, containing the ID parameter.
- * @return WP_REST_Response The interactivecalculationsulation description data on success, or a WP_Error object on failure.
+ * @return WP_REST_Response The interactivecalculations description data on success, or a WP_Error object on failure.
  * @since 1.0.0
  */
 function interactivecalculations_getCalculationDescriptionById(WP_REST_Request $request)
 {
-    $id = $request->get_param('id');
+    $id = sanitize_text_field($request->get_param('id'));
     $interactivecalculationsDescription = IcalculationsDescription::get("id", $id);
 
     return new WP_REST_Response($interactivecalculationsDescription);
@@ -196,9 +197,9 @@ function interactivecalculations_registerNewCalculationInteraction(WP_REST_Reque
 {
     $data = $request->get_json_params();
 
-    $calculationId = $data['calculationId'];
-    $body = $data['body'];
-    $user = $data['userId'];
+    $calculationId = sanitize_text_field($data['calculationId']);
+    $body = sanitize_text_field($data['body']);
+    $user = sanitize_text_field($data['userId']);
 
     $status = Icalculations::insertNew($calculationId, json_encode($body), $user);
 
@@ -222,7 +223,7 @@ function interactivecalculations_plugin_add_jwt_endpoints()
      */
     register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/token', array(
         'methods' => 'POST',
-        'callback' => 'issue_jwt_token_callback',
+        'callback' => 'interactivecalculations_interactivecalculations_issue_jwt_token_callback',
         'permission_callback' => 'interactivecalculations_user_can_manage'
     ));
 
@@ -248,17 +249,17 @@ function interactivecalculations_plugin_add_jwt_endpoints()
  * @since 1.0.0
  */
 
-function issue_jwt_token_callback(WP_REST_Request $request)
+function interactivecalculations_interactivecalculations_issue_jwt_token_callback(WP_REST_Request $request)
 {
     $body = $request->get_json_params();
-    $user = $body['user'];
-    $session = $body['session'];
+    $user = sanitize_text_field($body['user']);
+    $session = sanitize_text_field($body['session']);
     $transSession = get_transient($session);
 
     if ($transSession != $user) {
         return new WP_REST_Response(NO_SESSION_MSG);
     }
-    $token = issue_jwt_token($user, $session);
+    $token = interactivecalculations_issue_jwt_token($user, $session);
 
     return new WP_REST_Response(['token' => $token]);
 }
@@ -272,51 +273,51 @@ function issue_jwt_token_callback(WP_REST_Request $request)
  */
 function verify_jwt_token_callback(WP_REST_Request $request)
 {
-    $user = $request->get_header('user');
-    $session = $request->get_header('session');
-    $token = $request->get_header('interactivecalculations-token');
+    $user = sanitize_text_field($request->get_header('user'));
+    $session = sanitize_text_field($request->get_header('session'));
+    $token = sanitize_text_field($request->get_header('interactivecalculations-token'));
 
-    return new WP_REST_Response(['valid' => validate_jwt_token($token, $user, $session)]);
+    return new WP_REST_Response(['valid' => interactivecalculations_validate_jwt_token($token, $user, $session)]);
 }
 
 /**
- * Registers REST API endpoints for interactivecalculationsulation descriptions.
+ * Registers REST API endpoints for interactivecalculations descriptions.
  *
  * @return void
  * @since 1.0.0
  */
-function interactivecalculations_plugin_add_interactivecalculationsulation_descriptions_endpoints()
+function interactivecalculations_plugin_add_interactivecalculations_descriptions_endpoints()
 {
     /**
-     * Registers a REST API route for creating a new interactivecalculationsulation description.
+     * Registers a REST API route for creating a new interactivecalculations description.
      *
-     * @return WP_REST_Response|WP_Error The new interactivecalculationsulation description on success, or an error on failure.
+     * @return WP_REST_Response|WP_Error The new interactivecalculations description on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/descriptions', array(
         'methods' => 'POST',
         'callback' => 'interactivecalculations_postIcalculationsDescriptions',
         'permission_callback' => '__return_true'
     ));
 
     /**
-     * Registers a REST API route for retrieving all interactivecalculationsulation descriptions.
-     * @return WP_REST_Response|WP_Error The interactivecalculationsulation descriptions on success, or an error on failure.
+     * Registers a REST API route for retrieving all interactivecalculations descriptions.
+     * @return WP_REST_Response|WP_Error The interactivecalculations descriptions on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/descriptions', array(
         'methods' => 'GET',
         'callback' => 'interactivecalculations_getIcalculationsDescriptions',
         'permission_callback' => '__return_true'
     ));
 
     /**
-     * Registers a REST API route for updating an existing interactivecalculationsulation description.
+     * Registers a REST API route for updating an existing interactivecalculations description.
      *
-     * @return WP_REST_Response|WP_Error The updated interactivecalculationsulation description on success, or an error on failure.
+     * @return WP_REST_Response|WP_Error The updated interactivecalculations description on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/descriptions', array(
         'methods' => 'PUT',
         'callback' => 'interactivecalculations_putIcalculationsDescriptions',
         'permission_callback' => '__return_true'
@@ -324,24 +325,24 @@ function interactivecalculations_plugin_add_interactivecalculationsulation_descr
 
 
     /**
-     * Registers a REST API route for deleting an interactivecalculationsulation description.
+     * Registers a REST API route for deleting an interactivecalculations description.
      *
-     * @return WP_REST_Response|WP_Error The deleted interactivecalculationsulation description on success, or an error on failure.
+     * @return WP_REST_Response|WP_Error The deleted interactivecalculations description on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/descriptions', array(
         'methods' => 'DELETE',
         'callback' => 'interactivecalculations_deleteIcalculationsDescriptions',
         'permission_callback' => '__return_true'
     ));
 
     /**
-     * Registers a REST API route for retrieving the next available interactivecalculationsulation description ID.
+     * Registers a REST API route for retrieving the next available interactivecalculations description ID.
      *
-     * @return WP_REST_Response|WP_Error The next interactivecalculationsulation description ID on success, or an error on failure.
+     * @return WP_REST_Response|WP_Error The next interactivecalculations description ID on success, or an error on failure.
      * @since 1.0.0
      */
-    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/interactivecalculationsulation-descriptions/next', array(
+    register_rest_route(INTERACTIVECALCULATIONS_EP_PREFIX, '/descriptions/next', array(
         'methods' => 'GET',
         'callback' => 'interactivecalculations_getNextIcalculationsDescriptionId',
         'permission_callback' => '__return_true'
@@ -349,10 +350,10 @@ function interactivecalculations_plugin_add_interactivecalculationsulation_descr
 }
 
 /**
- * Callback function for creating a new interactivecalculationsulation description.
+ * Callback function for creating a new interactivecalculations description.
  *
- * @param WP_REST_Request $request The current REST API request object, containing the interactivecalculationsulation description data in the request body and the JWT token in the headers.
- * @return WP_REST_Response|WP_Error The new interactivecalculationsulation description on success, or an error on failure.
+ * @param WP_REST_Request $request The current REST API request object, containing the interactivecalculations description data in the request body and the JWT token in the headers.
+ * @return WP_REST_Response|WP_Error The new interactivecalculations description on success, or an error on failure.
  * @since 1.0.0
  *
  */
@@ -369,20 +370,20 @@ function interactivecalculations_postIcalculationsDescriptions(WP_REST_Request $
 
     $data = $request->get_json_params();
 
-    $name = $data['title'];
-    $desc = $data['configuration']['calculation-description'];
+    $name = sanitize_text_field($data['title']);
+    $desc = sanitize_text_field($data['configuration']['calculation-description']);
 
-    // Save the interactivecalculationsulation description to the database.
+    // Save the interactivecalculations description to the database.
     $success = IcalculationsDescription::insertNew($name, $desc, json_encode($data));
 
     return new WP_REST_Response($success);
 }
 
 /**
- * Callback function for updating an existing interactivecalculationsulation description.
+ * Callback function for updating an existing interactivecalculations description.
  *
- * @param WP_REST_Request $request The current REST API request object, containing the updated interactivecalculationsulation description data in the request body and the JWT token in the headers.
- * @return WP_REST_Response|WP_Error The updated interactivecalculationsulation description on success, or an error on failure.
+ * @param WP_REST_Request $request The current REST API request object, containing the updated interactivecalculations description data in the request body and the JWT token in the headers.
+ * @return WP_REST_Response|WP_Error The updated interactivecalculations description on success, or an error on failure.
  * @since 1.0.0
  */
 function interactivecalculations_putIcalculationsDescriptions(WP_REST_Request $request)
@@ -398,20 +399,20 @@ function interactivecalculations_putIcalculationsDescriptions(WP_REST_Request $r
 
     $data = $request->get_json_params();
     $body = json_decode($data['body']);
-    $id = $body->id;
-    $name = $body->title;
-    $desc = $body->configuration->{'calculation-description'};
+    $id = sanitize_text_field($body->id);
+    $name = sanitize_text_field($body->title);
+    $desc = sanitize_text_field($body->configuration->{'calculation-description'});
 
-    $success = IcalculationsDescription::updateById($id, $name, $desc, json_encode($body));
+    $success = IcalculationsDescription::updateById($id, $name, $desc, sanitize_text_field(json_encode($body)));
 
     return new WP_REST_Response("success");
 }
 
 /**
- * Callback function for getting the next available interactivecalculationsulation description ID.
+ * Callback function for getting the next available interactivecalculations description ID.
  *
  * @param WP_REST_Request $request The current REST API request object, containing the JWT token in the headers.
- * @return WP_REST_Response|WP_Error The next available interactivecalculationsulation description ID on success, or an error on failure.
+ * @return WP_REST_Response|WP_Error The next available interactivecalculations description ID on success, or an error on failure.
  * @since 1.0.0
  */
 function interactivecalculations_getNextIcalculationsDescriptionId(WP_REST_Request $request)
@@ -431,9 +432,9 @@ function interactivecalculations_getNextIcalculationsDescriptionId(WP_REST_Reque
 }
 
 /**
- * Callback function for deleting an interactivecalculationsulation description.
+ * Callback function for deleting an interactivecalculations description.
  *
- * @param WP_REST_Request $request The current REST API request object, containing the ID of the interactivecalculationsulation description to delete in the request body and the JWT token in the headers.
+ * @param WP_REST_Request $request The current REST API request object, containing the ID of the interactivecalculations description to delete in the request body and the JWT token in the headers.
  * @return WP_REST_Response|WP_Error The result of the deletion operation on success, or an error on failure.
  * @since 1.0.0
  */
@@ -449,7 +450,7 @@ function interactivecalculations_deleteIcalculationsDescriptions(WP_REST_Request
     }
 
     $data = $request->get_json_params();
-    $id = $data['id'];
+    $id = sanitize_text_field($data['id']);
 
     $result = IcalculationsDescription::delete($id);
 
@@ -458,10 +459,10 @@ function interactivecalculations_deleteIcalculationsDescriptions(WP_REST_Request
 
 
 /**
- * Callback function for getting all interactivecalculationsulation descriptions.
+ * Callback function for getting all interactivecalculations descriptions.
  *
  * @param WP_REST_Request $request The current REST API request object, containing the JWT token in the headers.
- * @return WP_REST_Response|WP_Error An array of all interactivecalculationsulation descriptions on success, or an error on failure.
+ * @return WP_REST_Response|WP_Error An array of all interactivecalculations descriptions on success, or an error on failure.
  * @since 1.0.0
  *
  */
@@ -476,7 +477,7 @@ function interactivecalculations_getIcalculationsDescriptions(WP_REST_Request $r
         return new WP_REST_Response(['msg' => NOT_AUTH_MSG], 401);
     }
 
-    // Retrieve all interactivecalculationsulation descriptions from the database using the `get_all()` function of the `IcalculationsDescription` model class.
+    // Retrieve all interactivecalculations descriptions from the database using the `get_all()` function of the `IcalculationsDescription` model class.
     $allDescriptions = IcalculationsDescription::get_all();
 
     return new WP_REST_Response($allDescriptions);
@@ -540,12 +541,12 @@ function interactivecalculations_postProduct(WP_REST_Request $request)
     }
 
     $data = $request->get_json_params();
-    $name = $data['name'];
-    $desc = $data['description'];
-    $price = $data['price'];
-    $unit = $data['unit'];
-    $minQuality = $data['minQuality'];
-    $displayType = $data['displayType'];
+    $name = sanitize_text_field($data['name']);
+    $desc = sanitize_text_field($data['description']);
+    $price = sanitize_text_field($data['price']);
+    $unit = sanitize_text_field($data['unit']);
+    $minQuality = sanitize_text_field($data['minQuality']);
+    $displayType = sanitize_text_field($data['displayType']);
 
     // Insert the new product into the database.
     $succes = Product::insertNew($name, $desc, $price, $unit, $minQuality, $displayType);
@@ -573,13 +574,13 @@ function interactivecalculations_putProduct(WP_REST_Request $request)
     }
 
     $data = $request->get_json_params();
-    $id = $data['id'];
-    $name = $data['name'];
-    $desc = $data['description'];
-    $price = $data['price'];
-    $unit = $data['unit'];
-    $minQuality = $data['minQuality'];
-    $displayType = $data['displayType'];
+    $id = sanitize_text_field($data['id']);
+    $name = sanitize_text_field($data['name']);
+    $desc = sanitize_text_field($data['description']);
+    $price = sanitize_text_field($data['price']);
+    $unit = sanitize_text_field($data['unit']);
+    $minQuality = sanitize_text_field($data['minQuality']);
+    $displayType = sanitize_text_field($data['displayType']);
 
     $succes = Product::updateById($id, $name, $desc, $price, $unit, $minQuality, $displayType);
 
@@ -630,7 +631,7 @@ function interactivecalculations_deleteProduct(WP_REST_Request $request)
     }
 
     $data = $request->get_json_params();
-    $id = $data['id'];
+    $id = sanitize_text_field($data['id']);
 
     $allProducts = Product::delete($id);
 
@@ -690,7 +691,7 @@ function interactivecalculations_autocomplete_endpoints()
 function interactivecalculations_autocompleteUnit(WP_REST_Request $request)
 {
     $data = $request->get_json_params();
-    $value = $data["value"];
+    $value = sanitize_text_field($data["value"]);
 
     return Unit::autocomplete($value);
 }
@@ -715,12 +716,12 @@ function interactivecalculations_postService(WP_REST_Request $request)
     }
 
     $data = $request->get_json_params();
-    $name = $data['name'];
-    $desc = $data['description'];
-    $price = $data['price'];
-    $unit = $data['unit'];
-    $minQuality = $data['minQuality'];
-    $displayType = $data['displayType'];
+    $name = sanitize_text_field($data['name']);
+    $desc = sanitize_text_field($data['description']);
+    $price = sanitize_text_field($data['price']);
+    $unit = sanitize_text_field($data['unit']);
+    $minQuality = sanitize_text_field($data['minQuality']);
+    $displayType = sanitize_text_field($data['displayType']);
 
     $succes = Service::insertNew($name, $desc, $price, $unit, $minQuality, $displayType);
 
@@ -747,13 +748,13 @@ function interactivecalculations_putService(WP_REST_Request $request)
     }
     $data = $request->get_json_params();
 
-    $id = $data['id'];
-    $name = $data['name'];
-    $desc = $data['description'];
-    $price = $data['price'];
-    $unit = $data['unit'];
-    $minQuality = $data['minQuality'];
-    $displayType = $data['displayType'];
+    $id = sanitize_text_field($data['id']);
+    $name = sanitize_text_field($data['name']);
+    $desc = sanitize_text_field($data['description']);
+    $price = sanitize_text_field($data['price']);
+    $unit = sanitize_text_field($data['unit']);
+    $minQuality = sanitize_text_field($data['minQuality']);
+    $displayType = sanitize_text_field($data['displayType']);
 
     $succes = Service::updateById($id, $name, $desc, $price, $unit, $minQuality, $displayType);
 
@@ -803,7 +804,7 @@ function interactivecalculations_deleteService(WP_REST_Request $request)
     }
 
     $data = $request->get_json_params();
-    $id = $data['id'];
+    $id = sanitize_text_field($data['id']);
 
     $allServices = Service::delete($id);
 
@@ -819,15 +820,15 @@ function interactivecalculations_deleteService(WP_REST_Request $request)
  */
 function validate_interactivecalculations_jwt_token(WP_REST_Request $request)
 {
-    $user = $request->get_header('user');
-    $session = $request->get_header('session');
-    $token = $request->get_header('interactivecalculations-token');
+    $user = sanitize_text_field($request->get_header('user'));
+    $session = sanitize_text_field($request->get_header('session'));
+    $token = sanitize_text_field($request->get_header('interactivecalculations-token'));
 
     if (empty($token)) {
         $token = getPossibleCookieValue($request, 'interactivecalculations-token');
     }
 
-    return validate_jwt_token($token, $user, $session);
+    return interactivecalculations_validate_jwt_token($token, $user, $session);
 }
 
 /**
@@ -840,7 +841,7 @@ function validate_interactivecalculations_jwt_token(WP_REST_Request $request)
 function interactivecalculations_user_can_manage(WP_REST_Request $request)
 {
     $body = $request->get_json_params();
-    $user = $body['user'];
+    $user = sanitize_text_field($body['user']);
 
     return user_can($user, 'manage_options');
 }

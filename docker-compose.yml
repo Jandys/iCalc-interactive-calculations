@@ -1,15 +1,14 @@
 version: '3'
 
 volumes:
-  wordpress:
   db:
 
 services:
 
   wordpress:
     container_name: wordpress
-    image: wordpress
-#    restart: always
+    image: wordpress:6.4.2-php8.1-apache
+    #    restarrt: always
     depends_on:
       - db
     ports:
@@ -22,14 +21,14 @@ services:
       WORDPRESS_DB_NAME: "wordpress"
       WORDPRESS_TABLE_PREFIX: "wp_"
     volumes:
-      - wordpress:/var/www/html
+      - ./wordpress:/var/www/html
       - ./deploy:/var/www/html/wp-content/plugins/
 
 
   db:
     image: mysql:5.7
     container_name: database
-#    restart: always
+    #    restart: always
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress

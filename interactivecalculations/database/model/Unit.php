@@ -57,9 +57,9 @@ class Unit extends BaseDatabaseModel
     public static function deleteByName($value)
     {
         global $wpdb;
-        $sql = sprintf('DELETE FROM %s WHERE %s = %%s', self::_tableName(), 'unit');
+        $sql = 'DELETE FROM %s WHERE %s = %s';
 
-        return $wpdb->query($wpdb->prepare($sql, $value)); //phpcs:ignore
+        return $wpdb->query($wpdb->prepare($sql, self::_tableName(), 'unit', $value)); //phpcs:ignore
     }
 
     public static function autocomplete($value)
@@ -69,8 +69,8 @@ class Unit extends BaseDatabaseModel
         }
 
         global $wpdb;
-        $sql = sprintf('SELECT unit FROM %s WHERE %s LIKE %%s', self::_tableName(), 'unit');
+        $sql = 'SELECT unit FROM %s WHERE %s LIKE %s';
 
-        return $wpdb->get_results($wpdb->prepare($sql, '%' . $value . '%'), ARRAY_A);
+        return $wpdb->get_results($wpdb->prepare($sql, self::_tableName(), 'unit', '%' . $value . '%'), ARRAY_A);
     }
 }
