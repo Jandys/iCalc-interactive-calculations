@@ -1,0 +1,311 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Interactive Calculations\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-09 14:21+0000\n"
+"PO-Revision-Date: 2023-12-10 17:55+0000\n"
+"Last-Translator: Jakub Jandak <jandyyysek@seznam.cz>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: interactivecalculations"
+
+#: frontend/Calculation.php:55
+msgid "-- NONE --"
+msgstr ""
+
+#: configuration/admin_menu.php:178
+msgid "-- None --"
+msgstr ""
+
+#: configuration/admin_menu.php:195
+msgid "Add Component Reference"
+msgstr ""
+
+#: configuration/admin_menu.php:185
+msgid "Base Value"
+msgstr ""
+
+#: configuration/admin_menu.php:176
+msgid "Calculation Component"
+msgstr ""
+
+#: configuration/admin_menu.php:198
+msgid "Calculation Description"
+msgstr ""
+
+#: configuration/admin_menu.php:171
+msgid "Calculation List"
+msgstr ""
+
+#: configuration/admin_menu.php:172
+msgid "Calculation Name"
+msgstr ""
+
+#: configuration/admin_menu.php:204
+msgid "Checkbox"
+msgstr ""
+
+#: configuration/admin_menu.php:210
+msgid "Complex Calculation"
+msgstr ""
+
+#: configuration/admin_menu.php:194
+msgid "Complex calculation configuration"
+msgstr ""
+
+#: integration/InteractiveCalculationsElementorWidget.php:94
+msgid "Configuration"
+msgstr ""
+
+#: configuration/admin_menu.php:167
+msgid "Create New Calculation"
+msgstr ""
+
+#: configuration/admin_menu.php:184
+msgid "Custom CSS"
+msgstr ""
+
+#: configuration/admin_menu.php:180
+msgid "Custom Label"
+msgstr ""
+
+#: configuration/admin_menu.php:217
+msgid "Default calculation description"
+msgstr ""
+
+#: configuration/admin_menu.php:162
+msgid "Description"
+msgstr ""
+
+#: configuration/admin_menu.php:166
+msgid "Display Type"
+msgstr ""
+
+#: configuration/admin_menu.php:169
+msgid "Edit Current Configuration"
+msgstr ""
+
+#: integration/wordpress-integration.php:60
+msgid "ERROR"
+msgstr ""
+
+#: configuration/admin_menu.php:175
+msgid "Generic Component"
+msgstr ""
+
+#: configuration/admin_menu.php:206
+msgid "Horizontal Rule"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://github.com/Jandys"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://php.jandys.eu/"
+msgstr ""
+
+#: configuration/admin_menu.php:160
+msgid "ID"
+msgstr ""
+
+#: configuration/admin_menu.php:182
+msgid "Input Classes"
+msgstr ""
+
+#. Name of the plugin
+msgid "Interactive Calculations"
+msgstr ""
+
+#: integration/InteractiveCalculationsElementorWidget.php:51
+msgid "Interactive Calculations Custom Widget"
+msgstr ""
+
+#: configuration/admin_menu.php:147
+msgid "Interactive Calculations Menu"
+msgstr ""
+
+#: integration/InteractiveCalculations_Wordpress_Widget.php:60
+msgid "interactivecalculations Custom Widget"
+msgstr ""
+
+#. Author of the plugin
+msgid "Jakub Jandák"
+msgstr ""
+
+#: configuration/admin_menu.php:199
+msgid "Label"
+msgstr ""
+
+#: configuration/admin_menu.php:181
+msgid "Label Classes"
+msgstr ""
+
+#: configuration/admin_menu.php:201
+msgid "List"
+msgstr ""
+
+#: configuration/admin_menu.php:165
+msgid "Minimal Quantity"
+msgstr ""
+
+#: configuration/admin_menu.php:161
+msgid "Name"
+msgstr ""
+
+#: configuration/admin_menu.php:168
+msgid "New Calculation title"
+msgstr ""
+
+#: configuration/admin_menu.php:212
+msgid "No Calculation Component found"
+msgstr ""
+
+#: integration/InteractiveCalculationsElementorWidget.php:124
+msgid "No calculation selected"
+msgstr ""
+
+#: configuration/admin_menu.php:213
+msgid "No Generic Component found"
+msgstr ""
+
+#: configuration/admin_menu.php:214
+msgid "No Product found"
+msgstr ""
+
+#: configuration/admin_menu.php:211
+msgid "No Service found"
+msgstr ""
+
+#: configuration/admin_menu.php:202
+msgid "Number Input"
+msgstr ""
+
+#: configuration/admin_menu.php:187
+msgid "Option"
+msgstr ""
+
+#: configuration/admin_menu.php:193
+msgid "Original Value to Subtract from"
+msgstr ""
+
+#: configuration/admin_menu.php:196
+msgid "Personal Customization"
+msgstr ""
+
+#: configuration/admin_menu.php:215
+msgid "Please fill previous option and value"
+msgstr ""
+
+#. Description of the plugin
+msgid "Plugin for easy creation of custom calculations."
+msgstr ""
+
+#: configuration/admin_menu.php:191
+msgid "Prefix"
+msgstr ""
+
+#: configuration/admin_menu.php:177
+msgid "Preview"
+msgstr ""
+
+#: configuration/admin_menu.php:163
+msgid "Price per Unit"
+msgstr ""
+
+#: configuration/admin_menu.php:173
+msgid "Product"
+msgstr ""
+
+#: configuration/admin_menu.php:208
+msgid "Product Calculation"
+msgstr ""
+
+#: configuration/admin_menu.php:241
+msgid "Product Menu"
+msgstr ""
+
+#: configuration/admin_menu.php:170
+msgid "Save Calculation"
+msgstr ""
+
+#: integration/InteractiveCalculationsElementorWidget.php:102
+msgid "Select Calculation"
+msgstr ""
+
+#: configuration/admin_menu.php:174
+msgid "Service"
+msgstr ""
+
+#: configuration/admin_menu.php:265
+msgid "Services Menu"
+msgstr ""
+
+#: configuration/admin_menu.php:179
+msgid "Show Label"
+msgstr ""
+
+#: configuration/admin_menu.php:190
+msgid "Show Value"
+msgstr ""
+
+#: configuration/admin_menu.php:203
+msgid "Slider"
+msgstr ""
+
+#: configuration/admin_menu.php:189
+msgid "Slider Max"
+msgstr ""
+
+#: configuration/admin_menu.php:205
+msgid "Spacer"
+msgstr ""
+
+#: configuration/admin_menu.php:285
+msgid "Statistics Menu"
+msgstr ""
+
+#: configuration/admin_menu.php:209
+msgid "Subtract Calculation"
+msgstr ""
+
+#: configuration/admin_menu.php:192
+msgid "Suffix"
+msgstr ""
+
+#: configuration/admin_menu.php:207
+msgid "Sum"
+msgstr ""
+
+#: configuration/admin_menu.php:200
+msgid "Text"
+msgstr ""
+
+#: configuration/admin_menu.php:216
+msgid "There are no valid components to be saved to calculation"
+msgstr ""
+
+#: configuration/admin_menu.php:183
+msgid "To add multiple classes separate them by using semicolon: ';'"
+msgstr ""
+
+#: configuration/admin_menu.php:186
+msgid "Unchecked Value"
+msgstr ""
+
+#: configuration/admin_menu.php:164
+msgid "Unit"
+msgstr ""
+
+#: configuration/admin_menu.php:188
+msgid "Value"
+msgstr ""
+
+#: configuration/admin_menu.php:197
+msgid "Wrapper custom class"
+msgstr ""
